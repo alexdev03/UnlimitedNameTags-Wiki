@@ -108,6 +108,9 @@ This setting determines the maximum distance at which a name tag will be visible
 
 ### `format: MINIMESSAGE`
 This setting defines which text formatting system to use for name tags. The `MINIMESSAGE` format allows you to use rich text formatting features, like colors and styles. Other supported formats include `MINEDOWN`, `LEGACY`, and `UNIVERSAL`.
+> **Note**: Take note that UNIVERSAL is the most resource intensive but it supports all formatting options (except for MINEDOWN)
+> 
+(&x&0&8&4&c&f&bc LEGACY OF LEGACY - &#084cfbc LEGACY - &#084cfbc& MINEDOWN - <color:#084cfbc> MINIMESSAGE)
 
 ---
 
