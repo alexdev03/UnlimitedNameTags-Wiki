@@ -12,7 +12,7 @@ Welcome to the official documentation for the **UnlimitedNameTags** plugin. This
     - [LineGroups](Features/linesgroups.md) 🏷️
     - [Placeholder Replacements](Features/placeholders-replacements.md) 🔄
     - [Show While Looking](Features/show-while-looking.md) 👀
-4. [Configuration](Configuration) 🔧
+4. [Configuration](Configuration.md) 🔧
 5. [Commands and Permissions](Commands-And-Permissions) 🖱️🔑
 6. [Integrations](Integrations/integrations.md) 🔗
 7. [Support](#-support) 🆘
