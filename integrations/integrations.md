@@ -32,3 +32,9 @@ UnlimitedNameTags integrates seamlessly with various plugins to extend functiona
 **TypeWriter** integration is supported for disabling nametags when a player is in cinematic mode.
 
 ---
+
+### **Bedrock** 🌐
+
+**Bedrock** integration is supported with Geyser. Not all features are supported, but the name tag will still be displayed.
+
+---
