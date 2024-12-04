@@ -7,5 +7,5 @@
   * [🏷️ LinesGroups](features/linesgroups.md)
   * [🔄 Placeholder Replacements](features/placeholders-replacements.md)
   * [👀 Show While Looking](features/show-while-looking.md)
-* [🛠️ Commands & Permissions](commands-permissions)
-* [⚙️ Configuration](configuration)
+* [🛠️ Commands & Permissions](commands-permissions.md)
+* [⚙️ Configuration](configuration.md)
