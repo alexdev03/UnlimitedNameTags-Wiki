@@ -34,7 +34,7 @@ Unlimited Name Tags is a powerful plugin for Minecraft servers that allows advan
 ### Key Features:
 - Customizable Name Tags (colors, formats, extra details)
 - Dynamic Placeholder Support via [PlaceholderAPI](https://github.com/PlaceholderAPI/PlaceholderAPI)
-- Smooth Name Tag Movement (client-side, no lag)
+- Smooth Name Tag Movement (client-side, no lag and no teleport)
 - Compatibility with vanish plugins
 - Customizable tag behavior based on player relationships
 - Easy-to-configure settings via `settings.yml`
