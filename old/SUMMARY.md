@@ -1,6 +1,6 @@
 # Table of contents
 
-* [🏷️ Nametags](README.md)
+* [🏷️ Overview](README.md)
 * [Billboards](billboards.md)
 * [Hooks](hooks.md)
 * [LinesGroups](linesgroups.md)
