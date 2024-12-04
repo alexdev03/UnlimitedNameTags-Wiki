@@ -10,8 +10,8 @@ UnlimitedNameTags integrates seamlessly with various plugins to extend functiona
 This integration adjusts the Y offset of the name tag based on the texture height, allowing for a more dynamic and immersive display of custom hats. When a player wears an Oraxen hat, the position of their name tag will shift to better align with the height of the hat, creating a smoother and more visually pleasing effect.
 
 <figure>
-  <img src="https://i.imgur.com/ocnlz9Q.gif" alt="Oraxen Integration Demo" />
-  <figcaption>Oraxen Integration: Dynamic Name Tag Adjustment</figcaption>
+  <img src="https://i.imgur.com/ocnlz9Q.gif" alt="Nexo Integration Demo" />
+  <figcaption>Nexo Integration: Dynamic Name Tag Adjustment</figcaption>
 </figure>
 
 ### **Oraxen** 🎩
