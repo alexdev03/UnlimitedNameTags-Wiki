@@ -43,9 +43,21 @@ Unlimited Name Tags is a powerful plugin for Minecraft servers that allows advan
 - **Paper**: Fully supported from **1.20.1+** *(highly recommended)*.
 - **Spigot**: Supported from **1.20.2+**, but Paper is preferred for enhanced performance.
 
+---
+
+## 📜 **Supported Client Versions**
+**Java:**
+- 1.19.4+
+
 > **Note**: Versions below **1.19.4** do not support text displays because the required packet functionality does not exist. Additionally, clients connecting with **ViaBackwards** are not compatible and will not display name tags correctly. For the best experience, ensure both the server and clients are using compatible versions.
 > You may connect with 1.19.4 client using **ViaBackwards** and **ViaVersion** and a server on one of the supported versions.
 
+
+**Bedrock:** ([Waiting for this pull request to be merged](https://github.com/GeyserMC/Geyser/pull/5157))
+- Latest 
+
+> **Note**: Bedrock clients do not support text displays so not all features are supported. Only multi-line and rgb colors are supported.
+> Features like backgrounds and shadows are not supported.
 ---
 
 ## 💬 **Support**
