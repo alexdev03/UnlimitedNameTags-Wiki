@@ -136,4 +136,11 @@ When set to `true`, this setting will allow the a player to see their own name t
 
 ---
 
+### `scale: 1.0`
+This setting allows you to set the default scale of the name tag. This works with the scale attribute of the player. 
+For example, if you set the scale to `0.5`, and the scale attribute of the player is `1.0`, the name tag will be half the size of normal.
+
+**Formula**: `scale = player_scale * nametag_scale`
+
+
 
