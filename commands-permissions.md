@@ -5,30 +5,108 @@ The following commands are available for managing and customizing name tags. The
 ---
 
 ### Main:
-- **`/unt`**: Displays the plugin version and a list of available commands. *(Permission: none)*
-- **`/unt reload`**: Reloads the plugin configuration without restarting the server. *(Permission: `unt.reload`)*
-- **`/unt debug`**: Performs a debug operation for troubleshooting. *(Permission: `unt.debug`)*
+
+### <mark style="color:orange;">`/unt`</mark>
+* **Description**: Displays the plugin version and a list of available commands.
+* **Usage**: <mark style="color:orange;">`/unt`</mark>
+* **Example**: <mark style="color:orange;">`/unt`</mark>
+* **Behavior**: Displays the plugin version and a list of commands.
+* **Permission**: <mark style="color:yellow;">*none*</mark>
+
+---
+
+### <mark style="color:orange;">`/unt reload`</mark>
+* **Description**: Reloads the plugin configuration without restarting the server.
+* **Usage**: <mark style="color:orange;">`/unt reload`</mark>
+* **Example**: <mark style="color:orange;">`/unt reload`</mark>
+* **Behavior**: Reloads the plugin settings.
+* **Permission**: <mark style="color:yellow;">`unt.reload`</mark>
+
+---
+
+### <mark style="color:orange;">`/unt debug`</mark>
+* **Description**: Performs a debug operation for troubleshooting.
+* **Usage**: <mark style="color:orange;">`/unt debug`</mark>
+* **Example**: <mark style="color:orange;">`/unt debug`</mark>
+* **Behavior**: Initiates the debugging process for troubleshooting issues.
+* **Permission**: <mark style="color:yellow;">`unt.debug`</mark>
 
 ---
 
 ### Name Tag Management:
-- **`/unt show <player>`**: Displays the name tag for a specific player. *(Permission: `unt.show`)*
-- **`/unt hide <player>`**: Hides the name tag for a specific player. *(Permission: `unt.hide`)*
-- **`/unt refresh <player>`**: Refreshes the name tag of a specific player for the command sender. *(Permission: `unt.refresh`)*
+
+### <mark style="color:orange;">`/unt show <player>`</mark>
+* **Description**: Displays the name tag for a specific player.
+* **Usage**: <mark style="color:orange;">`/unt show <player>`</mark>
+    * <mark style="color:green;">`<player>`</mark>: The name of the target player.
+* **Example**: <mark style="color:orange;">`/unt show AlexDev`</mark>
+* **Behavior**: Displays the name tag for the specified player.
+* **Permission**: <mark style="color:yellow;">`unt.show`</mark>
+
+---
+
+### <mark style="color:orange;">`/unt hide <player>`</mark>
+* **Description**: Hides the name tag for a specific player.
+* **Usage**: <mark style="color:orange;">`/unt hide <player>`</mark>
+    * <mark style="color:green;">`<player>`</mark>: The name of the target player.
+* **Example**: <mark style="color:orange;">`/unt hide AlexDev`</mark>
+* **Behavior**: Hides the name tag for the specified player.
+* **Permission**: <mark style="color:yellow;">`unt.hide`</mark>
+
+---
+
+### <mark style="color:orange;">`/unt refresh <player>`</mark>
+* **Description**: Refreshes the name tag of a specific player for the command sender.
+* **Usage**: <mark style="color:orange;">`/unt refresh <player>`</mark>
+    * <mark style="color:green;">`<player>`</mark>: The name of the target player.
+* **Example**: <mark style="color:orange;">`/unt refresh AlexDev`</mark>
+* **Behavior**: Refreshes the name tag to reflect any recent changes.
+* **Permission**: <mark style="color:yellow;">`unt.refresh`</mark>
 
 ---
 
 ### Customization and Configuration:
-- **`/unt billboard <type>`**: Sets the default billboard type (e.g., `CENTER`, `FIXED`, etc.). *(Permission: `unt.billboard`)*
-- **`/unt formatter <formatter>`**: Sets the default name tag formatter. *(Permission: `unt.formatter`)*
+
+### <mark style="color:orange;">`/unt billboard <type>`</mark>
+* **Description**: Sets the default billboard type (e.g., `CENTER`, `FIXED`, etc.).
+* **Usage**: <mark style="color:orange;">`/unt billboard <type>`</mark>
+    * <mark style="color:green;">`<type>`</mark>: The billboard type to be used.
+* **Example**: <mark style="color:orange;">`/unt billboard CENTER`</mark>
+* **Behavior**: Sets the type of billboard to display with the name tag.
+* **Permission**: <mark style="color:yellow;">`unt.billboard`</mark>
+
+---
+
+### <mark style="color:orange;">`/unt formatter <formatter>`</mark>
+* **Description**: Sets the default name tag formatter.
+* **Usage**: <mark style="color:orange;">`/unt formatter <formatter>`</mark>
+    * <mark style="color:green;">`<formatter>`</mark>: The format to be used (e.g., `MINIMESSAGE`, `MINEDOWN`, etc.).
+* **Example**: <mark style="color:orange;">`/unt formatter MINIMESSAGE`</mark>
+* **Behavior**: Sets the name tag format for displaying text.
+* **Permission**: <mark style="color:yellow;">`unt.formatter`</mark>
 
 ---
 
 ### Managing Other Players' Name Tags:
-- **`/unt hideOtherNametags [-h]`**: Hides the name tags of other players. Use the `-h` flag to suppress the confirmation message. *(Permission: `unt.hideOtherNametags`)*
-- **`/unt showOtherNametags [-h]`**: Displays the name tags of other players. Use the `-h` flag to suppress the confirmation message. *(Permission: `unt.showOtherNametags`)*
+
+### <mark style="color:orange;">`/unt hideOtherNametags [-h]`</mark>
+* **Description**: Hides the name tags of other players. Use the `-h` flag to suppress the confirmation message.
+* **Usage**: <mark style="color:orange;">`/unt hideOtherNametags [-h]`</mark>
+    * <mark style="color:green;">`[-h]`</mark>: Flag to suppress confirmation.
+* **Example**: <mark style="color:orange;">`/unt hideOtherNametags`</mark>
+* **Behavior**: Hides name tags of all players except the sender.
+* **Permission**: <mark style="color:yellow;">`unt.hideOtherNametags`</mark>
 
 ---
+
+### <mark style="color:orange;">`/unt showOtherNametags [-h]`</mark>
+* **Description**: Displays the name tags of other players. Use the `-h` flag to suppress the confirmation message.
+* **Usage**: <mark style="color:orange;">`/unt showOtherNametags [-h]`</mark>
+    * <mark style="color:green;">`[-h]`</mark>: Flag to suppress confirmation.
+* **Example**: <mark style="color:orange;">`/unt showOtherNametags`</mark>
+* **Behavior**: Displays name tags of all players.
+* **Permission**: <mark style="color:yellow;">`unt.showOtherNametags`</mark>
+
 
 ## 🔒 **Default Permissions**
 
@@ -37,32 +115,5 @@ The following permissions control access to various features of the plugin. You 
 ---
 
 ### **Core Permissions:**
-- **`unt.shownametags`**: Enabled by default. This permission controls whether a player can see other players' name tags. Revoking this permission will hide all other players' name tags globally for the player.
-- **`unt.showownnametag`**: Allows the player to see their own name tag. If revoked, the player will not see their own name tag, but other players can still see it.
-
----
-
-### **Name Tag Management:**
-- **`unt.show`**: Grants permission to show a specific player's name tag using the `/unt show <player>` command.
-- **`unt.hide`**: Grants permission to hide a specific player's name tag using the `/unt hide <player>` command.
-- **`unt.refresh`**: Allows the player to refresh a specific player's name tag using the `/unt refresh <player>` command.
-
----
-
-### **Customization and Configuration:**
-- **`unt.billboard`**: Allows the player to set the default billboard type with the `/unt billboard <type>` command.
-- **`unt.formatter`**: Allows the player to set the default name tag formatter using the `/unt formatter <formatter>` command.
-
----
-
-### **Managing Other Players' Name Tags:**
-- **`unt.hideOtherNametags`**: Grants permission to hide the name tags of other players using the `/unt hideOtherNametags` command.
-- **`unt.showOtherNametags`**: Grants permission to show the name tags of other players using the `/unt showOtherNametags` command.
-
---- 
-
-### **Advanced Permissions:**
-- **`unt.reload`**: Allows the player to reload the plugin configuration with the `/unt reload` command.
-- **`unt.debug`**: Allows the player to perform a debug operation using the `/unt debug` command.
-
-
+- **<mark style="color:yellow;">`unt.shownametags`</mark>**: Enabled by default. This permission controls whether a player can see other players' name tags. Revoking this permission will hide all other players' name tags globally for the player.
+- **<mark style="color:yellow;">`unt.showownnametag`</mark>**: Allows the player to see their own name tag. If revoked, the player will not see their own name tag, but other players can still see it.
