@@ -1,8 +1,16 @@
-# **Unlimited Name Tags Wiki** 📚
+# **UnlimitedNameTags Wiki** 📚
+*A powerful tool to customize and manage player name tags like never before!*
+
 
 Welcome to the official documentation for the **UnlimitedNameTags** plugin. This wiki provides detailed information about the plugin's features, installation, configuration, commands, and integrations.
 
 ---
+
+[![Discord](https://img.shields.io/discord/1263414013040263249?label=Discord&logo=discord&color=5865F2)](https://discord.gg/W4Fu8fqCKs)  
+[![CodeFactor](https://www.codefactor.io/repository/github/alexdev03/unlimitednametags/badge)](https://www.codefactor.io/repository/github/alexdev03/unlimitednametags)  
+[![API Version](https://img.shields.io/github/v/release/alexdev03/UnlimitedNametags?&color=blue)](https://github.com/alexdev03/UnlimitedNametags/releases/latest)
+
+![Unlimited Name Tags in Action](https://i.imgur.com/w7zlGaO.gif)
 
 ## **Table of Contents**
 1. [Overview](#overview) 📝

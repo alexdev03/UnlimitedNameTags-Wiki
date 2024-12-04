@@ -1,6 +1,6 @@
 # Table of Contents
 
-* [🏷️ Nametags](README.md)
+* [🏷️ Overview](README.md)
 * [🔗 Integrations](integrations/integrations.md)
 * [📝 Features]
   * [🎥 Billboards](features/billboards.md)
