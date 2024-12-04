@@ -81,7 +81,7 @@ Below is a description of key configuration options in the `settings.yml` file f
 ### `defaultBillboard: CENTER`
 This setting defines the default behavior for the name tag's positioning. The `CENTER` option places the name tag directly above the player’s head and is the most similar to the vanilla Minecraft name tag behavior.
 
-For more information on different billboard styles, visit the [Billboards feature documentation](features/billboards.md).
+For more information on different billboard styles, visit the [Billboards feature documentation](Features/billboards.md).
 
 ---
 
@@ -124,7 +124,7 @@ If enabled, this setting will remove any empty lines from the name tag. This hel
 ### `showWhileLooking: false`
 This option controls whether the name tag will be shown when you are looking directly at the player. If set to `true`, the name tag will appear while you're looking at the player, even if you are not close to them.
 
-For more details, visit the [Show While Looking feature documentation](features/show-while-looking.md).
+For more details, visit the [Show While Looking feature documentation](Features/show-while-looking.md).
 
 ---
 

@@ -128,5 +128,5 @@ NPC Plugins that use default nametag won't work, it's striclty advised to use a 
 
 * [Citizens ](https://wiki.citizensnpcs.co/Frequently_Asked_Questions#My_NPCs_Have_Names_Like_CIT-abc_Instead_Of_Their_Actual_Names)
 * [FancyNPCS](https://fancyplugins.de/docs/fn-multiple-lines.html)
-* [ZNPCs](https://github.com/gonalez/znpcs/wiki/commands-permissions#lines)
+* [ZNPCs](https://github.com/gonalez/znpcs/wiki/Commands-And-Permissions#lines)
 * There are problems with nametag visibility between blocks, this problem should be fixed by Mojang

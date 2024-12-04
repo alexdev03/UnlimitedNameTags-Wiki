@@ -8,13 +8,13 @@ Welcome to the official documentation for the **UnlimitedNameTags** plugin. This
 1. [Overview](#overview) 📝
 2. [Requirements](#requirements) 📋
 3. **Features** ✨
-    - [Billboards](features/billboards.md) 🎥
-    - [LineGroups](features/linesgroups.md) 🏷️
-    - [Placeholder Replacements](features/placeholders-replacements.md) 🔄
-    - [Show While Looking](features/show-while-looking.md) 👀
-4. [Configuration](configuration.md) 🔧
-5. [Commands and Permissions](commands-permissions.md) 🖱️🔑
-6. [Integrations](integrations/integrations.md) 🔗
+    - [Billboards](Features/billboards.md) 🎥
+    - [LineGroups](Features/linesgroups.md) 🏷️
+    - [Placeholder Replacements](Features/placeholders-replacements.md) 🔄
+    - [Show While Looking](Features/show-while-looking.md) 👀
+4. [Configuration](Configuration) 🔧
+5. [Commands and Permissions](Commands-And-Permissions) 🖱️🔑
+6. [Integrations](Integrations/integrations.md) 🔗
 7. [Support](#-support) 🆘
 
 ---
