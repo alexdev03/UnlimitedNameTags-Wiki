@@ -16,6 +16,7 @@ Welcome to the official documentation for the **UnlimitedNameTags** plugin. This
 1. [Overview](#overview) 📝
 2. [Requirements](#requirements) 📋
 3. **Features** ✨
+    - [Animations](features/animations.md) 🎨
     - [Billboards](features/billboards.md) 🎥
     - [LineGroups](features/linesgroups.md) 🏷️
     - [Placeholder Replacements](features/placeholders-replacements.md) 🔄
