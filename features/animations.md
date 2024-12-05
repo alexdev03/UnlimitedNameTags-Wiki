@@ -6,22 +6,22 @@ Here are the placeholders designed for animating colors and effects, which can b
 
 ## 🌈 **Available Placeholders for Animations**
 
-### 1. **`#phase-mm#` (MINIMESSAGE)**
-- **Description**: This placeholder is used for animating values in **MINIMESSAGE** format, especially for rainbow effects.
-- **Range**: The value ranges from `10` (full brightness) to `1` (minimal brightness).
-- **Usage**: It is used for animating color transitions, often for rainbow effects.
+### 1. **`#phase-mm#` (MINIMESSAGE for Rainbow tags)**
+- **Description**: This placeholder is used for for creating **rainbow** in **MINIMESSAGE** format.
+- **Range**: The value ranges from `10` (full offset) to `1` (minimal offset).
+- **Usage**: It is used for animating color transitions.
 - **Example**:
   ```yaml
   "<rainbow:#phase-mm#>MiniMessage rainbow animation with UnlimitedNameTags %player_name%</rainbow>"
   ```
-    - The color of the text animates from vibrant to dull as the value of `#phase-mm#` changes.
+    - The color in the name tag changes smoothly from red to yellow to green to blue, and so on with `#phase-mm#`.
 
 <figure style="text-align: center;">
   <img src="https://i.imgur.com/nFFL0T6.gif" alt="Rainbow Animation" />
   <figcaption>Rainbow Animation</figcaption>
 </figure>
 
-### 2. **`#phase-mm-g#` (MINIMESSAGE for Gradient)**
+### 2. **`#phase-mm-g#` (MINIMESSAGE for Gradient tags)**
 - **Description**: This placeholder is used for creating **gradient** animations in **MINIMESSAGE** format.
 - **Range**: The value ranges from `-1.0` (full gradient transition) to `1.0` (no transition), with increments of `0.1`.
 - **Usage**: It is used for creating smooth color gradients based on the specified `phase` value.
@@ -30,7 +30,7 @@ Here are the placeholders designed for animating colors and effects, which can b
   "<gradient:#5e4fa2:#f79459:red:#phase-mm-g#>MiniMessage gradient animation
         with UnlimitedNameTags %player_name%</gradient> "
   ```
-    - In this example, the text is displayed with a gradient that transitions from green to blue. The `#phase-mm-g#` value controls the intensity of the gradient transition.
+    - In this example, the color in the name tag changes from 5e4fa2 to f79459 with a smooth transition, where `#phase-mm-g#` controls the gradient.
 
 <figure style="text-align: center;">
   <img src="https://i.imgur.com/fZEDmDC.gif" alt="Gradient Animation" />
