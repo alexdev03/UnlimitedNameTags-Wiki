@@ -6,7 +6,7 @@ Here are the placeholders designed for animating colors and effects, which can b
 
 ## 🌈 **Available Placeholders for Animations**
 
-### 1. **`#phase-mm#` (MINIMESSAGE for Rainbow tags)**
+### 1. **`#phase-mm#` (MINIMESSAGE for Rainbow tags)** 
 - **Description**: This placeholder is used for for creating **rainbow** in **MINIMESSAGE** format.
 - **Range**: The value ranges from `10` (full offset) to `1` (minimal offset).
 - **Usage**: It is used for animating color transitions.
@@ -60,3 +60,15 @@ in the `settings.yml` file:
 ```yaml
 taskInterval: 5
 ```
+
+## Animation with the opposite direction
+
+You can animate the opposite direction by using the `#-phase-mm#`, `#-phase-mm-g#` or `#-phase-md#` placeholders. This will animate the color transition in the opposite direction.
+
+For example, if you want to animate the color transition from green to red, you can use the following code:
+
+```yaml
+"<rainbow:#-phase-mm#>MiniMessage rainbow animation with UnlimitedNameTags %player_name%</rainbow>"
+```
+
+This will animate the color transition from green to red, and then back to green. 
