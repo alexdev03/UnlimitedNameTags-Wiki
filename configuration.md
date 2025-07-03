@@ -324,3 +324,48 @@ placeholdersReplacements:
 ```
 If the placeholder %advancedvanish_is_vanished% (from the AdvancedVanish plugin, for example) returns the string "Yes", UnlimitedNameTags will replace it with " &7[V]&amp;r" (a grey [V] tag). If it returns "No", it will be replaced with an empty string, effectively hiding it. You can define multiple replacements for different placeholders.
 For more information on how to use placeholders, visit the [Placeholder Replacements feature documentation](features/placeholders-replacements.md).
+
+---
+### `scale:`
+This section, nested within a `nameTags` group, allows you to control the scale of the name tag.
+
+---
+### `background:`
+This section, nested within a `nameTags` group, allows you to configure a colored background for the name tag. You can enable or disable it, control its opacity, and define its color using two different methods: `integer` (RGB) or `hex`.
+
+* `enabled`: Set to `true` to show the background, or `false` to hide it.
+* `opacity`: An integer from `0` (fully transparent) to `255` (fully opaque) that controls the background's transparency.
+* `shadowed`: If `true`, a slight shadow is rendered behind the background, giving it depth.
+* `seeThrough`: If `true`, the background will be visible even when obstructed by blocks. (It may not always work due to client-side limitations.)
+
+`type: integer`
+
+When the type is set to `integer`, the color is defined using individual Red, Green, and Blue (RGB) channels.
+
+* `red`: A value from `0` to `255` for the red component of the color.
+* `green`: A value from `0` to `255` for the green component.
+* `blue`: A value from `0` to `255` for the blue component.
+
+**Example (Red Background):**
+```yaml
+background:
+  type: integer
+  enabled: true
+  red: 255
+  green: 0
+  blue: 0
+```
+
+`type: hex`
+
+When the type is set to `hex`, the color is defined using a hexadecimal value.
+
+* `hex`: A hexadecimal value in the format `#RRGGBB` or `#RGB`, where `RR` represents the red component, `GG` represents the green component, and `BB` represents the blue component.
+
+**Example (Red Background):**
+```yaml
+background:
+  type: hex
+  enabled: true
+  hex: '#FF0000'
+```
