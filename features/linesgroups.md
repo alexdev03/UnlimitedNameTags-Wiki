@@ -1,8 +1,6 @@
----
-description: LinesGroups are a way of displaying lines if a condition is met
----
-
 # LinesGroups
+
+Line groups control which lines show on a name tag and under which conditions.
 
 Every nametag in the config contains a list of `LineGroups`. Each group is made by a list of lines and a list of modifiers.
 

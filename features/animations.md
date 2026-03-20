@@ -71,4 +71,10 @@ For example, if you want to animate the color transition from green to red, you 
 "<rainbow:#-phase-mm#>MiniMessage rainbow animation with UnlimitedNameTags %player_name%</rainbow>"
 ```
 
-This will animate the color transition from green to red, and then back to green. 
+This will animate the color transition from green to red, and then back to green.
+
+---
+
+## PlaceholderAPI equivalents
+
+The same phase values are exposed for **PlaceholderAPI** as `%unt_phase-mm%`, `%unt_phase-md%`, `%unt_phase-mm-g%`, `%unt_-phase-mm%`, and `%unt_-phase-md%` (see [Integrations → PlaceholderAPI](../integrations/integrations.md#placeholderapi)).

@@ -1,32 +1,37 @@
-# Placeholder Replacements in UnlimitedNameTags
+# Placeholder replacements
 
-UnlimitedNameTags supports **placeholder replacements**, which allow you to replace a placeholder with a different value. This is useful for tasks such as:
+UnlimitedNameTags supports **placeholder replacements**: map raw PlaceholderAPI (or other) outputs to different text. Useful for:
 
-- Changing a date placeholder to a localized version.
-- Modifying biome placeholders to display text in colors.
-- Using vanish placeholders to show a player's vanish status when the placeholder returns a boolean (`true/false`).
+- Localising or restyling values (dates, biomes, worlds).
+- Turning boolean vanish placeholders into short labels.
 
-## Configuring Placeholder Replacements
+---
 
-Placeholder replacements are configured in the `placeholder_replacements` section of each **Tab Group**. You can specify a list of replacements for a particular placeholder, and the replacements will be applied in the order they are listed.
+## Configuration
 
-### Replacements Format
+Replacements are set in **`settings.yml`** under the top-level key **`placeholdersReplacements`** (camelCase, ConfigLib default).
 
-The replacements are defined as a list of objects, each with two properties:
-- `placeholder`: The placeholder to replace.
-- `replacement`: The replacement text.
+You list entries per placeholder string; each entry has `placeholder` (exact output to match) and `replacement` (what to show instead). Order matters: first match wins.
 
-### Example Configuration
+---
+
+## Format
 
 ```yaml
-placeholder_replacements:
-  '%localtime_timezone_en_US,EEEE%':
-    - placeholder: Monday
-      replacement: '<red>Monday</red>'
-    - placeholder: Tuesday
-      replacement: '<gold>Tuesday</gold>'
-    - placeholder: Else
-      replacement: '<green>Other day</green>'
+placeholdersReplacements:
+  '%some_placeholder%':
+    - placeholder: RawValueFromPAPI
+      replacement: '<green>Nicer text</green>'
+    - placeholder: OtherValue
+      replacement: '<red>…</red>'
+```
+
+---
+
+## Example
+
+```yaml
+placeholdersReplacements:
   '%player_world_type%':
     - placeholder: Overworld
       replacement: '<aqua>Overworld</aqua>'
@@ -34,47 +39,18 @@ placeholder_replacements:
       replacement: '<red>Nether</red>'
     - placeholder: End
       replacement: '<yellow>End</yellow>'
-  '%player_biome%':
-    - placeholder: PLAINS
-      replacement: '<red>Plains</red>'
-    - placeholder: DESERT
-      replacement: '<yellow>Desert</yellow>'
-    - placeholder: RIVER
-      replacement: '<aqua>River</aqua>'
 ```
 
-## Specified Cases
+---
 
-### Vanish Status
+## Vanish status
 
-If you want to display a player's vanish status, you can use the `%advancedvanish_is_vanished%` placeholder. This placeholder returns a boolean value, so you can use it to show the player's vanish status in the tab list or any other area where placeholders are supported.
+For `%advancedvanish_is_vanished%`, the default config maps `Yes` / `No` to styled text. Adjust the `placeholder` strings to match **exactly** what your vanish plugin returns.
 
-### Example Vanish Status Replacement
+---
 
-```yaml
-placeholder_replacements:
-  '%advancedvanish_is_vanished%':
-    - placeholder: 'true'
-      replacement: <gray>VANISHED</gray>
-    - placeholder: 'false'
-      replacement: <green>Visible</green>
-```
+## Catch-all row (`ELSE`)
 
-This configuration allows you to display the appropriate status based on whether the player is vanished or not.
+If no row matches the resolved placeholder output, the plugin looks for a row whose `placeholder` is **`Else`** or **`ELSE`** (case-insensitive; same as the internal `ELSE` fallback in code). Use that as a default replacement for all other values.
 
-### Else Clause
-
-The **Else clause** is used to define a default replacement when no specific placeholder matches. It’s a catch-all option for any placeholder that doesn't have a defined replacement.
-
-### Example:
-
-```yaml
-placeholder_replacements:
-  '%localtime_timezone_en_US,EEEE%':
-    - placeholder: Monday
-      replacement: <red>Monday</red>
-    - placeholder: Tuesday
-      replacement: <gold>Tuesday</gold>
-    - placeholder: Else
-      replacement: <green>Other day</green>
-```
+See also the [Configuration](../configuration.md) page for the full `settings.yml` overview.

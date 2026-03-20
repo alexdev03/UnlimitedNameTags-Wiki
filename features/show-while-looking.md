@@ -1,11 +1,6 @@
----
-description: >-
-  When showWhileLooking is enabled you will only see player's nametag if you are
-  looking near their head or if the distance between you and the player is less
-  than 5 blocks
----
+# Show while looking
 
-# ShowWhileLooking
+When `showWhileLooking` is enabled, you only see a player’s name tag when you are looking near their head or when you are within a short distance (see in-game behaviour).
 
 ```yaml
 showWhileLooking: true

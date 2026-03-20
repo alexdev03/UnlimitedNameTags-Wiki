@@ -1,12 +1,8 @@
----
-description: Display entities support 4 different billboard styles.
----
+# Billboards
 
-# Billboards 🎥
+**UnlimitedNameTags** uses **text display** entities with four **billboard** modes. Each mode controls how the name tag behaves relative to the player.
 
-**UnlimitedNameTags** supports four different billboard styles for displaying name tags. Each style controls how the name tag behaves relative to the player.
-
-### Available Billboards:
+### Available modes
 
 - **CENTER** (Default)
 - **HORIZONTAL**
