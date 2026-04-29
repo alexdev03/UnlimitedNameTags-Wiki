@@ -112,7 +112,7 @@ animation:
 
 ---
 
-## Example: rotating item
+## Example: Rotating Item
 
 ```yaml
 displayGroups:
@@ -127,6 +127,23 @@ displayGroups:
       degreesPerSecond: 120
       speed: 1.0
       cullBeyondBlocks: 32
+```
+
+## Example: Pulsing Text
+
+```yaml
+displayGroups:
+  - lines:
+      - text: '<gold>VIP</gold>'
+    scale: 1.0
+    yOffset: 0.0
+    animation:
+      type: pulse_scale
+      minMultiplier: 0.9
+      maxMultiplier: 1.1
+      pulsesPerSecond: 0.8
+      speed: 1.0
+      cullBeyondBlocks: 24
 ```
 
 ---

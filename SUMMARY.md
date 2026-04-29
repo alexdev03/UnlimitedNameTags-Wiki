@@ -1,10 +1,13 @@
 # Table of contents
 
 * [Overview](README.md)
+* [Getting Started](getting-started.md)
 * [Configuration](configuration.md)
+* [Commands & Permissions](commands-permissions.md)
 * [Performance](performance.md)
 * [FAQ](faq.md)
-* [Commands & permissions](commands-permissions.md)
+* [Migration Guide](migration.md)
+* [Developer API](api.md)
 * [Integrations](integrations/integrations.md)
 * [Features](features/README.md)
   * [Display groups](features/display-groups.md)

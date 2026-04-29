@@ -18,23 +18,26 @@ This wiki goes with **[UnlimitedNameTags](https://github.com/alexdev03/Unlimited
 
 ---
 
-## Where to start
+## Where to Start
 
-| Page | What you'll find |
+| Page | What you’ll find |
 |------|------------------|
+| [Getting Started](getting-started.md) | Installation, first run, minimal working config |
 | [Configuration](configuration.md) | Main settings file explained step by step |
-| [Display groups](features/display-groups.md) | Stacking multiple lines, conditions, text vs item vs block |
+| [Display Groups](features/display-groups.md) | Stacking multiple rows, conditions, text vs item vs block |
 | [Performance](performance.md) | If the server feels heavy — what to turn down or slow |
 | [FAQ](faq.md) | Common “why doesn’t this work?” answers |
-| [Commands & permissions](commands-permissions.md) | `/unt` and who can use what |
+| [Commands & Permissions](commands-permissions.md) | `/unt` and who can use what |
+| [Migration Guide](migration.md) | Upgrading from an older config version |
+| [Developer API](api.md) | Java API for integrating your plugin with UNT |
 | [Integrations](integrations/integrations.md) | Other plugins (Nexo, Geyser, PlaceholderAPI, …) |
 
-### Feature guides
+### Feature Guides
 
 - [Animations](features/animations.md) — moving or colour-cycling text and tags
 - [Billboard](features/billboards.md) — how the tag turns toward the camera
-- [Placeholder replacements](features/placeholders-replacements.md) — turn raw placeholder text into nicer labels
-- [Show while looking](features/show-while-looking.md) — only show the tag when someone looks at the player
+- [Placeholder Replacements](features/placeholders-replacements.md) — turn raw placeholder text into nicer labels
+- [Show While Looking](features/show-while-looking.md) — only show the tag when someone looks at the player
 - [Advanced (`advanced.yml`)](features/advanced-yml.md) — fine-tune helmet height by hand
 - [Performance](performance.md) — optional tuning when many players are online
 
