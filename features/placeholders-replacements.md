@@ -9,9 +9,9 @@ UnlimitedNameTags supports **placeholder replacements**: map raw PlaceholderAPI 
 
 ## Configuration
 
-Replacements are set in **`settings.yml`** under the top-level key **`placeholdersReplacements`** (camelCase, ConfigLib default).
+In **`settings.yml`**, top-level key **`placeholdersReplacements`** (camelCase, ConfigLib).
 
-You list entries per placeholder string; each entry has `placeholder` (exact output to match) and `replacement` (what to show instead). Order matters: first match wins.
+For each placeholder name you list entries with `placeholder` (**exact** string to match) and `replacement` (text to show). **Order:** first match wins.
 
 ---
 
@@ -43,14 +43,22 @@ placeholdersReplacements:
 
 ---
 
+## YAML reserved words
+
+In YAML 1.1, `Yes` / `No` / `On` / `Off` may parse as booleans. If the placeholder output is **literally** `Yes`, use **quotes**:
+
+```yaml
+placeholder: "Yes"
+```
+
 ## Vanish status
 
-For `%advancedvanish_is_vanished%`, the default config maps `Yes` / `No` to styled text. Adjust the `placeholder` strings to match **exactly** what your vanish plugin returns.
+For `%advancedvanish_is_vanished%`, the default config maps `Yes` / `No` to styled text. Align `placeholder` strings with **exactly** what your vanish plugin returns.
 
 ---
 
 ## Catch-all row (`ELSE`)
 
-If no row matches the resolved placeholder output, the plugin looks for a row whose `placeholder` is **`Else`** or **`ELSE`** (case-insensitive; same as the internal `ELSE` fallback in code). Use that as a default replacement for all other values.
+If no row matches the resolved output, the plugin looks for a row whose `placeholder` is **`Else`** or **`ELSE`** (case-insensitive). Use that as a fallback for all other values.
 
-See also the [Configuration](../configuration.md) page for the full `settings.yml` overview.
+See also [Configuration](../configuration.md).

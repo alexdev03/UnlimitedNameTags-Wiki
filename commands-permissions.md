@@ -1,33 +1,33 @@
-# Commands and permissions
+# Commands & permissions
 
-Commands for managing name tags. Aliases: `/unt`, `/unlimitednametags`.
+Aliases: **`/unt`**, **`/unlimitednametags`**.
 
 ---
 
 ## Commands
 
-### Main
+### General
 
 #### `/unt`
 
-- **Description:** Shows the plugin version and lists available subcommands.
+- **Description:** Shows the plugin version and lists subcommands.
 - **Usage:** `/unt`
-- **Permission:** *(none)*
+- **Permission:** none
 
 ---
 
 #### `/unt reload`
 
-- **Description:** Reloads configuration and refreshes name tag state **without** restarting the server.
+- **Description:** Reloads configuration and refreshes nametag state **without** restarting the server.
 - **Usage:** `/unt reload`
-- **Behavior:** Reloads `settings.yml` and, if the file exists, optional `advanced.yml`. Also reloads the name tag manager and placeholder manager.
+- **Behaviour:** Reloads `settings.yml` and, if present, `advanced.yml`; refreshes the nametag manager and placeholder manager.
 - **Permission:** `unt.reload`
 
 ---
 
 #### `/unt debugger <true|false>`
 
-- **Description:** Turns **debug mode** for the name tag system on or off (verbose / diagnostic behaviour in-game).
+- **Description:** Turns **persistent debug mode** for the nametag system on or off.
 - **Usage:** `/unt debugger true` or `/unt debugger false`
 - **Permission:** `unt.debug`
 
@@ -35,17 +35,17 @@ Commands for managing name tags. Aliases: `/unt`, `/unlimitednametags`.
 
 #### `/unt debug`
 
-- **Description:** Runs a **one-shot debug** action for the executing user (inspection / troubleshooting output from the name tag manager). This is **not** the same as `/unt debugger`, which toggles persistent debug mode.
+- **Description:** Runs a **one-shot** debug for the command sender (unlike `/unt debugger`, which toggles persistent debug).
 - **Usage:** `/unt debug`
 - **Permission:** `unt.debug`
 
 ---
 
-### Name tag management
+### Nametag management
 
 #### `/unt show <player>`
 
-- **Description:** Shows the name tag for the given player (to the server / tracking system).
+- **Description:** Shows the nametag for the given player (server / tracking side).
 - **Usage:** `/unt show <player>`
 - **Example:** `/unt show AlexDev`
 - **Permission:** `unt.show`
@@ -54,7 +54,7 @@ Commands for managing name tags. Aliases: `/unt`, `/unlimitednametags`.
 
 #### `/unt hide <player>`
 
-- **Description:** Hides the name tag for the given player.
+- **Description:** Hides the nametag for the given player.
 - **Usage:** `/unt hide <player>`
 - **Example:** `/unt hide AlexDev`
 - **Permission:** `unt.hide`
@@ -63,8 +63,8 @@ Commands for managing name tags. Aliases: `/unt`, `/unlimitednametags`.
 
 #### `/unt refresh <player>`
 
-- **Description:** Refreshes how you see that player’s name tag (for the **command sender** only).
-- **Usage:** `/unt refresh <player>` *(player-only command sender)*
+- **Description:** Refreshes how **you** see that player’s nametag (command sender only).
+- **Usage:** `/unt refresh <player>` *(player sender only)*
 - **Example:** `/unt refresh AlexDev`
 - **Permission:** `unt.refresh`
 
@@ -90,19 +90,19 @@ Commands for managing name tags. Aliases: `/unt`, `/unlimitednametags`.
 
 ---
 
-### Other players’ name tags (per viewer)
+### Other players’ nametags (per viewer)
 
 #### `/unt hideOtherNametags [-h]`
 
-- **Description:** Hides other players’ name tags for you.
-- **Usage:** `/unt hideOtherNametags` or `/unt hideOtherNametags -h` *(hide confirmation message when supported)*
+- **Description:** Hides other players’ nametags for you.
+- **Usage:** `/unt hideOtherNametags` or `/unt hideOtherNametags -h` *(hide confirmation when supported)*
 - **Permission:** `unt.hideOtherNametags`
 
 ---
 
 #### `/unt showOtherNametags [-h]`
 
-- **Description:** Shows other players’ name tags again for you.
+- **Description:** Shows other players’ nametags again for you.
 - **Usage:** `/unt showOtherNametags` or `/unt showOtherNametags -h`
 - **Permission:** `unt.showOtherNametags`
 
@@ -110,12 +110,12 @@ Commands for managing name tags. Aliases: `/unt`, `/unlimitednametags`.
 
 ## Default permissions
 
-Configure these in your permissions plugin (e.g. LuckPerms).
+Configure in your permissions plugin (e.g. LuckPerms).
 
 | Permission | Purpose |
 |------------|---------|
-| `unt.shownametags` | **Default: yes** for normal players. If removed, that player will not see **other** players’ UnlimitedNameTags name tags. |
-| `unt.showownnametag` | Allows seeing **your own** custom name tag; without it, others can still see yours (subject to `showCurrentNameTag` in config). |
+| `unt.shownametags` | **Default: yes** for normal players. If removed, that player will not see **other** players’ UnlimitedNameTags nametags. |
+| `unt.showownnametag` | Allows seeing **your own** custom nametag; without it, others can still see yours (subject to `showCurrentNameTag` in config). |
 
 ---
 

@@ -1,54 +1,66 @@
-# Billboards
+# Billboard
 
-**UnlimitedNameTags** uses **text display** entities with four **billboard** modes. Each mode controls how the name tag behaves relative to the player.
-
-### Available modes
-
-- **CENTER** (Default)
-- **HORIZONTAL**
-- **VERTICAL**
-- **FIXED**
+Display entities use Minecraft **billboard constraints** to orient the nametag relative to the viewer. Set a global default (`defaultBillboard`) and optionally a **`billboard`** on each `displayGroup`.
 
 ---
 
-## **CENTER** 🔘
+## Modes
 
-The **Center** billboard is the default style. The name tag stays centered above the player’s head and does not move along any axis.
+| Value | Typical behaviour |
+|-------|-------------------|
+| **CENTER** | Standard billboard-style facing; balanced toward the viewer (closest to vanilla feel). |
+| **HORIZONTAL** | Stronger horizontal (yaw) component; less vertical roll in many setups. |
+| **VERTICAL** | Stronger pitch (vertical tilt) component. |
+| **FIXED** | Fixed orientation relative to the entity (does not face the camera like CENTER). |
 
-<figure>
-  <img src="https://i.imgur.com/LBlke9Q.gif" alt="CENTER Billboard" />
-  <figcaption>Centered Billboard (Default)</figcaption>
-</figure>
-
----
-
-## **HORIZONTAL** ➡️
-
-The **Horizontal** billboard moves along the **X-axis**. The name tag moves left or right as the player moves.
-
-<figure>
-  <img src="https://i.imgur.com/Z8lALCR.gif" alt="HORIZONTAL Billboard" />
-  <figcaption>Horizontal Billboard (Moves along the X-axis)</figcaption>
-</figure>
+The GIFs below are illustrative; test in-game for your pack and scale.
 
 ---
 
-## **VERTICAL** ⬆️
+## CENTER (default)
 
-The **Vertical** billboard moves along the **Y-axis**. The name tag moves up or down as the player changes elevation.
+```yaml
+defaultBillboard: CENTER
+```
 
-<figure>
-  <img src="https://i.imgur.com/uNIAC4y.gif" alt="VERTICAL Billboard" />
-  <figcaption>Vertical Billboard (Moves along the Y-axis)</figcaption>
-</figure>
+![CENTER](https://i.imgur.com/LBlke9Q.gif)
 
 ---
 
-## **FIXED** 🔒
+## HORIZONTAL
 
-The **Fixed** billboard does not move with the player’s view. It stays fixed in the world space but follows the player's movement in the world.
+```yaml
+defaultBillboard: HORIZONTAL
+```
 
-<figure>
-  <img src="https://i.imgur.com/ukpMPq5.gif" alt="FIXED Billboard" />
-  <figcaption>Fixed Billboard (Follows the player's movement in the world)</figcaption>
-</figure>
+![HORIZONTAL](https://i.imgur.com/Z8lALCR.gif)
+
+---
+
+## VERTICAL
+
+```yaml
+defaultBillboard: VERTICAL
+```
+
+![VERTICAL](https://i.imgur.com/uNIAC4y.gif)
+
+---
+
+## FIXED
+
+```yaml
+defaultBillboard: FIXED
+```
+
+![FIXED](https://i.imgur.com/ukpMPq5.gif)
+
+---
+
+## Command vs per-row
+
+- Global default: `defaultBillboard` in `settings.yml`.
+- Per row: `billboard` on the `displayGroup`.
+- In-game: **`/unt billboard <CENTER|HORIZONTAL|VERTICAL|FIXED>`** (permission `unt.billboard`) — updates the default per command implementation.
+
+See also [Configuration](../configuration.md).

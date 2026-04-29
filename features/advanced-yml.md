@@ -1,26 +1,26 @@
-# 🧢 **Optional `advanced.yml` (helmet height rules)**
+# Optional `advanced.yml` (helmet height rules)
 
-**UnlimitedNameTags** can read an **optional** file named `advanced.yml` in the plugin data folder (`plugins/UnlimitedNameTags/advanced.yml`). This file is **never created automatically**: if it does not exist, the plugin behaves exactly as before.
+**UnlimitedNameTags** can read an **optional** file `advanced.yml` in the plugin data folder (`plugins/UnlimitedNameTags/advanced.yml`). It is **never created automatically**: if missing, behaviour is unchanged.
 
-Use it when you need **manual** rules to raise the name tag for specific helmets (for example **custom model data**, **equippable model keys**, or **material**). This is especially useful when automatic hooks do not match your items (for example **ItemsAdder** is not active in the current release — use `advanced.yml` for those items, or rely on **Nexo** / **Oraxen** where supported).
+Use it for **manual** rules to raise the nametag for specific helmets (**custom model data**, **equippable model**, **material**, etc.). Useful when automatic hooks do not match your items (e.g. **ItemsAdder** not active in the current build — use `advanced.yml` or **Nexo** / **Oraxen** where supported).
 
 ---
 
-## **How it works**
+## How it works
 
 * Rules live under **`helmetHeightRules`** (a list).
-* Each rule adds vertical offset using the same **`height`** unit as other hat hooks (e.g. Nexo / ItemsAdder).
-* Rules are sorted by **`priority`** (higher first). The **first rule that matches** the player’s helmet applies; its `height` is used.
-* This hook is registered **before** other hat integrations, so a matching `advanced.yml` rule **wins** over Nexo / ItemsAdder / Oraxen / HMCCosmetics when it returns a height **greater than 0**.
-* Reload with **`/unt reload`** (same as `settings.yml` for the main config).
+* Each rule adds vertical offset using the same **`height`** unit as other hat hooks (Nexo, Oraxen, …).
+* Rules are sorted by **`priority`** (higher first). The **first matching** rule for the player’s helmet applies; its `height` is used.
+* This hook registers **before** other integrations: a matching `advanced.yml` rule **wins** over Nexo / ItemsAdder / Oraxen / HMCCosmetics when it returns height **> 0**.
+* Reload with **`/unt reload`** (same as `settings.yml`).
 
 ---
 
-## **YAML format (ConfigLib)**
+## YAML format (ConfigLib)
 
 Keys use **camelCase** (ConfigLib default), not kebab-case.
 
-### **Example**
+### Example
 
 ```yaml
 helmetHeightRules:
@@ -44,51 +44,51 @@ helmetHeightRules:
   # permission: "myserver.bighelmet"
 ```
 
-A full copy-paste template is also in the main plugin repo as [`advanced.example.yml`](https://github.com/alexdev03/UnlimitedNameTags/blob/main/advanced.example.yml).
+Full template in the main repo: [`advanced.example.yml`](https://github.com/alexdev03/UnlimitedNameTags/blob/main/advanced.example.yml).
 
 ---
 
-## **Rule fields**
+## Rule fields
 
 | Field | Required | Description |
 |--------|-----------|-------------|
-| `priority` | No (default `0`) | Higher values are evaluated first. |
-| `height` | Yes (must be **> 0**) | Vertical offset; same scale as other hat hooks. |
-| `material` | No* | Bukkit material name, e.g. `PLAYER_HEAD`, `LEATHER_HELMET`. |
+| `priority` | No (default `0`) | Higher values evaluated first. |
+| `height` | Yes (**> 0**) | Vertical offset; same scale as other hat hooks. |
+| `material` | No* | Bukkit material name, e.g. `PLAYER_HEAD`. |
 | `customModelData` | No* | Exact **CustomModelData** match. |
-| `customModelDataMin` / `customModelDataMax` | No* | Inclusive CMD range; **both** must be set. If a range is set, `customModelData` is **ignored** (the server logs a warning). |
-| `equippableModel` | No* | `namespace:key` for the equippable model (**Minecraft 1.21.3+**), e.g. `mypack:item/my_hat`. |
-| `worlds` | No | If non-empty, the player must be in one of these world **names**. |
-| `permission` | No | If set, the player must have this permission. |
+| `customModelDataMin` / `customModelDataMax` | No* | Inclusive CMD range; **both** required. If a range is set, `customModelData` is ignored (console warning). |
+| `equippableModel` | No* | `namespace:key` for equippable model (**1.21.3+**). |
+| `worlds` | No | If non-empty, player must be in one of these world **names**. |
+| `permission` | No | If set, player must have this permission. |
 
-\* **At least one** of the following must be set, or the rule never applies: `material`, `customModelData`, both `customModelDataMin` and `customModelDataMax`, or `equippableModel`.
+\* **At least one** of: `material`, `customModelData`, both `customModelDataMin` and `customModelDataMax`, or `equippableModel`, or the rule never applies.
 
 ---
 
-## **Matching logic**
+## Matching logic
 
-All conditions you specify on a rule must pass:
+All conditions on a rule must pass:
 
 1. `permission` (if set)
 2. `worlds` (if non-empty)
-3. `material` (if set) — must match the helmet item’s type; unknown material names are warned in the console.
-4. `equippableModel` (if set) — helmet must have equippable meta and the same model key.
-5. CMD **range** (if both min and max set), or **exact** `customModelData` (if set and no full range).
+3. `material` (if set) — must match helmet item type; unknown materials log a warning
+4. `equippableModel` (if set) — equippable meta and same model key
+5. CMD **range** (if both min and max set), or exact `customModelData` (if set and no full range)
 
 Material-only rules (no CMD / equippable) match **any** stack of that material.
 
 ---
 
-## **Errors and reload**
+## Errors and reload
 
-* If `advanced.yml` is **missing**: defaults are used (no extra helmet offset from this file).
-* If the file **exists** but fails to load on **first** start: the plugin uses empty rules for this file.
-* If it fails on **`/unt reload`**: the **previous** successfully loaded `advanced` data is kept.
-* Invalid rules (e.g. `height <= 0`, only one of min/max CMD, no item matcher) are **logged**; they will not apply.
+* **Missing** file: no extra offset from this file.
+* File exists but **fails on first start**: empty rules for `advanced.yml`.
+* Failure on **`/unt reload`**: **previous** successfully loaded `advanced` data is kept.
+* Invalid rules (`height <= 0`, only one of min/max CMD, no item matcher): **logged**; they do not apply.
 
 ---
 
-## **See also**
+## See also
 
 * [Configuration (`settings.yml`)](../configuration.md)
-* [Integrations](../integrations/integrations.md) — Nexo, ItemsAdder, hat-related plugins
+* [Integrations](../integrations/integrations.md) — Nexo, ItemsAdder, hats

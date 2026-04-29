@@ -1,86 +1,54 @@
-# 🏷️ Overview
+# UnlimitedNameTags — Wiki
 
-_A powerful tool to customize and manage player name tags like never before!_
+> Stacked name tags for Paper — **text**, **items**, and **blocks**; PlaceholderAPI; display-entity animations; developer API.
 
-Welcome to the official documentation for the **UnlimitedNameTags** plugin. This wiki provides detailed information about the plugin's features, installation, configuration, commands, and integrations.
+Documentation for **[UnlimitedNameTags](https://github.com/alexdev03/UnlimitedNameTags)**.
 
----
+[![Discord](https://img.shields.io/discord/1263414013040263249?label=Discord&logo=discord&color=5865F2)](https://discord.gg/W4Fu8fqCKs)
+[![Release](https://img.shields.io/github/v/release/alexdev03/UnlimitedNametags?color=blue)](https://github.com/alexdev03/UnlimitedNameTags/releases/latest)
 
-[![Discord](https://img.shields.io/discord/1263414013040263249?label=Discord\&logo=discord\&color=5865F2)](https://discord.gg/W4Fu8fqCKs)\
-[![CodeFactor](https://www.codefactor.io/repository/github/alexdev03/unlimitednametags/badge)](https://www.codefactor.io/repository/github/alexdev03/unlimitednametags)\
-[![API Version](https://img.shields.io/github/v/release/alexdev03/UnlimitedNametags?\&color=blue)](https://github.com/alexdev03/UnlimitedNametags/releases/latest)
+| | |
+|:--|:--|
+| **Host** | Paper **1.20.1+** (Spigot 1.20.2+ supported; Paper recommended) |
+| **Depends on** | [PacketEvents](https://modrinth.com/plugin/packetevents) (required) |
+| **Config** | `plugins/UnlimitedNameTags/settings.yml` (schema v4) |
+| **Optional** | `advanced.yml` — helmet height rules (not auto-generated) |
 
-![Unlimited Name Tags in Action](https://i.imgur.com/w7zlGaO.gif)
-
-## **Table of Contents**
-
-1. [Overview](./#overview) 📝
-2. [Requirements](./#requirements) 📋
-3. **Features** ✨
-   * [Advanced (`advanced.yml`)](features/advanced-yml.md) 🧢
-   * [Animations](features/animations.md) 🎨
-   * [Billboards](features/billboards.md) 🎥
-   * [LineGroups](features/linesgroups.md) 🏷️
-   * [Placeholder replacements](features/placeholders-replacements.md) 🔄
-   * [Show while looking](features/show-while-looking.md) 👀
-4. [Configuration](configuration.md) 🔧
-5. [Commands and permissions](commands-permissions.md) 🖱️🔑
-6. [Integrations](integrations/integrations.md) 🔗
-7. [Wiki style guide](STYLE.md) ✏️
-8. [Support](./#-support) 🆘
+![Name tags preview](https://i.imgur.com/w7zlGaO.gif)
 
 ---
 
-## **Overview**
+## Quick links
 
-Unlimited Name Tags is a powerful plugin for Minecraft servers that allows advanced customization and management of player name tags. It is compatible with **Paper 1.20.1+** and **Spigot 1.20.2+**, with **Paper** being highly recommended for optimal performance and compatibility with advanced features.
+| Page | Contents |
+|------|----------|
+| [Configuration](configuration.md) | `settings.yml`: `displayGroups`, globals, formatting |
+| [Display groups](features/display-groups.md) | Stacked rows, `when` (JEXL), TEXT / ITEM / BLOCK |
+| [Performance](performance.md) | Reducing CPU load, ticks, and network |
+| [FAQ](faq.md) | Common questions and issues |
+| [Commands & permissions](commands-permissions.md) | `/unt`, viewer permissions |
+| [Integrations](integrations/integrations.md) | PAPI, ViaVersion, Nexo, Geyser, etc. |
 
-### Key Features:
+### Features
 
-* Customizable Name Tags (colors, formats, extra details)
-* Dynamic Placeholder Support via [PlaceholderAPI](https://github.com/PlaceholderAPI/PlaceholderAPI)
-* Smooth Name Tag Movement (client-side, no lag and no teleport)
-* Compatibility with vanish plugins
-* Customizable tag behavior based on player relationships
-* Easy-to-configure settings via `settings.yml`
-* Optional [`advanced.yml`](features/advanced-yml.md) for manual helmet → name tag height rules (custom CMD, equippable models, etc.)
-
----
-
-## **Requirements**
-
-* Minecraft **Paper 1.20.1+** or **Spigot 1.20.2+**
-* [PacketEvents](https://www.spigotmc.org/resources/packetevents-api.80279/)
-
-## 📜 **Supported Versions**
-
-* **Paper**: Fully supported from **1.20.1+** _(highly recommended)_.
-* **Spigot**: Supported from **1.20.2+**, but Paper is preferred for enhanced performance.
+- [Animations](features/animations.md) — phase placeholders (`#phase-mm#`) and display animations (`rotate`, `bob`, …)
+- [Billboard](features/billboards.md) — `CENTER`, `HORIZONTAL`, `VERTICAL`, `FIXED`
+- [Placeholder replacements](features/placeholders-replacements.md) — rewrite PAPI output strings
+- [Show while looking](features/show-while-looking.md) — tag only when aiming at the player
+- [Advanced (`advanced.yml`)](features/advanced-yml.md) — manual helmet / CMD height rules
 
 ---
 
-## 📜 **Supported Client Versions**
+## Supported versions
 
-**Java:**
+**Server:** Paper 1.20.1+; Spigot 1.20.2+ (Paper preferred).
 
-* **1.19.4 or newer** is required for **custom UnlimitedNameTags** (text display) name tags to render. Older clients lack the necessary protocol support.
+**Java clients:** custom name tags (text displays) require **1.19.4 or newer**. Older clients lack protocol support; this is not a plugin bug. **ViaVersion on the server does not** make sub-1.19.4 clients supported for these tags.
 
-> **Important:** Players using a **Java client older than 1.19.4** will **not** see custom name tags from this plugin. This is a hard limitation, not a bug.
->
-> **Support policy:** Any support request related to clients **below 1.19.4** (including combinations with ViaVersion / ViaBackwards) **will be ignored**. Use a supported client version.
-
-The plugin may use **ViaVersion** on the server to detect viewer capabilities; that does **not** make sub-1.19.4 clients supported for displaying these name tags.
-
-**Bedrock:** ([Waiting for this pull request to be merged](https://github.com/GeyserMC/Geyser/pull/5157))
-
-* Latest
-
-> **Note:** Bedrock clients do not support text displays like Java; not all features match. Multi-line and RGB-style colours may work; backgrounds and shadows often will not.
+**Bedrock (Geyser):** partial support; text displays do not match Java (backgrounds, shadows, multi-line may differ).
 
 ---
 
-## 💬 **Support**
+## Support
 
-Need help? Join our [Discord Server](https://discord.gg/W4Fu8fqCKs)! For **pre-sale questions**, feel free to use the **#chat** channel. If you need support, please open a ticket and ensure your license is verified to gain access to assistance.
-
----
+[Discord](https://discord.gg/W4Fu8fqCKs) — for help after purchase, open a ticket with verified license where required.

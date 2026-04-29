@@ -1,9 +1,12 @@
 # Show while looking
 
-When `showWhileLooking` is enabled, you only see a player’s name tag when you are looking near their head or when you are within a short distance (see in-game behaviour).
+With **`visibility.showWhileLooking: true`** in `settings.yml`, a viewer only sees another player's nametag when **aiming at them** (plus the usual checks: permissions, world, vanish, etc.).
 
 ```yaml
-showWhileLooking: true
+visibility:
+  showWhileLooking: true
 ```
 
-<figure><img src="https://i.imgur.com/VHJ8IxQ.gif" alt=""><figcaption></figcaption></figure>
+The plugin runs periodic checks to update visibility and packets; on very large servers consider the impact on load ([Performance](../performance.md)).
+
+![Example](https://i.imgur.com/VHJ8IxQ.gif)
