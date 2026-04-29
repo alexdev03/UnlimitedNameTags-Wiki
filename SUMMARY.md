@@ -13,3 +13,4 @@
   * [Placeholder replacements](features/placeholders-replacements.md)
   * [Show while looking](features/show-while-looking.md)
   * [Advanced (`advanced.yml`)](features/advanced-yml.md)
+* [Full `advanced.example.yml`](reference/advanced.example.yml)

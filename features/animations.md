@@ -1,15 +1,15 @@
 # Animations
 
-Two families of effects:
+Two kinds of effects you can use:
 
-1. **Text animations** — **phase** placeholders that change colours/gradients in lines (MiniMessage, MineDown, …), updated with placeholder refresh.
-2. **Display animations** — pose updates on **display entities** (`animation:` under each `displayGroup`).
+1. **Text “phase” tokens** — special pieces inside a line (like `#phase-mm#`) that cycle colours or gradients when the tag refreshes.
+2. **Whole-tag motion** — an **`animation:`** block under a row makes the display **move** (spin, bob, etc.).
 
 ---
 
-## Phase placeholders (in lines)
+## Phase placeholders (inside line text)
 
-These are **not** YAML `animation:` blocks — they are **inline tokens** in TEXT lines, replaced each placeholder refresh.
+These are **not** the same as the YAML **`animation:`** section — they are **short codes** written directly in TEXT lines. They update whenever placeholders refresh.
 
 | Token | Role |
 |-------|------|
@@ -20,9 +20,9 @@ These are **not** YAML `animation:` blocks — they are **inline tokens** in TEX
 | `#-phase-mm-g#` | Negative phase (gradient) |
 | `#-phase-md#` | Negative phase (MineDown) |
 
-PlaceholderAPI expansion **`unt`** exposes: `%unt_phase-mm%`, `%unt_phase-md%`, `%unt_phase-mm-g%`, `%unt_-phase-mm%`, `%unt_-phase-md%`. There is **no** `%unt_-phase-mm-g%` — use the inline `#-phase-mm-g#` in lines instead.
+PlaceholderAPI expansion **`unt`** also offers: `%unt_phase-mm%`, `%unt_phase-md%`, `%unt_phase-mm-g%`, `%unt_-phase-mm%`, `%unt_-phase-md%`. There is **no** `%unt_-phase-mm-g%` — use **`#-phase-mm-g#`** in the line text instead.
 
-Perceived **speed** ties to **`taskInterval`**: more frequent refresh = faster colour cycling (higher CPU). See [Performance](../performance.md).
+How “fast” phases feel ties to **`taskInterval`** — more refreshes per second = faster cycling but more CPU. See [Performance](../performance.md).
 
 ---
 
@@ -30,24 +30,24 @@ Perceived **speed** ties to **`taskInterval`**: more frequent refresh = faster c
 
 | Setting | Controls |
 |---------|----------|
-| **`taskInterval`** | How often placeholders and text refresh (including `#phase-mm#`). |
-| **`displayAnimationInterval`** | Ticks between **pose** updates if the row has no `animationInterval`. `0` = follow `taskInterval`. |
-| **`animationInterval`** (per row) | Override for that row. |
+| **`taskInterval`** | How often placeholders and phase tokens refresh. |
+| **`displayAnimationInterval`** | Time between **pose** updates if the row has no `animationInterval`. `0` = follow `taskInterval`. |
+| **`animationInterval`** (per row) | Override for that row only. |
 
-**Higher** values = slower motion/refresh and usually **less load**.
+**Higher** numbers = slower motion / refresh and usually **less load**.
 
 ---
 
 ## Display animations (`animation:`)
 
-Every `animation:` block has a **`type`** and optional fields shared by **all** types:
+Every **`animation:`** block has a **`type`** and optional fields shared by **all** types:
 
 | Field | Default | Notes |
 |-------|---------|--------|
 | `enabled` | `true` | If `false`, animation does nothing. |
-| `speed` | `1.0` | Tempo multiplier (1 = default speed for that type). |
+| `speed` | `1.0` | Speed multiplier (1 = default for that type). |
 | `cullBeyondBlocks` | `0` | If &gt; 0, pose updates may be skipped when no viewer is within this distance (blocks). `0` = no culling. |
-| `customProperties` | `{}` | String map for API / integrations; built-in animators ignore unknown keys. |
+| `customProperties` | `{}` | Extra string pairs for APIs; built-in types ignore unknown keys. |
 
 Then each **`type`** adds its own fields (defaults below).
 
@@ -141,7 +141,7 @@ displayGroups:
 | `pulse_scale` | Breathing scale |
 | `wiggle` | Tilt wiggle |
 | `orbit` | Circular motion in XZ |
-| `custom` | Your handler via API |
+| `custom` | For **developers** hooking custom motion |
 
 ---
 

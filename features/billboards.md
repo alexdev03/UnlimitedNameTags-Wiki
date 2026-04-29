@@ -1,6 +1,6 @@
 # Billboard
 
-Display entities use Minecraft **billboard constraints** to orient the nametag relative to the viewer. Set a global default (`defaultBillboard`) and optionally a **`billboard`** on each `displayGroup`.
+Nametag rows can **face the player** in different ways — that facing mode is what we call the **billboard**. Set a default for all rows, and optionally override **per row** with **`billboard`**.
 
 ---
 
@@ -23,7 +23,7 @@ The GIFs below are illustrative; test in-game for your pack and scale.
 defaultBillboard: CENTER
 ```
 
-![CENTER](https://i.imgur.com/LBlke9Q.gif)
+![CENTER](../assets/billboard-center.gif)
 
 ---
 
@@ -33,7 +33,7 @@ defaultBillboard: CENTER
 defaultBillboard: HORIZONTAL
 ```
 
-![HORIZONTAL](https://i.imgur.com/Z8lALCR.gif)
+![HORIZONTAL](../assets/billboard-horizontal.gif)
 
 ---
 
@@ -43,7 +43,7 @@ defaultBillboard: HORIZONTAL
 defaultBillboard: VERTICAL
 ```
 
-![VERTICAL](https://i.imgur.com/uNIAC4y.gif)
+![VERTICAL](../assets/billboard-vertical.gif)
 
 ---
 
@@ -53,7 +53,7 @@ defaultBillboard: VERTICAL
 defaultBillboard: FIXED
 ```
 
-![FIXED](https://i.imgur.com/ukpMPq5.gif)
+![FIXED](../assets/billboard-fixed.gif)
 
 ---
 

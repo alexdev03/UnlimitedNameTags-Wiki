@@ -1,24 +1,27 @@
 # Optional `advanced.yml` (helmet height rules)
 
-**UnlimitedNameTags** can read an **optional** file `advanced.yml` in the plugin data folder (`plugins/UnlimitedNameTags/advanced.yml`). It is **never created automatically**: if missing, behaviour is unchanged.
+You can add a second file next to your main config: **`plugins/UnlimitedNameTags/advanced.yml`**.
 
-Use it for **manual** rules to raise the nametag for specific helmets (**custom model data**, **equippable model**, **material**, etc.). Useful when automatic hooks do not match your items (e.g. **ItemsAdder** not active in the current build — use `advanced.yml` or **Nexo** / **Oraxen** where supported).
+- The plugin **never creates it for you**. If the file does not exist, nothing changes.
+- Use it to **nudge the nametag up or down** when someone wears a specific helmet (custom head, leather with model data, resource-pack items, …).
+- Reload with **`/unt reload`** like the main `settings.yml`.
+
+Handy when automatic pack support (Nexo, Oraxen, …) does not match your item, or ItemsAdder auto-height is not available in your build — see [Integrations](../integrations/integrations.md).
 
 ---
 
 ## How it works
 
-* Rules live under **`helmetHeightRules`** (a list).
-* Each rule adds vertical offset using the same **`height`** unit as other hat hooks (Nexo, Oraxen, …).
-* Rules are sorted by **`priority`** (higher first). The **first matching** rule for the player’s helmet applies; its `height` is used.
-* This hook registers **before** other integrations: a matching `advanced.yml` rule **wins** over Nexo / ItemsAdder / Oraxen / HMCCosmetics when it returns height **> 0**.
-* Reload with **`/unt reload`** (same as `settings.yml`).
+* Rules live under **`helmetHeightRules`** — a **list** you add to yourself.
+* Each rule sets a **`height`** (same kind of number other hat integrations use).
+* **`priority`** — higher numbers are checked **first**. The **first rule that matches** the helmet wins.
+* Manual rules here can **override** automatic height from Nexo / Oraxen / ItemsAdder / HMCCosmetics when they return a height **greater than zero** (see server logs if unsure).
 
 ---
 
-## YAML format (ConfigLib)
+## How to write option names
 
-Keys use **camelCase** (ConfigLib default), not kebab-case.
+Use the spellings below exactly — **no dashes** in names, and **capitals** where shown (e.g. `customModelData`, not `custom-model-data`). Copy from the sample and change the numbers.
 
 ### Example
 
@@ -44,51 +47,51 @@ helmetHeightRules:
   # permission: "myserver.bighelmet"
 ```
 
-Full template in the main repo: [`advanced.example.yml`](https://github.com/alexdev03/UnlimitedNameTags/blob/main/advanced.example.yml).
+Full copy-paste template: [`reference/advanced.example.yml`](../reference/advanced.example.yml).
 
 ---
 
 ## Rule fields
 
-| Field | Required | Description |
-|--------|-----------|-------------|
-| `priority` | No (default `0`) | Higher values evaluated first. |
-| `height` | Yes (**> 0**) | Vertical offset; same scale as other hat hooks. |
-| `material` | No* | Bukkit material name, e.g. `PLAYER_HEAD`. |
-| `customModelData` | No* | Exact **CustomModelData** match. |
-| `customModelDataMin` / `customModelDataMax` | No* | Inclusive CMD range; **both** required. If a range is set, `customModelData` is ignored (console warning). |
-| `equippableModel` | No* | `namespace:key` for equippable model (**1.21.3+**). |
-| `worlds` | No | If non-empty, player must be in one of these world **names**. |
+| Field | Required | What it means |
+|--------|-----------|---------------|
+| `priority` | No (treat as `0` if omitted) | Higher = checked earlier. |
+| `height` | Yes, must be **&gt; 0** | How much to raise the tag. |
+| `material` | No* | Helmet item type, e.g. `PLAYER_HEAD`. |
+| `customModelData` | No* | Exact **custom model data** number on the item. |
+| `customModelDataMin` / `customModelDataMax` | No* | Inclusive range — **both** needed. If you use a range, single `customModelData` is ignored. |
+| `equippableModel` | No* | `namespace:key` style id on **1.21.3+** items. |
+| `worlds` | No | If set, only applies in those world **names**. |
 | `permission` | No | If set, player must have this permission. |
 
-\* **At least one** of: `material`, `customModelData`, both `customModelDataMin` and `customModelDataMax`, or `equippableModel`, or the rule never applies.
+\* At least **one** of: `material`, `customModelData`, both min and max, or `equippableModel` — otherwise the rule never matches.
 
 ---
 
 ## Matching logic
 
-All conditions on a rule must pass:
+Everything on a rule must pass:
 
-1. `permission` (if set)
-2. `worlds` (if non-empty)
-3. `material` (if set) — must match helmet item type; unknown materials log a warning
-4. `equippableModel` (if set) — equippable meta and same model key
-5. CMD **range** (if both min and max set), or exact `customModelData` (if set and no full range)
+1. Permission (if you set one)
+2. World list (if you set one)
+3. Material (if you set one)
+4. Equippable model (if you set one)
+5. Either a **range** of model data or one exact **`customModelData`**
 
-Material-only rules (no CMD / equippable) match **any** stack of that material.
+A rule with only **`material`** matches **any** stack of that item type.
 
 ---
 
-## Errors and reload
+## If something goes wrong
 
-* **Missing** file: no extra offset from this file.
-* File exists but **fails on first start**: empty rules for `advanced.yml`.
-* Failure on **`/unt reload`**: **previous** successfully loaded `advanced` data is kept.
-* Invalid rules (`height <= 0`, only one of min/max CMD, no item matcher): **logged**; they do not apply.
+* **No file** → no extra offset from this feature.
+* **Bad file on first start** → rules load as empty; check console errors.
+* **Bad file on reload** → **previous** good rules stay loaded until you fix YAML.
+* Broken single rules are **skipped** and logged — fix the numbers and reload.
 
 ---
 
 ## See also
 
 * [Configuration (`settings.yml`)](../configuration.md)
-* [Integrations](../integrations/integrations.md) — Nexo, ItemsAdder, hats
+* [Integrations](../integrations/integrations.md) — Nexo, Oraxen, ItemsAdder, hats

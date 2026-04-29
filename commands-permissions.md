@@ -1,6 +1,8 @@
 # Commands & permissions
 
-Aliases: **`/unt`**, **`/unlimitednametags`**.
+Use **`/unt`** in chat (same idea as **`/unlimitednametags`** — either spelling works).
+
+**Permissions** are the nodes you give with LuckPerms, PermissionsEx, or whatever you already use.
 
 ---
 

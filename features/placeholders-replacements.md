@@ -1,17 +1,19 @@
 # Placeholder replacements
 
-UnlimitedNameTags supports **placeholder replacements**: map raw PlaceholderAPI (or other) outputs to different text. Useful for:
-
-- Localising or restyling values (dates, biomes, worlds).
-- Turning boolean vanish placeholders into short labels.
+Sometimes PlaceholderAPI returns ugly or long text — a biome id, a raw `Yes`/`No`, a timestamp you want prettier. **Placeholder replacements** let you say: “when the result is **exactly this**, show **that** instead.”
 
 ---
 
-## Configuration
+## Where it lives
 
-In **`settings.yml`**, top-level key **`placeholdersReplacements`** (camelCase, ConfigLib).
+In **`settings.yml`**, look for **`placeholdersReplacements`** near the top (same area as other global options — it may sit under a parent section depending on your plugin version).
 
-For each placeholder name you list entries with `placeholder` (**exact** string to match) and `replacement` (text to show). **Order:** first match wins.
+For each placeholder you list one or more pairs:
+
+- **`placeholder`** — the **exact** text to match (case handled as documented for your version)
+- **`replacement`** — what players should see
+
+**First match wins** if you list several rows.
 
 ---
 
@@ -20,7 +22,7 @@ For each placeholder name you list entries with `placeholder` (**exact** string 
 ```yaml
 placeholdersReplacements:
   '%some_placeholder%':
-    - placeholder: RawValueFromPAPI
+    - placeholder: RawValueFromPlaceholder
       replacement: '<green>Nicer text</green>'
     - placeholder: OtherValue
       replacement: '<red>…</red>'
@@ -43,22 +45,26 @@ placeholdersReplacements:
 
 ---
 
-## YAML reserved words
+## When the value is `Yes`, `No`, `On`, or `Off`
 
-In YAML 1.1, `Yes` / `No` / `On` / `Off` may parse as booleans. If the placeholder output is **literally** `Yes`, use **quotes**:
+Some words are treated specially by YAML. If PlaceholderAPI literally returns **`Yes`**, write it with **quotes**:
 
 ```yaml
 placeholder: "Yes"
 ```
 
-## Vanish status
-
-For `%advancedvanish_is_vanished%`, the default config maps `Yes` / `No` to styled text. Align `placeholder` strings with **exactly** what your vanish plugin returns.
+Same idea for **`No`** matching a vanish placeholder, etc.
 
 ---
 
-## Catch-all row (`ELSE`)
+## Vanish status
 
-If no row matches the resolved output, the plugin looks for a row whose `placeholder` is **`Else`** or **`ELSE`** (case-insensitive). Use that as a fallback for all other values.
+The default config often maps **`Yes` / `No`** for vanish-style placeholders to short tags like `[V]`. Make sure the **`placeholder`** text matches **exactly** what your vanish plugin prints.
+
+---
+
+## Fallback row (`ELSE`)
+
+Add a line whose **`placeholder`** is **`Else`** or **`ELSE`** to catch **every other** value that did not match above.
 
 See also [Configuration](../configuration.md).

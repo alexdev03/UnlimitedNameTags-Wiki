@@ -1,37 +1,84 @@
 # Configuration (`settings.yml`)
 
-This page covers **`plugins/UnlimitedNameTags/settings.yml`**. The current schema is **config version 4**. For optional helmet height rules see [`advanced.yml`](features/advanced-yml.md).
+Almost everything runs from **`plugins/UnlimitedNameTags/settings.yml`**. You do not need to create it yourself — start the server once with the plugin, then edit the file it generates and run **`/unt reload`**.
+
+For optional helmet-height rules in a separate file, see [Advanced (`advanced.yml`)](features/advanced-yml.md).
 
 ---
 
-## Minimal example
+## How the file is organised
+
+Think of it in three layers:
+
+1. **Global options** — timing, how far tags can be seen, formatting style, and so on. In recent plugin versions these are grouped under headings like **`behavior`**, **`visibility`**, and **`performance`** instead of one long flat list. If your file still has settings at the top level, the plugin will migrate them when possible.
+2. **`nameTags`** — named **presets** (e.g. `default`, `vip`). Each player gets **one** preset: the first in the file they have permission for, or `default` if nothing else matches.
+3. **`placeholdersReplacements`** — optional rules that rewrite what PlaceholderAPI returns before it appears on the tag.
+
+Each preset contains **`displayGroups`**: a **list of rows** stacked above the player (text lines, an item, or a block). The order in the file is top-to-bottom on screen.
+
+---
+
+## About “ticks”
+
+Many numbers in the config are in **ticks**. On a normal server, **20 ticks ≈ 1 second** (20 updates per second). So `taskInterval: 20` usually means “refresh about once per second.”
+
+---
+
+## Example (older flat layout)
+
+Your generated file might look different (newer backgrounds, or settings under `behavior:` / `visibility:`). This sample shows the idea: two stacked text rows, the second only when a balance check passes.
 
 ```yaml
-configVersion: 4
+configVersion: 2
+defaultBillboard: CENTER
+taskInterval: 20
+displayAnimationInterval: 1
+sneakOpacity: 70
+yOffset: 0.3
+viewDistance: 60
+format: MINIMESSAGE
+disableDefaultNameTag: true
+forceDisableDefaultNameTag: false
+removeEmptyLines: true
+showWhileLooking: false
+obscuredNametagThroughWalls: false
+obscuredNametagOpacity: 55
+obscuredNametagMaxDistance: 48.0
+obscuredNametagCheckInterval: 5
+showCurrentNameTag: false
+componentCaching: false
+placeholderCacheTime: 1
+enableRelationalPlaceholders: false
 
 nameTags:
   default:
+    permission: nametag.default
     displayGroups:
       - lines:
-          - text: '%luckperms_prefix% %player_name% %luckperms_suffix%'
+          - '%luckperms_prefix% %player_name% %luckperms_suffix%'
         background:
+          type: integer
           enabled: true
-          color: "255,0,0"   # R,G,B  — or use hex: "#FF0000"
-          opacity: 200
+          red: 255
+          green: 0
+          blue: 0
+          opacity: 255
           shadowed: true
+          seeThrough: false
         scale: 1.0
         yOffset: 0.0
-
-behavior:
-  taskInterval: 20
-  format: MINIMESSAGE
-  disableDefaultNameTag: true
-
-visibility:
-  sneakOpacity: 70
-
-performance:
-  placeholderCacheTime: 1
+      - lines:
+          - 'Rich rank line'
+        background:
+          type: hex
+          enabled: true
+          hex: '#ffffff'
+          opacity: 255
+          shadowed: false
+          seeThrough: false
+        scale: 1.0
+        yOffset: 0.0
+        when: '%vault_eco_balance% > 1000'
 
 placeholdersReplacements:
   '%advancedvanish_is_vanished%':
@@ -41,161 +88,88 @@ placeholdersReplacements:
       replacement: ''
 ```
 
-Unspecified keys keep their defaults. The file is auto-generated and updated on the first run.
-
 ---
 
-## General structure
+## Global options (what each idea does)
 
-- **`nameTags`**: map of nametag profiles (keys e.g. `default`, `staffer`).
-- The **first** profile for which the player has **`permission`** (if set) wins; otherwise **`default`** is used.
-- Each profile contains **`displayGroups`**: a list of stacked rows (text, item, or block).
-- Settings are grouped into **`behavior`**, **`visibility`**, and **`performance`** sections.
+### `configVersion`
 
----
-
-## `behavior` section
-
-Controls how nametags are refreshed and rendered.
-
-### `taskInterval` (ticks)
-
-Interval between nametag **refreshes** (placeholders, text, etc.). Default `20` (one second). **Higher** = less load, less real-time updates. See [Performance](performance.md).
-
-### `displayAnimationInterval` (ticks)
-
-Ticks between **animation pose** updates when a `displayGroup` does not set its own `animationInterval`. `0` = follow `taskInterval`.
-
-### `yOffset`
-
-Base vertical offset (blocks) of the nametag stack relative to the player. Default `0.3`.
-
-### `viewDistance`
-
-Sent as the display entity **view range** (divided by 160 internally). Not exact blocks — it affects how far the **client** renders the entity. **Lower** = visible from shorter range (less client load). See [Performance](performance.md).
-
-### `compactDisplayGroupStack`
-
-When `true`, rows are stacked without gaps for inactive (hidden) rows. Rows that evaluate their `when` as false don't reserve space. Default `false`.
-
-### `displayGroupLineHeightBlocks`
-
-Approximate height (blocks) of one text line, used for compact stack spacing. Default `0.25`. Client-rendered font height varies.
-
-### `format`
-
-`MINIMESSAGE` (recommended), `MINEDOWN`, `LEGACY`, or `UNIVERSAL`. `UNIVERSAL` is the most flexible but heaviest on CPU.
+Internal version number for the layout of this file. **Do not lower it** manually — let the plugin update it when you upgrade.
 
 ### `defaultBillboard`
 
-Default billboard for rows that do not set their own: `CENTER`, `HORIZONTAL`, `VERTICAL`, `FIXED`. See [Billboard](features/billboards.md).
+How rows face the camera by default: `CENTER`, `HORIZONTAL`, `VERTICAL`, or `FIXED`. See [Billboard](features/billboards.md).
 
-### `disableDefaultNameTag` / `forceDisableDefaultNameTag`
+### `taskInterval` (ticks)
 
-Control whether and how the vanilla nametag is suppressed. `forceDisableDefaultNameTag` helps rare cases with NPCs that share an online player's name.
+How often nametag text and placeholders are **refreshed**. Default is often `20` (~1 second). **Higher** = easier on the server, but money/ping-style text updates less often. See [Performance](performance.md).
 
-### `removeEmptyLines`
+### `displayAnimationInterval` (ticks)
 
-Strips empty lines after parsing. Default `true`.
-
----
-
-## `visibility` section
-
-Controls when and how players see nametags.
+How often **moving** tag animations update their pose if a row does not set its own speed. `0` means “match `taskInterval`.”
 
 ### `sneakOpacity`
 
-Text opacity while the player is **sneaking** (-128…127; `-1` = fully opaque / 255). Below the client threshold (~26) text may not render.
+How faint the tag looks while the player is **sneaking**.
+
+### `yOffset`
+
+Small vertical shift of the whole stack above the player.
+
+### `viewDistance`
+
+How far away clients are told **they might still draw** the tag (not exact block metres — the plugin scales this number internally). **Lower** often means less work for distant players’ games. See [Performance](performance.md).
+
+### `format`
+
+How chat formatting in lines is read: `MINIMESSAGE`, `MINEDOWN`, `LEGACY` (`&` colour codes), or `UNIVERSAL` (heaviest on the CPU).
+
+### `disableDefaultNameTag` / `forceDisableDefaultNameTag`
+
+Hide Minecraft’s built-in name so it does not sit on top of your custom tag. The **force** option helps odd cases where an NPC shares a real player’s name.
+
+### `removeEmptyLines`
+
+Hide blank lines when a placeholder resolves to nothing useful.
 
 ### `showWhileLooking`
 
-If `true`, a viewer only sees the tag when **aiming** at the player (plus other checks). See [Show while looking](features/show-while-looking.md).
+Only show the tag when the **viewer is looking at** that player. See [Show while looking](features/show-while-looking.md).
 
 ### `obscuredNametagThroughWalls`
 
-If `true`, viewers without clear line-of-sight get a dimmed style where supported. **`obscuredNametagCheckInterval`** controls how often LOS is rechecked — raise it to reduce work. **`obscuredNametagMaxDistance`** caps the effect distance (blocks).
-
-### `obscuredNametagOpacity`
-
-Text opacity used for the through-wall dimmed style (-128–127).
+Dim or style tags when there is no clear line of sight. **`obscuredNametagCheckInterval`** controls how often that is rechecked — higher = less frequent checks, easier on the server.
 
 ### `showCurrentNameTag`
 
-Lets the player see their own tag (Lunar-style). Often paired with permission `unt.showownnametag`.
+Whether someone can see **their own** tag above their head (like some client mods). Often used with permission `unt.showownnametag`.
 
-### `allowPerPlayerShowOwnWhenGlobalDisabled`
+### `componentCaching` / `placeholderCacheTime`
 
-When `showCurrentNameTag: false`, players with `unt.showownnametag` can still toggle it on via `/unt preferences showown true`.
-
----
-
-## `performance` section
-
-### `componentCaching`
-
-Caches rendered text components to reduce formatting cost. Can interact with very dynamic placeholders (e.g. MiniPlaceholders). Default `false`.
-
-### `placeholderCacheTime` (ticks)
-
-Global default cache for placeholder values. Effective update rate = `max(behavior.taskInterval, placeholderCacheTime)`. Higher = staler data, lower server load.
-
-### `placeholderUpdateRates`
-
-Per-placeholder refresh rate in ticks. Overrides `placeholderCacheTime` for specific placeholders:
-
-```yaml
-performance:
-  placeholderUpdateRates:
-    "%vault_eco_balance%": 100
-    "%player_ping%": 10
-```
-
-Effective rate = `max(behavior.taskInterval, rate)`. Setting a rate lower than `taskInterval` has no effect. See [Performance](performance.md#performanceplaceholderupdaterates) for full details.
+Optional caching to avoid redoing the same work every refresh. Can make very “live” placeholders look slightly out of date — see [Performance](performance.md).
 
 ### `enableRelationalPlaceholders`
 
-Enables **relational** PlaceholderAPI placeholders (viewer + target). Default `false` — enabling it multiplies PAPI calls by the number of viewers.
+If **on**, some PlaceholderAPI placeholders that need **who is looking at whom** are supported; cost can rise on big servers. Default is usually **off**.
+
+### `placeholdersReplacements`
+
+“When PlaceholderAPI returns exactly **this** text, show **that** instead.” If you need to match the word `Yes` or `No`, put it in **quotes** in YAML so the file does not treat it as true/false. See [Placeholder replacements](features/placeholders-replacements.md).
 
 ---
 
-## `placeholdersReplacements`
-
-Top-level map from placeholder name to a list of `{ placeholder, replacement }` entries. First match wins.
-
-Quote YAML reserved words: `"Yes"`, `"No"`, `"On"`, `"Off"` must be quoted to avoid boolean parsing.
-
-See [Placeholder replacements](features/placeholders-replacements.md).
-
----
-
-## `DisplayGroup` fields (each row)
+## Each row (`displayGroup`) — quick field list
 
 | Field | Role |
 |-------|------|
-| `lines` | Only for **`displayType: TEXT`** (default). Each entry: `{ text: "..." }` or `{ text: "...", when: "expr" }`. |
-| `background` | Optional. If omitted, transparent default. See [Background](features/display-groups.md#background). |
-| `scale` | Entity scale; `<= 0` treated as 1. |
-| `yOffset` | Vertical offset for this row in the stack. |
-| `when` | Optional JEXL + PAPI expression; if false, the row is hidden. |
-| `relationalConditions` | If `true`, `when` and line conditions are evaluated per-viewer (requires PAPI). |
-| `displayType` | `TEXT` (default), `ITEM`, `BLOCK`. |
-| `itemMaterial`, `itemDisplayMode`, `blockMaterial` | For ITEM/BLOCK rows. `lines` is ignored for these types. |
-| `animation` | Animation object. See [Animations](features/animations.md). |
-| `animationInterval` | Ticks between poses for **this** row (overrides `displayAnimationInterval`). |
-| `billboard` | Per-row billboard override. |
+| `lines` | Text lines for a **normal text** row (default type). |
+| `background` | Optional panel behind the text (colour from RGB numbers or hex). |
+| `scale`, `yOffset` | Size and vertical position of that row in the stack. |
+| `when` | Optional **condition**: if it is not true, the row is hidden. You can use placeholders inside the condition (same idea as “balance &gt; 1000” in the example above). |
+| `displayType` | `TEXT` (default), `ITEM`, or `BLOCK`. |
+| `itemMaterial`, `itemDisplayMode`, `blockMaterial` | For **item** or **block** rows instead of text. |
+| `animation` | Movement effect (`rotate`, `bob`, …). |
+| `animationInterval` | How often that row’s animation updates (ticks). |
+| `billboard` | Per-row facing mode; overrides default if set. |
 
-More detail: [Display groups](features/display-groups.md), [Animations](features/animations.md).
-
----
-
-## Migration from older versions
-
-The plugin migrates `settings.yml` automatically on startup and creates a timestamped backup in `plugins/UnlimitedNameTags/migration-backups/` before any change.
-
-| Version | What changed |
-|---------|-------------|
-| 1 | Flat `lines`/`background`/`scale` on each NameTag |
-| 2 | Introduced `displayGroups` with string lines |
-| 3 | Lines became structured objects `{ text, when? }` |
-| **4** | Background unified: no `type:` discriminator; settings moved to `behavior`/`visibility`/`performance` sections |
+Deeper guides: [Display groups](features/display-groups.md), [Animations](features/animations.md).
