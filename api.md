@@ -6,35 +6,45 @@ UnlimitedNameTags exposes a Java API for other plugins to control nametags at ru
 
 ## Adding the Dependency
 
-The API artifact is published via JitPack. Add it as a **compile-only** dependency (do not shade it — the plugin jar must already be present on the server).
+The API is published on **Maven Central** (and also available via local build `publishToMavenLocal`). Add it as a **compile-only** dependency (do not shade it — the plugin jar must already be present on the server).
+
+* Use **`unlimitednametags-api-paper`** if your plugin is built for Paper/Bukkit and you want convenient `Player` overloads.
+* Use **`unlimitednametags-api`** if you only need the platform-neutral UUID-based API.
 
 **Gradle (Kotlin DSL):**
 ```kotlin
 repositories {
-    maven("https://jitpack.io")
+    mavenCentral()
 }
 
 dependencies {
-    compileOnly("com.github.alexdev03.UnlimitedNametags:api:2.0.0")
+    // For Paper/Bukkit development (recommended):
+    compileOnly("org.alexdev:unlimitednametags-api-paper:2.0.0")
+
+    // Or, for platform-neutral UUID-only development:
+    // compileOnly("org.alexdev:unlimitednametags-api:2.0.0")
 }
 ```
 
 **Maven:**
 ```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
-
 <dependencies>
+    <!-- For Paper/Bukkit development (recommended): -->
     <dependency>
-        <groupId>com.github.alexdev03.UnlimitedNametags</groupId>
-        <artifactId>api</artifactId>
+        <groupId>org.alexdev</groupId>
+        <artifactId>unlimitednametags-api-paper</artifactId>
         <version>2.0.0</version>
         <scope>provided</scope>
     </dependency>
+
+    <!-- Or, for platform-neutral UUID-only development:
+    <dependency>
+        <groupId>org.alexdev</groupId>
+        <artifactId>unlimitednametags-api</artifactId>
+        <version>2.0.0</version>
+        <scope>provided</scope>
+    </dependency>
+    -->
 </dependencies>
 ```
 
@@ -52,11 +62,20 @@ softdepend: [UnlimitedNameTags]
 
 ## Getting the API Instance
 
+Depending on whether you are using the platform-neutral API or the Paper-specific API, retrieve the instance accordingly:
+
+**For Paper/Bukkit (recommended):**
+```java
+UNTPaperAPI api = UNTPaperAPI.getInstance();
+```
+
+**For Platform-neutral (UUID-based):**
 ```java
 UNTAPI api = UNTAPI.getInstance();
 ```
 
 > **Note:** `getInstance()` throws `IllegalStateException` if called before your plugin's `onEnable`, or if UnlimitedNameTags failed to load. For soft-depends, guard with `Bukkit.getPluginManager().isPluginEnabled("UnlimitedNameTags")` first.
+
 
 ---
 

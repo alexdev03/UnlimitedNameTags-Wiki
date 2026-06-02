@@ -6,7 +6,7 @@
 
 | Requirement | Notes |
 |-------------|-------|
-| **Paper 1.20.1+** | Spigot 1.20.2+ also works; Paper is recommended |
+| **Paper 1.21.4+** | Paper is highly recommended |
 | **PacketEvents** | Required — download and install like any other plugin |
 | **Java 21** | Required to run the plugin jar |
 | **Client 1.19.4+** | Older Java clients cannot render custom nametags at all |

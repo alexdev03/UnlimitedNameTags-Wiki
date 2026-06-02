@@ -2,6 +2,25 @@
 # Optional: if this file is missing, the plugin behaves as before.
 # Use the option names exactly as below (capital letters, no dashes).
 
+# --- Global Settings ---
+
+# Optional: Enable helmet-rule matching and hat-hook pipeline logging.
+# (throttled for each player; very noisy in the console).
+# Default: false
+#helmetRulesDebug: false
+
+# Optional: Cooldown in milliseconds between full helmet debug bursts for each player.
+# Values below 1000 are treated as 1000.
+# Default: 5000
+#helmetRulesDebugCooldownMs: 5000
+
+# Optional: Converts the hat-hook helmet height into extra nametag yOffset.
+# Increase if the nametag still clips tall hats.
+# Default: 0.017857143 (which is 0.25 / 14)
+#helmetHeightYOffsetMultiplier: 0.017857143
+
+# --- Height Rules ---
+
 helmetHeightRules:
   # Example: custom head with a specific CustomModelData
   - priority: 10
@@ -16,6 +35,11 @@ helmetHeightRules:
     customModelDataMin: 1000
     customModelDataMax: 1999
 
+  # Example: item component model key (1.20.5+), e.g., minecraft:item_model
+  - priority: 9
+    height: 24
+    itemModel: "nexo:my_custom_helmet"
+
   # Example: equippable item model (1.21.3+)
   - priority: 8
     height: 32
@@ -24,3 +48,4 @@ helmetHeightRules:
   # Optional filters on any rule:
   # worlds: [world, world_nether]
   # permission: "myserver.bighelmet"
+

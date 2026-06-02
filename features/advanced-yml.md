@@ -23,9 +23,22 @@ Handy when automatic pack support (Nexo, Oraxen, …) does not match your item, 
 
 Use the spellings below exactly — **no dashes** in names, and **capitals** where shown (e.g. `customModelData`, not `custom-model-data`). Copy from the sample and change the numbers.
 
+### Global settings
+
+You can also specify global settings in this file to tweak multiplier math or debug rules:
+
+* **`helmetRulesDebug`** (boolean, default: `false`) — Enables verbose console messages when evaluating rules for a player (highly detailed, throttled).
+* **`helmetRulesDebugCooldownMs`** (number, default: `5000`) — The minimum interval in milliseconds between debug logs per player.
+* **`helmetHeightYOffsetMultiplier`** (number, default: `0.017857143`) — Converts hat-hook helmet height into the final y-offset in Minecraft coordinates. The default is `0.25 / 14`.
+
 ### Example
 
 ```yaml
+# Optional debugging / scaling config:
+helmetRulesDebug: false
+helmetRulesDebugCooldownMs: 5000
+helmetHeightYOffsetMultiplier: 0.017857143
+
 helmetHeightRules:
   - priority: 10
     height: 28
@@ -37,6 +50,10 @@ helmetHeightRules:
     material: LEATHER_HELMET
     customModelDataMin: 1000
     customModelDataMax: 1999
+
+  - priority: 9
+    height: 24
+    itemModel: "nexo:my_custom_helmet"
 
   - priority: 8
     height: 32
@@ -60,11 +77,12 @@ Full copy-paste template: [`reference/advanced.example.yml`](../reference/advanc
 | `material` | No* | Helmet item type, e.g. `PLAYER_HEAD`. |
 | `customModelData` | No* | Exact **custom model data** number on the item. |
 | `customModelDataMin` / `customModelDataMax` | No* | Inclusive range — **both** needed. If you use a range, single `customModelData` is ignored. |
-| `equippableModel` | No* | `namespace:key` style id on **1.21.3+** items. |
+| `itemModel` | No* | `namespace:key` style id for **1.20.5+** `minecraft:item_model` component (e.g. `nexo:my_custom_helmet`). |
+| `equippableModel` | No* | `namespace:key` style id on **1.21.3+** items using equippable component model. |
 | `worlds` | No | If set, only applies in those world **names**. |
 | `permission` | No | If set, player must have this permission. |
 
-\* At least **one** of: `material`, `customModelData`, both min and max, or `equippableModel` — otherwise the rule never matches.
+\* At least **one** of: `material`, `customModelData`, both min and max, `itemModel`, or `equippableModel` — otherwise the rule never matches.
 
 ---
 
@@ -76,9 +94,11 @@ Everything on a rule must pass:
 2. World list (if you set one)
 3. Material (if you set one)
 4. Equippable model (if you set one)
-5. Either a **range** of model data or one exact **`customModelData`**
+5. Item model (if you set one)
+6. Either a **range** of model data or one exact **`customModelData`**
 
 A rule with only **`material`** matches **any** stack of that item type.
+
 
 ---
 

@@ -7,9 +7,7 @@ This wiki goes with **[UnlimitedNameTags](https://github.com/alexdev03/Unlimited
 [![Discord](https://img.shields.io/discord/1263414013040263249?label=Discord&logo=discord&color=5865F2)](https://discord.gg/W4Fu8fqCKs)
 [![Release](https://img.shields.io/github/v/release/alexdev03/UnlimitedNametags?color=blue)](https://github.com/alexdev03/UnlimitedNameTags/releases/latest)
 
-| | |
-|:--|:--|
-| **Server** | Paper **1.20.1+** (Spigot 1.20.2+ works; Paper is recommended) |
+| **Server** | Paper **1.21.4+** (Paper is highly recommended) |
 | **Required add-on** | [PacketEvents](https://modrinth.com/plugin/packetevents) — install it like any other plugin |
 | **Main settings** | `plugins/UnlimitedNameTags/settings.yml` (created when the plugin first runs) |
 | **Optional extra file** | `advanced.yml` — only if you need to nudge nametag height for certain helmets (not created automatically) |
@@ -45,7 +43,7 @@ This wiki goes with **[UnlimitedNameTags](https://github.com/alexdev03/Unlimited
 
 ## Supported versions
 
-**Server:** Paper 1.20.1+; Spigot 1.20.2+ (Paper is still preferred).
+**Server:** Paper 1.21.4+ (Paper is highly preferred).
 
 **Java players:** custom tags need **Minecraft Java 1.19.4 or newer**. Older game versions simply cannot show this kind of nametag — that is a game limit, not something you fix in config alone. **ViaVersion does not** make ancient clients magically support these tags.
 

@@ -6,7 +6,7 @@
 
 ### What else do I need besides UnlimitedNameTags?
 
-**PacketEvents** is required — download it like a normal plugin and restart. **Paper 1.20.1+** (or **Spigot 1.20.2+**) is required for the main plugin.
+**PacketEvents** is required — download it like a normal plugin and restart. **Paper 1.21.4+** is required for the main plugin.
 
 ### Where do I change settings?
 
