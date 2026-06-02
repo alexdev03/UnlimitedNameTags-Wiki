@@ -1,5 +1,8 @@
 # Configuration (`settings.yml`)
 
+> [!NOTE]
+> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
+
 Almost everything runs from **`plugins/UnlimitedNameTags/settings.yml`**. You do not need to create it yourself — start the server once with the plugin, then edit the file it generates and run **`/unt reload`**.
 
 For optional helmet-height rules in a separate file, see [Advanced (`advanced.yml`)](features/advanced-yml.md).

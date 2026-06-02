@@ -1,5 +1,8 @@
 # Commands & Permissions
 
+> [!NOTE]
+> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
+
 Use **`/unt`** in chat (same idea as **`/unlimitednametags`** — either spelling works).
 
 **Permissions** are the nodes you give with LuckPerms, PermissionsEx, or whatever you already use.

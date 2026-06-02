@@ -1,5 +1,8 @@
 # Display Groups
 
+> [!NOTE]
+> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](../v1/README.md).
+
 Each entry under **`nameTags`** has a list called **`displayGroups`**. That list is the **stack of rows** above the player's head — text, a floating item, or a block. **Order in the file = top to bottom** in-game.
 
 ---

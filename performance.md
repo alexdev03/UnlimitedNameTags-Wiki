@@ -1,5 +1,8 @@
 # Performance
 
+> [!NOTE]
+> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
+
 Nametags redraw and ask PlaceholderAPI for fresh text on a schedule. When lots of players are online, or lines use heavy placeholders, small changes in **`settings.yml`** can keep things smooth.
 
 **Ticks:** on most servers **20 ticks ≈ 1 second**. Settings often say “every N ticks.”

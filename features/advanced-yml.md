@@ -1,5 +1,8 @@
 # Optional `advanced.yml` (helmet height rules)
 
+> [!NOTE]
+> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](../v1/README.md).
+
 You can add a second file next to your main config: **`plugins/UnlimitedNameTags/advanced.yml`**.
 
 - The plugin **never creates it for you**. If the file does not exist, nothing changes.

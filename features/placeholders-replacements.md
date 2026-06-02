@@ -1,5 +1,8 @@
 # Placeholder replacements
 
+> [!NOTE]
+> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](../v1/README.md).
+
 Sometimes PlaceholderAPI returns ugly or long text — a biome id, a raw `Yes`/`No`, a timestamp you want prettier. **Placeholder replacements** let you say: “when the result is **exactly this**, show **that** instead.”
 
 ---

@@ -1,5 +1,8 @@
 # Billboard
 
+> [!NOTE]
+> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](../v1/README.md).
+
 Nametag rows can **face the player** in different ways — that facing mode is what we call the **billboard**. Set a default for all rows, and optionally override **per row** with **`billboard`**.
 
 ---

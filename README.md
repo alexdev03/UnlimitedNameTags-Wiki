@@ -1,5 +1,8 @@
 # UnlimitedNameTags — Wiki
 
+> [!NOTE]
+> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
+
 > Fancy stacked name tags on Paper: **plain text**, **items**, and **blocks** above the head; works with PlaceholderAPI; optional movement and colour effects.
 
 This wiki goes with **[UnlimitedNameTags](https://github.com/alexdev03/UnlimitedNameTags)** on GitHub.

@@ -1,5 +1,8 @@
 # Migration Guide
 
+> [!NOTE]
+> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
+
 This page covers upgrading an existing UnlimitedNameTags config to v2.0.0 (schema **`configVersion: 4`**).
 
 ---
