@@ -33,6 +33,7 @@ information you need, whether you are installing the plugin for the first time o
 integrations.
 
 ### 🏁 Tutorials & Getting Started
+- **[What's New in v2](whats-new-v2.md)**: Highlights of the major new features and improvements from v1 to v2.
 - **[Getting Started](getting-started.md)**: Installation process, requirements, and basic setup.
 - **[Migration Guide](migration.md)**: Upgrading from legacy configuration structures (v1.x) to
   v2.x.

@@ -1,6 +1,7 @@
 # Table of contents
 
 * [Overview](README.md)
+* [What's New in v2](whats-new-v2.md)
 * [Getting Started](getting-started.md)
 * [Configuration](configuration.md)
 * [Commands & Permissions](commands-permissions.md)
