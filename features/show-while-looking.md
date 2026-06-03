@@ -1,14 +1,17 @@
 # Show While Looking & Through-Wall Dimming
 
-These features provide advanced visibility control for player name tags based on a viewer's line of sight and crosshair target direction.
+These features provide advanced visibility control for player name tags based on a viewer's line of
+sight and crosshair target direction.
 
 ---
 
 ## 🎯 Show While Looking
 
-When `showWhileLooking` is enabled, player name tags are only rendered to a viewer if they aim their crosshair directly at the target player. The name tag despawns the moment the viewer looks away. All standard visibility filters (permissions, vanish integrations, world list constraints) still apply.
+When `showWhileLooking` is enabled, player name tags are only rendered to a viewer if they aim their
+crosshair directly at the target player. The name tag despawns the moment the viewer looks away. All
+standard visibility filters (permissions, vanish integrations, world list constraints) still apply.
 
-![Example](../assets/show-while-looking.gif)
+![Visual demonstration of the name tag appearing only when the player's crosshair is aimed directly at the target player](../assets/show-while-looking.gif)
 
 ### Enabling Show While Looking
 ```yaml
@@ -20,20 +23,25 @@ visibility:
 
 ## 🔍 How Visibility Checks Work
 
-The plugin performs synchronous raycast calculations on the main server thread at intervals defined by `taskInterval` for every active viewer/player pair within tracking distance.
+The plugin performs synchronous raycast calculations on the main server thread at intervals defined by
+`taskInterval` for every active viewer/player pair within tracking distance.
 
 > [!WARNING]
-> Because raycasting is performed on the primary server thread, enabling `showWhileLooking` on high-population servers increases CPU load. If server TPS decreases after enabling this option, refer to the [Performance Tuning Guide](../performance.md) — raising the global `taskInterval` value is the primary method to mitigate load.
+> Because raycasting is performed on the primary server thread, enabling `showWhileLooking` on
+> high-population servers increases CPU load. If server TPS decreases after enabling this option,
+> refer to the [Performance Tuning Guide](../performance.md) — raising the global `taskInterval`
+> value is the primary method to mitigate load.
 
 ---
 
 ## Companion Feature: Through-Wall Occlusion (`throughWallMode`)
 
-The `throughWallMode` setting provides advanced visibility check options when the line of sight between the viewer and target is blocked by solid blocks. 
+The `throughWallMode` setting provides advanced visibility check options when the line of sight
+between the viewer and target is blocked by solid blocks. 
 
-* **`SEE_THROUGH`** (Default): Vanilla behavior; name tags remain fully visible through walls.
-* **`OBSCURED`**: Dims the name tag to a specified opacity when behind walls.
-* **`HIDE`**: Completely hides the name tag display when behind walls (acts as a built-in anti-wallhack).
+- **`SEE_THROUGH`** (Default): Vanilla behavior; name tags remain fully visible through walls.
+- **`OBSCURED`**: Dims the name tag to a specified opacity when behind walls.
+- **`HIDE`**: Completely hides the name tag display when behind walls (acts as a built-in anti-wallhack).
 
 ### Interaction Matrix
 
@@ -66,15 +74,21 @@ visibility:
 | **`throughWallSettings.checkInterval`** | `5` | Ticks between raycast updates. This runs synchronously on the main thread. |
 
 > [!WARNING]
-> Both `showWhileLooking` and through-wall checks execute raycast calculations on the **primary server thread**. Through-wall occlusion settings are applied to `TEXT` display groups only. On high-population servers, it is highly recommended to increase `throughWallSettings.checkInterval` to `10` or `20` ticks to prevent performance degradation.
+> Both `showWhileLooking` and through-wall checks execute raycast calculations on the
+> **primary server thread**. Through-wall occlusion settings are applied to `TEXT` display groups
+> only. On high-population servers, it is highly recommended to increase
+> `throughWallSettings.checkInterval` to `10` or `20` ticks to prevent performance degradation.
 
 ---
 
 ## Performance Best Practices
 
-* **Adjust Intervals**: Raise `behavior.taskInterval` (e.g., to `40` ticks) to reduce the computation frequency of `showWhileLooking`.
-* **Settle Check Timings**: Set `throughWallSettings.checkInterval` between `10` and `20` ticks. This change is virtually unnoticeable to players but significantly reduces CPU overhead.
-* **Disable Unused Toggles**: Keep `showWhileLooking` set to `false` and `throughWallMode` set to `SEE_THROUGH` if they are not actively utilized; they consume no resources.
+- **Adjust Intervals**: Raise `behavior.taskInterval` (e.g., to `40` ticks) to reduce the
+  computation frequency of `showWhileLooking`.
+- **Settle Check Timings**: Set `throughWallSettings.checkInterval` between `10` and `20` ticks.
+  This change is virtually unnoticeable to players but significantly reduces CPU overhead.
+- **Disable Unused Toggles**: Keep `showWhileLooking` set to `false` and `throughWallMode` set to
+  `SEE_THROUGH` if they are not actively utilized; they consume no resources.
 
 For detailed performance steps, refer to the [Performance Tuning Guide](../performance.md).
 
@@ -82,6 +96,9 @@ For detailed performance steps, refer to the [Performance Tuning Guide](../perfo
 
 ## Common Use Cases
 
-* **Minigames & Competitive Maps**: Displays team names only when targeted, minimizing UI clutter on screen.
-* **Roleplay & Immersive Servers**: Hides name tags at long distances to protect immersion, revealing them only when focusing on a player.
-* **Tactical & PvP Servers**: Through-wall dimming prevents players from tracking opponents through solid walls using floating name tags, without completely disabling name tag visibility.
+- **Minigames & Competitive Maps**: Displays team names only when targeted, minimizing UI clutter
+  on screen.
+- **Roleplay & Immersive Servers**: Hides name tags at long distances to protect immersion,
+  revealing them only when focusing on a player.
+- **Tactical & PvP Servers**: Through-wall dimming prevents players from tracking opponents through
+  solid walls using floating name tags, without completely disabling name tag visibility.

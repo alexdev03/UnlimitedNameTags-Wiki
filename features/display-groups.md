@@ -19,9 +19,11 @@ The `displayGroups` list under each **`nameTags`** preset defines the layout sta
 This is the default display type. It renders high-definition, customizable text lines.
 
 ### Features
-* **Multi-Line Stacking**: Define one or more lines in the same display group.
-* **MiniMessage Formatting**: Out-of-the-box support for gradients, hex colors, shadows, custom fonts, and styling.
-* **Line-Level Conditions**: Toggle the visibility of individual text lines using the `when` condition.
+- **Multi-Line Stacking**: Define one or more lines in the same display group.
+- **MiniMessage Formatting**: Out-of-the-box support for gradients, hex colors, shadows, custom
+  fonts, and styling.
+- **Line-Level Conditions**: Toggle the visibility of individual text lines using the `when`
+  condition.
 
 ### Example
 ```yaml
@@ -48,9 +50,10 @@ displayGroups:
 Renders a floating Minecraft item or custom item model (including resources from Nexo, Oraxen, ItemsAdder, etc.) above the player's head.
 
 ### Features
-* **Custom Model Data**: Renders complex cosmetic items like floating crowns, wings, or shields.
-* **Positioning**: Fine-tune item display postures using the `itemDisplayMode` key.
-* **Dynamic Resolution**: Supports PlaceholderAPI to resolve item types dynamically (e.g., matching a player's active hand item).
+- **Custom Model Data**: Renders complex cosmetic items like floating crowns, wings, or shields.
+- **Positioning**: Fine-tune item display postures using the `itemDisplayMode` key.
+- **Dynamic Resolution**: Supports PlaceholderAPI to resolve item types dynamically (e.g.,
+  matching a player's active hand item).
 
 ### Example: Floating Crown
 ```yaml
@@ -80,9 +83,11 @@ Renders a floating Minecraft item or custom item model (including resources from
 Renders 3D blocks (such as diamond blocks, custom block geometry, or crystals) as part of the name tag stack.
 
 ### Features
-* **Full 3D Block Models**: Renders actual block geometry.
-* **Dynamic Material Binding**: Swap block materials dynamically based on player stats or placeholders.
-* **Conditional Rendering**: Display blocks based on logical conditions (e.g., showing a status block when a player goes AFK).
+- **Full 3D Block Models**: Renders actual block geometry.
+- **Dynamic Material Binding**: Swap block materials dynamically based on player stats or
+  placeholders.
+- **Conditional Rendering**: Display blocks based on logical conditions (e.g., showing a status
+  block when a player goes AFK).
 
 ### Example: Spinning Wealth Indicator
 ```yaml
@@ -155,8 +160,9 @@ background:
 ## 📐 Scale and Offset
 
 Positioning and sizing parameters per row:
-* **`scale`**: Sizing multiplier for the row display (`1.0` = default size, `0.7` = 70% scale).
-* **`yOffset`**: Vertical offset (in blocks) relative to the group stack's base position. Positive values raise the row; negative values lower it.
+- **`scale`**: Sizing multiplier for the row display (`1.0` = default size, `0.7` = 70% scale).
+- **`yOffset`**: Vertical offset (in blocks) relative to the group stack's base position. Positive
+  values raise the row; negative values lower it.
 
 ---
 
@@ -221,5 +227,7 @@ Each configuration preset under **`nameTags`** can define a `permission` node. T
 
 You can apply an optional `animation` block on any row. (See [Animations Guide](animations.md) for full configuration options).
 
-* **`animationInterval`** (in ticks): Overrides the global `behavior.displayAnimationInterval` for this specific row.
-* **`cullBeyondBlocks`**: Pauses animation calculations when no players are within the specified block radius. (See [Performance Tuning Guide](../performance.md)).
+- **`animationInterval`** (in ticks): Overrides the global `behavior.displayAnimationInterval` for
+  this specific row.
+- **`cullBeyondBlocks`**: Pauses animation calculations when no players are within the specified
+  block radius. (See [Performance Tuning Guide](../performance.md)).

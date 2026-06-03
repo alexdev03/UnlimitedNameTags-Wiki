@@ -1,15 +1,22 @@
 # Developer API
 
-**UnlimitedNameTags** exposes a comprehensive Java API that allows other plugins to dynamically control player name tags at runtime. You can programmatically override name tag text, inject item/block entities, register custom animations, implement custom vanish integrations, and adjust cosmetic height offsets.
+**UnlimitedNameTags** exposes a comprehensive Java API that allows other plugins to dynamically
+control player name tags at runtime. You can programmatically override name tag text, inject
+item/block entities, register custom animations, implement custom vanish integrations, and adjust
+cosmetic height offsets.
 
 ---
 
 ## Adding the Dependency
 
-The API is published to **Maven Central** (and can also be installed locally using `gradle publishToMavenLocal`). It must be declared as a **compile-only** dependency; do not shade or bundle it within your plugin artifact, as the **UnlimitedNameTags** jar must be present on the server at runtime.
+The API is published to **Maven Central** (and can also be installed locally using
+`gradle publishToMavenLocal`). It must be declared as a **compile-only** dependency; do not shade
+or bundle it within your plugin artifact, as the **UnlimitedNameTags** jar must be present on the
+server at runtime.
 
-* **`unlimitednametags-api-paper`**: Recommended for Paper/Bukkit plugins. Provides helper methods utilizing the standard Bukkit `Player` object.
-* **`unlimitednametags-api`**: Platform-neutral API utilizing player `UUID` identifiers.
+- **`unlimitednametags-api-paper`**: Recommended for Paper/Bukkit plugins. Provides helper methods
+  utilizing the standard Bukkit `Player` object.
+- **`unlimitednametags-api`**: Platform-neutral API utilizing player `UUID` identifiers.
 
 ### Gradle (Kotlin DSL)
 ```kotlin
@@ -65,18 +72,21 @@ softdepend: [UnlimitedNameTags]
 
 Acquire the appropriate API singleton instance depending on your platform dependency:
 
-* **Paper/Bukkit API (Recommended):**
+- **Paper/Bukkit API (Recommended):**
   ```java
   UNTPaperAPI api = UNTPaperAPI.getInstance();
   ```
 
-* **Platform-Neutral API (UUID-based):**
+- **Platform-Neutral API (UUID-based):**
   ```java
   UNTAPI api = UNTAPI.getInstance();
   ```
 
 > [!WARNING]
-> Calling `getInstance()` before your plugin's `onEnable()` execution or when **UnlimitedNameTags** is disabled will throw an `IllegalStateException`. For soft-dependent setups, always verify plugin status using `Bukkit.getPluginManager().isPluginEnabled("UnlimitedNameTags")` before retrieving the instance.
+> Calling `getInstance()` before your plugin's `onEnable()` execution or when
+> **UnlimitedNameTags** is disabled will throw an `IllegalStateException`. For soft-dependent
+> setups, always verify plugin status using
+> `Bukkit.getPluginManager().isPluginEnabled("UnlimitedNameTags")` before retrieving the instance.
 
 ---
 
@@ -207,9 +217,12 @@ api.registerNametagCustomAnimation("my_pulse", (target, animation, elapsedMs) ->
 ```
 
 The handler interface provides three parameters:
-* **`target`** (`NametagAnimationTarget`): An interface allowing updates to the display's scale and positional offsets.
-* **`animation`** (`DisplayAnimation.CustomDisplayAnimation`): The animation configuration containing custom configuration properties.
-* **`elapsedMs`**: The total elapsed time in milliseconds since the animation execution was initialized.
+- **`target`** (`NametagAnimationTarget`): An interface allowing updates to the display's scale
+  and positional offsets.
+- **`animation`** (`DisplayAnimation.CustomDisplayAnimation`): The animation configuration containing
+  custom configuration properties.
+- **`elapsedMs`**: The total elapsed time in milliseconds since the animation execution was
+  initialized.
 
 ```java
 // Unregister a custom handler

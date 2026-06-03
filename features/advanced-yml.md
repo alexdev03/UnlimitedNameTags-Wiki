@@ -11,10 +11,12 @@ Modifications to this file can be applied instantly using the `/unt reload` comm
 
 ## How Height Rules Work
 
-* Rules are defined under the `helmetHeightRules` list.
-* Each rule specifies a `height` value representing the vertical offset.
-* The `priority` field determines evaluation order (higher priority rules are evaluated first). The first rule that matches the equipped helmet is applied.
-* Rules defined in `advanced.yml` override heights supplied by Nexo, Oraxen, ItemsAdder, or HMCCosmetics when they return a height value greater than zero.
+- Rules are defined under the `helmetHeightRules` list.
+- Each rule specifies a `height` value representing the vertical offset.
+- The `priority` field determines evaluation order (higher priority rules are evaluated first).
+  The first rule that matches the equipped helmet is applied.
+- Rules defined in `advanced.yml` override heights supplied by Nexo, Oraxen, ItemsAdder, or
+  HMCCosmetics when they return a height value greater than zero.
 
 ---
 
@@ -26,9 +28,13 @@ Modifications to this file can be applied instantly using the `/unt reload` comm
 ### Global Settings
 The following global parameters can be configured to debug or customize scaling math:
 
-* **`helmetRulesDebug`** (boolean, default: `false`): Enables verbose console logs when evaluating rules for players (throttled).
-* **`helmetRulesDebugCooldownMs`** (number, default: `5000`): Minimum cooldown interval (in milliseconds) between debug logs per player.
-* **`helmetHeightYOffsetMultiplier`** (number, default: `0.017857143`): Multiplier used to convert rule height values into Minecraft coordinate system blocks. The default conversion is `0.25 / 14`.
+- **`helmetRulesDebug`** (boolean, default: `false`): Enables verbose console logs when evaluating
+  rules for players (throttled).
+- **`helmetRulesDebugCooldownMs`** (number, default: `5000`): Minimum cooldown interval (in
+  milliseconds) between debug logs per player.
+- **`helmetHeightYOffsetMultiplier`** (number, default: `0.017857143`): Multiplier used to convert
+  rule height values into Minecraft coordinate system blocks. The default conversion is
+  `0.25 / 14`.
 
 ### Rule Example
 ```yaml
@@ -96,20 +102,23 @@ For a rule to apply, all defined criteria must evaluate to true:
 5. **Item Model**: Checked if defined.
 6. **Model Data**: Checks either the exact `customModelData` or the inclusive range `customModelDataMin` to `customModelDataMax`.
 
-* A rule containing only a `material` definition matches any item stack of that material type.
+- A rule containing only a `material` definition matches any item stack of that material type.
 
 ---
 
 ## Error Handling & Troubleshooting
 
-* **File Missing**: No height offsets are applied through this system.
-* **Invalid File on Startup**: The plugin console logs the configuration loading error; no rules are loaded.
-* **Invalid File on Reload**: The plugin logs the error, but keeps the **previously parsed valid rules** in memory until the configuration is fixed.
-* **Malformed Rules**: Individual rules with syntax errors are skipped and logged; other valid rules load normally.
+- **File Missing**: No height offsets are applied through this system.
+- **Invalid File on Startup**: The plugin console logs the configuration loading error; no rules
+  are loaded.
+- **Invalid File on Reload**: The plugin logs the error, but keeps the **previously parsed valid
+  rules** in memory until the configuration is fixed.
+- **Malformed Rules**: Individual rules with syntax errors are skipped and logged; other valid rules
+  load normally.
 
 ---
 
 ## See Also
 
-* [Configuration Guide (`settings.yml`)](../configuration.md)
-* [Integrations Guide (Nexo, Oraxen, ItemsAdder)](../integrations/integrations.md)
+- [Configuration Guide (`settings.yml`)](../configuration.md)
+- [Integrations Guide (Nexo, Oraxen, ItemsAdder)](../integrations/integrations.md)

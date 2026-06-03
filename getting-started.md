@@ -15,10 +15,15 @@ This page covers the requirements, installation steps, and basic setup needed to
 
 ### Client Compatibility
 > [!WARNING]
-> **Minecraft Java 1.19.4 or newer** is strictly required for clients to render custom displays. Older game versions cannot display these custom name tags due to client-side engine limitations. Protocol translation tools (e.g., **ViaVersion**) do not bypass this limitation.
+> **Minecraft Java 1.19.4 or newer** is strictly required for clients to render custom
+> displays. Older game versions cannot display these custom name tags due to client-side engine
+> limitations. Protocol translation tools (e.g., **ViaVersion**) do not bypass this limitation.
 
 > [!NOTE]
-> **Bedrock Edition (Geyser/Floodgate)** clients are only partially supported. Specific rendering options, such as custom text shadows and background plates, may not display accurately or at all on Bedrock clients. For details, see the [Integrations](integrations/integrations.md) guide.
+> **Bedrock Edition (Geyser/Floodgate)** clients are only partially supported. Specific
+> rendering options, such as custom text shadows and background plates, may not display
+> accurately or at all on Bedrock clients. For details, see the
+> [Integrations](integrations/integrations.md) guide.
 
 ---
 
@@ -27,20 +32,20 @@ This page covers the requirements, installation steps, and basic setup needed to
 Follow these steps to install the plugin on your server:
 
 1. Download **PacketEvents** from [Modrinth](https://modrinth.com/plugin/packetevents) and place the `.jar` file into the `plugins/` directory.
-2. Download **UnlimitedNameTags** and place the `.jar` file into the `plugins/` directory.
-3. Start (or restart) the server. Verify that both plugins enable successfully without error messages in the server console.
-4. The plugin will automatically generate the configuration directory and file at `plugins/UnlimitedNameTags/settings.yml` upon its initial execution.
-5. Modify `settings.yml` to fit your server's needs, then execute the `/unt reload` command to apply your changes.
+1. Download **UnlimitedNameTags** and place the `.jar` file into the `plugins/` directory.
+1. Start (or restart) the server. Verify that both plugins enable successfully without error messages in the server console.
+1. The plugin will automatically generate the configuration directory and file at `plugins/UnlimitedNameTags/settings.yml` upon its initial execution.
+1. Modify `settings.yml` to fit your server's needs, then execute the `/unt reload` command to apply your changes.
 
 ---
 
 ## First-Run Checklist
 
 Confirm your setup is correct by verifying the following:
-* [ ] The console outputs `[UnlimitedNameTags] Plugin enabled` without errors.
-* [ ] The console reports no startup issues from **PacketEvents**.
-* [ ] The file `plugins/UnlimitedNameTags/settings.yml` has been successfully created.
-* [ ] A player joining from a Minecraft Java 1.19.4+ client can see the custom name tags.
+- [ ] The console outputs `[UnlimitedNameTags] Plugin enabled` without errors.
+- [ ] The console reports no startup issues from **PacketEvents**.
+- [ ] The file `plugins/UnlimitedNameTags/settings.yml` has been successfully created.
+- [ ] A player joining from a Minecraft Java 1.19.4+ client can see the custom name tags.
 
 ---
 
@@ -99,7 +104,7 @@ nameTags:
 
 To apply edits made to `settings.yml` or `advanced.yml` (if present) without restarting the Minecraft server, execute the following command:
 
-* **Command:** `/unt reload` (run in-game or via the console)
+- **Command:** `/unt reload` (run in-game or via the console)
 
 ---
 

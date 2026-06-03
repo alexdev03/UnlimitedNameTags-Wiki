@@ -8,8 +8,9 @@ Placeholder replacements allow you to map and format raw or unformatted string o
 
 In your `settings.yml`, replacement rules are defined under the `placeholdersReplacements` section:
 
-* **`placeholder`**: The exact string returned by the PlaceholderAPI variable to match.
-* **`replacement`**: The formatted replacement string (supports formatting engines like MiniMessage) to display on the player name tag.
+- **`placeholder`**: The exact string returned by the PlaceholderAPI variable to match.
+- **`replacement`**: The formatted replacement string (supports formatting engines like
+  MiniMessage) to display on the player name tag.
 
 The plugin evaluates replacement entries sequentially from top to bottom. The first match that satisfies the rule is applied.
 

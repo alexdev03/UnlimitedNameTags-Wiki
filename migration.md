@@ -56,8 +56,10 @@ modifiers:
 when: '%vault_eco_balance% > 1000'
 ```
 
-* **Group-level conditional:** Place the `when:` key directly under the display group entry to show/hide the entire line row.
-* **Line-level conditional:** Place the `when:` key inside the `lines` list entry to show/hide only that specific line of text.
+- **Group-level conditional**: Place the `when:` key directly under the display group entry to
+  show/hide the entire line row.
+- **Line-level conditional**: Place the `when:` key inside the `lines` list entry to show/hide
+  only that specific line of text.
 
 ---
 

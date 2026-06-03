@@ -54,9 +54,13 @@ defaultBillboard: FIXED
 
 ## Scope & Overrides
 
-* **Global Settings**: Defined by the `defaultBillboard` key in `settings.yml` (e.g., `defaultBillboard: CENTER`).
-* **Display Group Overrides**: Can be configured on a per-row basis using the `billboard` key inside a specific `displayGroup` (e.g., `billboard: FIXED`).
-* **Command Modifier**: Run the in-game command `/unt billboard <CENTER|HORIZONTAL|VERTICAL|FIXED>` to update and persist the default global billboard setting in `settings.yml` (requires the permission node `unt.billboard`).
+- **Global Settings**: Defined by the `defaultBillboard` key in `settings.yml` (e.g.,
+  `defaultBillboard: CENTER`).
+- **Display Group Overrides**: Can be configured on a per-row basis using the `billboard` key
+  inside a specific `displayGroup` (e.g., `billboard: FIXED`).
+- **Command Modifier**: Run the in-game command
+  `/unt billboard <CENTER|HORIZONTAL|VERTICAL|FIXED>` to update and persist the default global
+  billboard setting in `settings.yml` (requires the permission node `unt.billboard`).
 
 ---
 

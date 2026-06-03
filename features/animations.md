@@ -22,11 +22,11 @@ Phase placeholders are shortcodes defined directly within a display group's text
 
 ### PlaceholderAPI Integration
 You can query phase values using the following PlaceholderAPI expansion variables:
-* `%unt_phase-mm%`
-* `%unt_phase-md%`
-* `%unt_phase-mm-g%`
-* `%unt_-phase-mm%`
-* `%unt_-phase-md%`
+- `%unt_phase-mm%`
+- `%unt_phase-md%`
+- `%unt_phase-mm-g%`
+- `%unt_-phase-mm%`
+- `%unt_-phase-md%`
 
 > [!NOTE]
 > There is no `%unt_-phase-mm-g%` placeholder. To render reverse-direction gradient transitions, insert the inline token **`#-phase-mm-g#`** directly into the text.
@@ -46,8 +46,10 @@ Animation update frequencies are controlled by the following parameters:
 | **`behavior.displayAnimationInterval`** | Global | Defines the tick interval between entity pose updates for all groups lacking a specific interval override. Set to `0` to match `taskInterval`. |
 | **`animationInterval`** | Local | Set within a display group to override the global update frequency for that specific group. |
 
-* **Higher Values**: Decreases packet payload frequency, reducing server CPU overhead and network traffic.
-* **Lower Values**: Yields smoother physical animations at the cost of higher server payload tracking.
+- **Higher Values**: Decreases packet payload frequency, reducing server CPU overhead and
+  network traffic.
+- **Lower Values**: Yields smoother physical animations at the cost of higher server payload
+  tracking.
 
 ---
 

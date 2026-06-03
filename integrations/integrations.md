@@ -30,8 +30,10 @@ Similarly, Oraxen custom hats automatically offset name tag rendering heights.
 
 ## Cosmetics & Accessories (HMCCosmetics, etc.)
 
-* **HMCCosmetics**: Height offsets are supported when used with a compatible hook source (such as CreativeHook or Nexo).
-* **CosmeticsCore**: Direct integration is not supported. Custom helmets must be recognized as standard items by other supported integration systems for offsets to apply.
+- **HMCCosmetics**: Height offsets are supported when used with a compatible hook source (such as
+  CreativeHook or Nexo).
+- **CosmeticsCore**: Direct integration is not supported. Custom helmets must be recognized as
+  standard items by other supported integration systems for offsets to apply.
 
 ---
 
@@ -44,7 +46,8 @@ Similarly, Oraxen custom hats automatically offset name tag rendering heights.
 
 ## LibsDisguises
 
-* The plugin automatically hides custom name tags when players are disguised as other entity types.
+- The plugin automatically hides custom name tags when players are disguised as other entity
+  types.
 
 ---
 
@@ -72,27 +75,31 @@ Name tags fully support standard **PlaceholderAPI** variables.
 
 ## MiniPlaceholders
 
-* **MiniPlaceholders** is fully supported.
-* Set `behavior.format` to `MINIMESSAGE` or `UNIVERSAL` for optimal formatting.
-* If text components appear static or fail to update, try disabling `performance.componentCaching` in `settings.yml`. (See the [Performance Tuning Guide](../performance.md)).
+- **MiniPlaceholders** is fully supported.
+- Set `behavior.format` to `MINIMESSAGE` or `UNIVERSAL` for optimal formatting.
+- If text components appear static or fail to update, try disabling
+  `performance.componentCaching` in `settings.yml`. (See the
+  [Performance Tuning Guide](../performance.md)).
 
 ---
 
 ## TypeWriter
 
-* Custom name tags are automatically hidden during TypeWriter cinematic sequences.
+- Custom name tags are automatically hidden during TypeWriter cinematic sequences.
 
 ---
 
 ## Floodgate
 
-* Integrates with **Floodgate** to differentiate Bedrock Edition players from Java Edition players, adjusting name tag packaging logic where needed.
+- Integrates with **Floodgate** to differentiate Bedrock Edition players from Java Edition
+  players, adjusting name tag packaging logic where needed.
 
 ---
 
 ## FeatherServerAPI
 
-* When present, the plugin disables Feather's client-side name tags on supported Java clients to prevent rendering conflicts.
+- When present, the plugin disables Feather's client-side name tags on supported Java clients
+  to prevent rendering conflicts.
 
 ---
 
