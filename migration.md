@@ -157,10 +157,10 @@ The legacy internal setting `linesGroups` is automatically renamed to `displayGr
 
 ---
 
-### API Deprecation: `setNametagLines`
+### API Method Removal: `setNametagLines`
 
 > [!WARNING]
-> The API method `UNTAPI.setNametagLines(Player, List<Settings.DisplayGroup>)` is deprecated. While it remains functional in v2.0.0, it will be removed in a future release. 
+> The deprecated API method `UNTAPI.setNametagLines(Player, List<Settings.DisplayGroup>)` has been **completely removed** as of configuration schema version 5 (v2.1.0+).
 > 
 > Developers must replace all instances of this call with `setNametagDisplayGroups(Player, List<Settings.DisplayGroup>)`. For more information, refer to the [Developer API Guide](api.md).
 

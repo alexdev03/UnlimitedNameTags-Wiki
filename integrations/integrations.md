@@ -23,8 +23,14 @@ Similarly, Oraxen custom hats automatically offset name tag rendering heights.
 
 ## ItemsAdder
 
-> [!WARNING]
-> Depending on your plugin version, automatic height detection for **ItemsAdder** may not be included. Check your release notes. If automatic ItemsAdder support is unavailable in your build, you must define custom height rules in `advanced.yml` matching the specific `material`, `customModelData`, or `equippableModel` parameters.
+**ItemsAdder** custom items and helmets are automatically detected and integrated. When a player equips a custom hat or helmet created via ItemsAdder, the plugin registers a height offset hook to dynamically adjust the player's name tag height.
+
+This ensures the custom name tag is raised above the custom helmet model to prevent visual clipping.
+
+### Integration Details
+* **Automatic Detection**: The plugin registers the ItemsAdder hook automatically when the ItemsAdder plugin is loaded.
+* **Model Lookup**: The hook queries the ItemsAdder API (`CustomStack`) to identify the custom item stack, retrieve its namespace and model path, and extract the corresponding height offset from the resource pack.
+* **Fallback Rules**: If you need to manually override or fine-tune specific ItemsAdder helmet heights, you can still define custom rules in `advanced.yml`. (See the [advanced.yml Guide](../features/advanced-yml.md)).
 
 ---
 
