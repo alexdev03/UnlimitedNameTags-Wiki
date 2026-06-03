@@ -3,43 +3,46 @@
 > [!NOTE]
 > This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
 
-This page covers upgrading an existing UnlimitedNameTags config to v2.0.0 (schema **`configVersion: 4`**).
+This document provides step-by-step instructions for upgrading your configuration format to **UnlimitedNameTags v2.x** (`configVersion: 5`).
 
 ---
 
 ## Schema Version History
 
-| `configVersion` | What changed |
-|-----------------|-------------|
-| **1** (legacy) | Flat layout — `lines`, `background`, `scale`, `yOffset` directly on each `nameTags` entry |
-| **2** | `displayGroups` list introduced; `lines` values were plain strings (`- 'text'`) |
-| **3** | `lines` changed to structured objects (`- {text: 'text', when: 'condition'}`) |
-| **4** (current) | `behavior` / `visibility` / `performance` sections introduced; `Background` unified `color:` field (no `type:` discriminator) |
+| `configVersion` | Description of Changes |
+| :--- | :--- |
+| **1** (Legacy) | Flat layout configuration. Properties like `lines`, `background`, `scale`, and `yOffset` were defined directly under each `nameTags` entry. |
+| **2** | Introduced the `displayGroups` list. The `lines` configuration was defined as a simple string list (e.g., `- 'text'`). |
+| **3** | Updated the `lines` list format to structured objects, supporting conditional parameters (e.g., `- {text: 'text', when: 'condition'}`). |
+| **4** | Grouped global variables into `behavior`, `visibility`, and `performance` sections. Standardized the `background` block by unifying background parameters under a single `color` option. |
+| **5** (Current) | Replaced `obscuredNametagThroughWalls` and related parameters with `throughWallMode` (`SEE_THROUGH`, `OBSCURED`, `HIDE`) and nested `throughWallSettings`. |
 
 ---
 
 ## Automatic Migration
 
-The plugin runs its migrator on every load and `/unt reload`. It:
+The plugin executes an automatic migration routine whenever it starts or when `/unt reload` is triggered. The migration process:
 
-- Creates a backup at `plugins/UnlimitedNameTags/settings.yml.backup-<timestamp>.yml` **before** any rewrite.
-- Promotes flat v1 keys into `displayGroups`.
-- Converts string `lines` entries to `{text: '…'}` objects.
-- Converts old `type: integer` / `type: hex` Background entries to the unified `color:` format.
-- Moves top-level keys (`taskInterval`, `sneakOpacity`, etc.) under the correct section heading.
-- Sets `configVersion: 4` in the output.
+1. Generates a backup copy of your configuration at `plugins/UnlimitedNameTags/settings.yml.backup-<timestamp>.yml` prior to performing any modifications.
+2. Restructures flat v1 parameters into the modern `displayGroups` layout.
+3. Converts flat string list entries under `lines` into standard `{text: '...'}` objects.
+4. Translates old background structures (`type: integer` or `type: hex`) into the unified `color:` format.
+5. Restructures top-level global settings under their respective `behavior`, `visibility`, or `performance` categories.
+6. Converts `obscuredNametagThroughWalls` and related settings to the unified `throughWallMode` and nested `throughWallSettings` layout.
+7. Sets `configVersion: 5` in the rewritten configuration file.
 
-In most cases you just restart the server or run `/unt reload` — the migration is fully automatic.
+Under normal circumstances, restarting the server or executing `/unt reload` is sufficient to complete the migration.
 
 ---
 
-## What Requires Manual Attention
+## Configuration Aspects Requiring Manual Review
 
-### `modifiers:` Removed
+### Removal of `modifiers`
 
-Old configs used a `modifiers:` list with `type: conditional` entries for per-row conditions. The migrator **strips** these rather than migrating them, because the new `when:` string is not equivalent to the old multi-condition list.
+> [!WARNING]
+> The automatic migration utility **deletes** the legacy `modifiers:` block. The old multi-condition parameter structure cannot be automatically translated due to changes in syntax. You must manually rewrite these rules using the new `when:` condition string.
 
-**Before (v1/v2 style):**
+**Before (Legacy v1/v2 format):**
 ```yaml
 modifiers:
   - type: conditional
@@ -48,18 +51,19 @@ modifiers:
     value: "1000"
 ```
 
-**After (v2.0.0):**
+**After (v2.0.0+ / configVersion 4+ format):**
 ```yaml
 when: '%vault_eco_balance% > 1000'
 ```
 
-Place the `when:` field at the `displayGroup` level to hide the whole row, or at the `lines` entry level to hide just that line.
+* **Group-level conditional:** Place the `when:` key directly under the display group entry to show/hide the entire line row.
+* **Line-level conditional:** Place the `when:` key inside the `lines` list entry to show/hide only that specific line of text.
 
 ---
 
-### Background `type:` Field Removed
+### Removal of Background `type` Field
 
-Old backgrounds used `type: integer` (RGB components) or `type: hex` (hex string). Both are gone.
+The parameters `type: integer` and `type: hex` are no longer supported.
 
 **Before (`type: integer`):**
 ```yaml
@@ -89,52 +93,82 @@ background:
 ```yaml
 background:
   enabled: true
-  color: '#ff0000'      # hex, OR use "255,0,0" for R,G,B
+  color: '#ff0000'      # Defined as a hex string OR "255,0,0" for RGB format
   opacity: 200
   shadowed: false
   seeThrough: false
 ```
 
-The migrator converts both old forms automatically on load.
+The built-in migrator automatically standardizes these structures upon initialization.
 
 ---
 
-### `lines` is Now a List of Objects
+### Migration of Through-Wall Settings to `throughWallMode` (v5)
 
-**Before (v2 string lines):**
+The old visibility parameters `obscuredNametagThroughWalls`, `obscuredNametagOpacity`, `obscuredNametagMaxDistance`, and `obscuredNametagCheckInterval` have been unified into `throughWallMode` and a nested `throughWallSettings` map.
+
+**Before (v4):**
+```yaml
+visibility:
+  obscuredNametagThroughWalls: false # or true
+  obscuredNametagOpacity: 55
+  obscuredNametagMaxDistance: 48.0
+  obscuredNametagCheckInterval: 5
+```
+
+**After (v5):**
+```yaml
+visibility:
+  throughWallMode: SEE_THROUGH # Becomes OBSCURED if obscuredNametagThroughWalls was true
+  throughWallSettings:
+    opacity: 55
+    maxDistance: 48.0
+    checkInterval: 5
+```
+
+The built-in migrator automatically performs this conversion.
+
+---
+
+### Conversion of `lines` to Objects
+
+**Before (Plain String Format):**
 ```yaml
 lines:
   - '%luckperms_prefix% %player_name%'
   - '%player_ping%ms'
 ```
 
-**After (v4):**
+**After (v4 Object Format):**
 ```yaml
 lines:
   - text: '%luckperms_prefix% %player_name%'
   - text: '%player_ping%ms'
-    when: '%player_ping% > 0'   # optional per-line condition
+    when: '%player_ping% > 0'   # Optional per-line visibility check
 ```
 
-The migrator converts plain string entries to `{text: '…'}` objects automatically.
+---
+
+### Legacy `linesGroups` renamed to `displayGroups`
+
+The legacy internal setting `linesGroups` is automatically renamed to `displayGroups` by the migrator.
 
 ---
 
-### `linesGroups` → `displayGroups`
+### API Deprecation: `setNametagLines`
 
-The old internal key `linesGroups` is renamed to `displayGroups` automatically by the migrator.
-
----
-
-### API: `setNametagLines` Deprecated
-
-`UNTAPI.setNametagLines(Player, List<Settings.DisplayGroup>)` still compiles in v2.0.0 but is deprecated and will be removed in a future version. Replace all calls with `setNametagDisplayGroups(Player, List<Settings.DisplayGroup>)`. See [Developer API](api.md).
+> [!WARNING]
+> The API method `UNTAPI.setNametagLines(Player, List<Settings.DisplayGroup>)` is deprecated. While it remains functional in v2.0.0, it will be removed in a future release. 
+> 
+> Developers must replace all instances of this call with `setNametagDisplayGroups(Player, List<Settings.DisplayGroup>)`. For more information, refer to the [Developer API Guide](api.md).
 
 ---
 
-## Checking Migration Success
+## Verifying the Migration
 
-1. Run `/unt reload` and watch the console — no migration errors should appear.
-2. Run `/unt debug` to print a diagnostic snapshot of the current nametag state.
-3. Check `plugins/UnlimitedNameTags/` for a `settings.yml.backup-*.yml` file — its presence confirms the migrator ran.
-4. Log into the server with a 1.19.4+ client and verify nametags render correctly.
+Confirm the migration completed successfully by following these steps:
+
+1. Execute the `/unt reload` command and monitor the server console for any configuration loading or parsing errors.
+2. Run `/unt debug` to inspect a snapshot of active player name tag metadata.
+3. Check the `plugins/UnlimitedNameTags/` directory to ensure that a `settings.yml.backup-*.yml` file was created.
+4. Join the server using a Minecraft Java 1.19.4+ client and verify that custom name tags render correctly.

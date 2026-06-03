@@ -1,98 +1,102 @@
 # Integrations
 
-> [!NOTE]
-> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](../v1/README.md).
-
-UnlimitedNameTags talks to several popular plugins when they are installed. This page is a **practical** overview — not every edge case.
+**UnlimitedNameTags** integrates with several popular plugins to provide automatic features (such as height offsets for custom headwear) and custom visual effects.
 
 ---
 
-## Nexo & Oraxen
+## Nexo & Oraxen (Custom Helmets)
 
-**Nexo** and **Oraxen** can **raise or lower** the nametag when someone wears a tall custom hat, so the text does not clip into the model.
+Both **Nexo** and **Oraxen** automatically adjust player name tag heights when players equip custom helmets or tall hats, preventing the name tag text from clipping into the custom models.
 
-### Nexo
-
-With Nexo helmets (or items from merged resource packs), the tag follows model height.
+### Nexo Offset Rendering
+With Nexo custom helmets (or custom items utilizing merged resource packs), the tag automatically tracks model height offsets.
 
 ![Nexo nametag offset](../assets/nexo-nametag-offset.gif)
 
 ### Oraxen
+Similarly, Oraxen custom hats automatically offset name tag rendering heights.
 
-Same idea for **Oraxen** hats.
-
-You can **add or tweak** behaviour with [`advanced.yml`](../features/advanced-yml.md) — hand-written rules can win over automatic ones in some cases (see that page).
+> [!TIP]
+> You can override or adjust these automatic height rules manually by writing custom rule sets in `advanced.yml`. (See the [advanced.yml Guide](../features/advanced-yml.md)).
 
 ---
 
 ## ItemsAdder
 
-Some releases build **without** automatic ItemsAdder height. Check **your jar’s** release notes — if auto support is off, use [`advanced.yml`](../features/advanced-yml.md) and match **`customModelData`**, **`equippableModel`**, or **`material`** yourself.
+> [!WARNING]
+> Depending on your plugin version, automatic height detection for **ItemsAdder** may not be included. Check your release notes. If automatic ItemsAdder support is unavailable in your build, you must define custom height rules in `advanced.yml` matching the specific `material`, `customModelData`, or `equippableModel` parameters.
 
 ---
 
-## Hats / cosmetics (HMCCosmetics, etc.)
+## Cosmetics & Accessories (HMCCosmetics, etc.)
 
-**HMCCosmetics** is supported for height when a compatible source is there (e.g. CreativeHook / Nexo).
-
-**CosmeticsCore** has no direct hook — it only works if the worn helmet is still a normal item the other systems can recognise.
+* **HMCCosmetics**: Height offsets are supported when used with a compatible hook source (such as CreativeHook or Nexo).
+* **CosmeticsCore**: Direct integration is not supported. Custom helmets must be recognized as standard items by other supported integration systems for offsets to apply.
 
 ---
 
 ## ViaVersion
 
-With **ViaVersion**, the server can tell whether a client **can** show these custom tags. It does **not** make **Java below 1.19.4** fully supported for text-display nametags. See [Supported versions](../README.md#supported-versions).
+> [!WARNING]
+> While **ViaVersion** allows older client versions to connect to the server and helps the plugin detect client capability profiles, it **does not** enable custom display entity rendering on Java clients older than **1.19.4**. (See the [Supported Versions Guide](../README.md)).
 
 ---
 
 ## LibsDisguises
 
-Nametags can be hidden while someone is disguised as another entity.
+* The plugin automatically hides custom name tags when players are disguised as other entity types.
 
 ---
 
 ## PlaceholderAPI
 
-Nametag lines use **PlaceholderAPI** as usual. Turn **`enableRelationalPlaceholders`** **on** only if you need placeholders that **depend on who is looking** (viewer + target).
+Name tags fully support standard **PlaceholderAPI** variables.
 
-### Built-in `%unt_<param>%` expansion
+> [!IMPORTANT]
+> To use viewer-dependent placeholders (such as `%rel_...%` or `%relational_...%`), you must enable `performance.enableRelationalPlaceholders: true` in `settings.yml`. (See the [Performance Tuning Guide](../performance.md)).
 
-| Placeholder | Purpose |
-|-------------|---------|
-| `%unt_phase-mm%` | MiniMessage-style animation phase |
-| `%unt_phase-md%` | MineDown phase |
-| `%unt_phase-mm-g%` | MiniMessage gradient phase |
-| `%unt_-phase-mm%` | Negative phase (MiniMessage) |
-| `%unt_-phase-md%` | Negative phase (MineDown) |
+### Built-in `%unt_` Placeholder Expansion
 
-There is **no** `%unt_-phase-mm-g%` — put **`#-phase-mm-g#`** in the line text instead (see [Animations](../features/animations.md)).
+| Placeholder | Description |
+| :--- | :--- |
+| **`%unt_phase-mm%`** | MiniMessage-style color cycling animation phase. |
+| **`%unt_phase-md%`** | MineDown color cycling animation phase. |
+| **`%unt_phase-mm-g%`** | MiniMessage gradient cycling animation phase. |
+| **`%unt_-phase-mm%`** | Reverse MiniMessage color cycling animation phase. |
+| **`%unt_-phase-md%`** | Reverse MineDown color cycling animation phase. |
+
+> [!NOTE]
+> There is no `%unt_-phase-mm-g%` placeholder. To use reverse gradient cycles, write the token **`#-phase-mm-g#`** directly within your text lines. (See the [Animations Guide](../features/animations.md)).
 
 ---
 
 ## MiniPlaceholders
 
-Works. Prefer **`MINIMESSAGE`** or **`UNIVERSAL`** for formatting. If text looks “stuck,” try turning **`componentCaching`** **off** in [Performance](../performance.md).
+* **MiniPlaceholders** is fully supported.
+* Set `behavior.format` to `MINIMESSAGE` or `UNIVERSAL` for optimal formatting.
+* If text components appear static or fail to update, try disabling `performance.componentCaching` in `settings.yml`. (See the [Performance Tuning Guide](../performance.md)).
 
 ---
 
 ## TypeWriter
 
-Nametags can be hidden during cinematic-style scenes.
+* Custom name tags are automatically hidden during TypeWriter cinematic sequences.
 
 ---
 
 ## Floodgate
 
-Helps tell **Bedrock** players from **Java** where the plugin needs to behave differently.
+* Integrates with **Floodgate** to differentiate Bedrock Edition players from Java Edition players, adjusting name tag packaging logic where needed.
 
 ---
 
 ## FeatherServerAPI
 
-When present, the plugin can **turn off** Feather’s client nametag on supported Java clients so it does not fight with the server-side tag.
+* When present, the plugin disables Feather's client-side name tags on supported Java clients to prevent rendering conflicts.
 
 ---
 
-## Bedrock (Geyser)
+## Bedrock Edition (Geyser)
 
-**Geyser** lets Bedrock players see nametags, but the result is **not** pixel-identical to Java — backgrounds, shadows, and multi-line layouts may differ. See [Supported versions / Bedrock](../README.md#supported-versions).
+> [!NOTE]
+> Name tags render on Bedrock Edition clients connected via **Geyser**, but support is only partial. Rendering elements (such as background plates, drop-shadows, and multi-line stacks) may not appear identical to Java Edition clients due to Bedrock rendering limitations.

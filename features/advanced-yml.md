@@ -1,41 +1,36 @@
-# Optional `advanced.yml` (helmet height rules)
+# Advanced Configuration (`advanced.yml`)
+
+The optional file `plugins/UnlimitedNameTags/advanced.yml` allows you to define custom height offset rules for specific headwear or helmets (e.g., custom models, player heads, resource pack cosmetics). 
 
 > [!NOTE]
-> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](../v1/README.md).
+> The plugin does not automatically generate this file. If the file is not present, no custom height rules will be applied.
 
-You can add a second file next to your main config: **`plugins/UnlimitedNameTags/advanced.yml`**.
-
-- The plugin **never creates it for you**. If the file does not exist, nothing changes.
-- Use it to **nudge the nametag up or down** when someone wears a specific helmet (custom head, leather with model data, resource-pack items, …).
-- Reload with **`/unt reload`** like the main `settings.yml`.
-
-Handy when automatic pack support (Nexo, Oraxen, …) does not match your item, or ItemsAdder auto-height is not available in your build — see [Integrations](../integrations/integrations.md).
+Modifications to this file can be applied instantly using the `/unt reload` command. This file is useful when automatic height detection (provided by integrations like Nexo or Oraxen) is unavailable, disabled, or requires manual overrides. (See the [Integrations Guide](../integrations/integrations.md)).
 
 ---
 
-## How it works
+## How Height Rules Work
 
-* Rules live under **`helmetHeightRules`** — a **list** you add to yourself.
-* Each rule sets a **`height`** (same kind of number other hat integrations use).
-* **`priority`** — higher numbers are checked **first**. The **first rule that matches** the helmet wins.
-* Manual rules here can **override** automatic height from Nexo / Oraxen / ItemsAdder / HMCCosmetics when they return a height **greater than zero** (see server logs if unsure).
+* Rules are defined under the `helmetHeightRules` list.
+* Each rule specifies a `height` value representing the vertical offset.
+* The `priority` field determines evaluation order (higher priority rules are evaluated first). The first rule that matches the equipped helmet is applied.
+* Rules defined in `advanced.yml` override heights supplied by Nexo, Oraxen, ItemsAdder, or HMCCosmetics when they return a height value greater than zero.
 
 ---
 
-## How to write option names
+## Configuration Key Syntax
 
-Use the spellings below exactly — **no dashes** in names, and **capitals** where shown (e.g. `customModelData`, not `custom-model-data`). Copy from the sample and change the numbers.
+> [!WARNING]
+> Configuration keys in `advanced.yml` are case-sensitive and must be written in camelCase (e.g., use `customModelData`, not `custom-model-data`). Ensure you match the capitalization shown in the template exactly.
 
-### Global settings
+### Global Settings
+The following global parameters can be configured to debug or customize scaling math:
 
-You can also specify global settings in this file to tweak multiplier math or debug rules:
+* **`helmetRulesDebug`** (boolean, default: `false`): Enables verbose console logs when evaluating rules for players (throttled).
+* **`helmetRulesDebugCooldownMs`** (number, default: `5000`): Minimum cooldown interval (in milliseconds) between debug logs per player.
+* **`helmetHeightYOffsetMultiplier`** (number, default: `0.017857143`): Multiplier used to convert rule height values into Minecraft coordinate system blocks. The default conversion is `0.25 / 14`.
 
-* **`helmetRulesDebug`** (boolean, default: `false`) — Enables verbose console messages when evaluating rules for a player (highly detailed, throttled).
-* **`helmetRulesDebugCooldownMs`** (number, default: `5000`) — The minimum interval in milliseconds between debug logs per player.
-* **`helmetHeightYOffsetMultiplier`** (number, default: `0.017857143`) — Converts hat-hook helmet height into the final y-offset in Minecraft coordinates. The default is `0.25 / 14`.
-
-### Example
-
+### Rule Example
 ```yaml
 # Optional debugging / scaling config:
 helmetRulesDebug: false
@@ -67,54 +62,54 @@ helmetHeightRules:
   # permission: "myserver.bighelmet"
 ```
 
-Full copy-paste template: [`reference/advanced.example.yml`](../reference/advanced.example.yml).
+A complete configuration template is available in [`reference/advanced.example.yml`](../reference/advanced.example.yml).
 
 ---
 
-## Rule fields
+## Rule Fields Reference
 
-| Field | Required | What it means |
-|--------|-----------|---------------|
-| `priority` | No (treat as `0` if omitted) | Higher = checked earlier. |
-| `height` | Yes, must be **&gt; 0** | How much to raise the tag. |
-| `material` | No* | Helmet item type, e.g. `PLAYER_HEAD`. |
-| `customModelData` | No* | Exact **custom model data** number on the item. |
-| `customModelDataMin` / `customModelDataMax` | No* | Inclusive range — **both** needed. If you use a range, single `customModelData` is ignored. |
-| `itemModel` | No* | `namespace:key` style id for **1.20.5+** `minecraft:item_model` component (e.g. `nexo:my_custom_helmet`). |
-| `equippableModel` | No* | `namespace:key` style id on **1.21.3+** items using equippable component model. |
-| `worlds` | No | If set, only applies in those world **names**. |
-| `permission` | No | If set, player must have this permission. |
+| Field | Required | Description |
+| :--- | :--- | :--- |
+| **`priority`** | No (Defaults to `0`) | Higher priorities are evaluated first. |
+| **`height`** | Yes (Must be `> 0`) | The vertical offset value applied to the tag. |
+| **`material`** | No* | The item material type (e.g., `PLAYER_HEAD`). |
+| **`customModelData`** | No* | The exact custom model data integer value. |
+| **`customModelDataMin` / `customModelDataMax`** | No* | An inclusive range of custom model data integers. If used, `customModelData` is ignored. |
+| **`itemModel`** | No* | The namespace ID (e.g., `nexo:my_custom_helmet`) for the Minecraft 1.20.5+ `minecraft:item_model` component. |
+| **`equippableModel`** | No* | The namespace ID for the Minecraft 1.21.3+ equippable model component. |
+| **`worlds`** | No | A list of world names where the rule applies. |
+| **`permission`** | No | The permission node required for the rule to apply to the player. |
 
-\* At least **one** of: `material`, `customModelData`, both min and max, `itemModel`, or `equippableModel` — otherwise the rule never matches.
-
----
-
-## Matching logic
-
-Everything on a rule must pass:
-
-1. Permission (if you set one)
-2. World list (if you set one)
-3. Material (if you set one)
-4. Equippable model (if you set one)
-5. Item model (if you set one)
-6. Either a **range** of model data or one exact **`customModelData`**
-
-A rule with only **`material`** matches **any** stack of that item type.
-
+> [!IMPORTANT]
+> A rule must define at least **one** matching criteria (`material`, `customModelData`, the custom model data range, `itemModel`, or `equippableModel`) to be valid. Otherwise, the rule will never match.
 
 ---
 
-## If something goes wrong
+## Matching Logic
 
-* **No file** → no extra offset from this feature.
-* **Bad file on first start** → rules load as empty; check console errors.
-* **Bad file on reload** → **previous** good rules stay loaded until you fix YAML.
-* Broken single rules are **skipped** and logged — fix the numbers and reload.
+For a rule to apply, all defined criteria must evaluate to true:
+
+1. **Permission**: Checked if defined.
+2. **Worlds**: Checked if defined.
+3. **Material**: Checked if defined.
+4. **Equippable Model**: Checked if defined.
+5. **Item Model**: Checked if defined.
+6. **Model Data**: Checks either the exact `customModelData` or the inclusive range `customModelDataMin` to `customModelDataMax`.
+
+* A rule containing only a `material` definition matches any item stack of that material type.
 
 ---
 
-## See also
+## Error Handling & Troubleshooting
 
-* [Configuration (`settings.yml`)](../configuration.md)
-* [Integrations](../integrations/integrations.md) — Nexo, Oraxen, ItemsAdder, hats
+* **File Missing**: No height offsets are applied through this system.
+* **Invalid File on Startup**: The plugin console logs the configuration loading error; no rules are loaded.
+* **Invalid File on Reload**: The plugin logs the error, but keeps the **previously parsed valid rules** in memory until the configuration is fixed.
+* **Malformed Rules**: Individual rules with syntax errors are skipped and logged; other valid rules load normally.
+
+---
+
+## See Also
+
+* [Configuration Guide (`settings.yml`)](../configuration.md)
+* [Integrations Guide (Nexo, Oraxen, ItemsAdder)](../integrations/integrations.md)

@@ -1,130 +1,128 @@
-# FAQ
+# Frequently Asked Questions (FAQ)
 
+Find answers to common questions about installation, configuration, compatibility, and optimization for **UnlimitedNameTags v2.x**.
+
+---
+
+## Installation & Dependencies
+
+### What are the plugin dependencies?
+* **PacketEvents**: Required. Install it like any other plugin in the `plugins/` directory and restart the server.
+* **Paper 1.21.4+**: Required for the core plugin to load and execute correctly.
+
+### Where are the configuration files located?
+* **Primary Settings**: Managed via `plugins/UnlimitedNameTags/settings.yml`. This file is generated automatically upon the first successful startup.
+* **Helmet Height Rules**: Managed via the optional `plugins/UnlimitedNameTags/advanced.yml` configuration (which is not generated automatically).
+
+### How do I reload the configuration?
+* Run the command `/unt reload` (in-game or via the console) to reload both `settings.yml` and `advanced.yml` without restarting the server.
+
+---
+
+## Version Compatibility
+
+### Why was a backup of my configuration created automatically?
+* **Automatic Schema Migration**: The plugin automatically migrates `settings.yml` when upgrading to a version with a newer configuration schema. It saves a copy of your prior configuration as `settings.yml.backup-<timestamp>.yml` before writing the migrated file.
+
+### Is manual configuration update required after upgrading?
+* **Usually No**: The built-in migrator automatically updates old flat settings to the modern v4 layout. 
+* **Exception:** If you used the legacy `modifiers:` list in v1, you must manually rewrite them using the new `when:` condition syntax. For details, refer to the [Migration Guide](migration.md).
+
+### Why are custom name tags invisible to certain players?
+> [!WARNING]
+> **Minecraft Java 1.19.4 or newer** is required to render these display entities. Clients running versions older than 1.19.4 are physically unable to render custom name tags due to client-side engine limitations.
+
+### Does ViaVersion allow older clients to render custom name tags?
+* **No**: While ViaVersion allows older client versions to connect to the server, it cannot backport missing features (like display entities) to legacy game clients.
+
+### Are Bedrock Edition clients supported via Geyser?
 > [!NOTE]
-> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
-
----
-
-## Installation & dependencies
-
-### What else do I need besides UnlimitedNameTags?
-
-**PacketEvents** is required — download it like a normal plugin and restart. **Paper 1.21.4+** is required for the main plugin.
-
-### Where do I change settings?
-
-Almost everything is in **`plugins/UnlimitedNameTags/settings.yml`**. It appears after the first successful start.
-
-Optional helmet tuning: **`advanced.yml`** in the same folder — only if you need it; the plugin does **not** create this file for you.
-
-### How do I apply config changes without restarting?
-
-**`/unt reload`** reloads `settings.yml` and `advanced.yml` (if present) and refreshes nametags.
-
----
-
-## Versions & Compatibility
-
-### My config got backed up automatically after an upgrade — is that normal?
-
-**Yes.** The plugin auto-migrates `settings.yml` when the schema version changes and creates a backup (`settings.yml.backup-<timestamp>.yml`) before rewriting anything. Your old file is safe. See [Migration Guide](migration.md).
-
-### Do I need to hand-edit my config when upgrading from an older version?
-
-**Usually no.** The plugin migrates v1 flat nametags to the current v4 sectioned format automatically on first load. The only case requiring manual work is the old **`modifiers:`** list — the migrator removes it and you need to replace it with a `when:` string. See [Migration Guide](migration.md).
-
-### Why doesn’t someone see the custom nametag?
-
-**Minecraft Java older than 1.19.4** cannot show this kind of nametag at all. Updating the game fixes it; config cannot bypass that.
-
-### Does ViaVersion fix old clients?
-
-**No** for actually **showing** these tags. Via may help the server **detect** what a client can do, but it does not add missing features to ancient clients.
-
-### Is Bedrock the same as Java here?
-
-**No.** With **Geyser** / Bedrock, things can look different: several lines, shadows, or backgrounds may not match Java. Expect **partial** support.
+> **Bedrock/Geyser** support is only partial. Visual features such as multiple lines, custom backgrounds, text shadows, or opacity settings may not align perfectly with Java rendering.
 
 ---
 
 ## Layout & Conditions
 
-### I used `linesGroups` / `modifiers` on an old config — what now?
+### How do I migrate legacy `linesGroups` or `modifiers`?
+* The modern configuration format uses `displayGroups` to represent stacked rows. To conditionally show or hide rows, define a logical condition string in the `when:` key of each group. (See [Display Groups](features/display-groups.md)).
 
-New configs use **`displayGroups`**: each entry is one stacked row (text, item, or block). **One `when:` line per row** replaces old modifier lists for “only show if…”.
+### How do I conditionally display a name tag row?
+* Define the `when:` option under the target display group. You can use standard comparison operators and placeholders (e.g., `when: '%vault_eco_balance% > 1000'`).
 
-### How do I show a line only sometimes?
+### Why are lines ignored in `ITEM` or `BLOCK` display groups?
+* If a group's `displayType` is set to `ITEM` or `BLOCK`, the visual elements are rendered using the `itemMaterial` or `blockMaterial` fields. The `lines` list is ignored and can be left empty.
 
-Add **`when:`** under that row with a condition — for example “only if balance is above 1000” using placeholders. Examples: [Display groups](features/display-groups.md).
+### What is the difference between group-level and line-level visibility conditions?
+* **Group-level `when:`**: Hides the entire row entity when the condition is false.
+* **Line-level `when:`**: Hides only that specific text line. 
+* If a display group is hidden by a group-level condition, its line-level conditions are not evaluated.
 
-### I set up an ITEM or BLOCK row but `lines` seems ignored?
-
-For **item** or **block** rows, the visual comes from **`itemMaterial`** / **`blockMaterial`** (and related fields), not from `lines`. You can leave `lines` empty.
-
-### What is the difference between group-level `when:` and line-level `when:`?
-
-**Group-level `when:`** (on a `displayGroup`) hides the **entire row entity** when false. **Line-level `when:`** (inside a `lines` entry) hides only **that single line of text** when false. Both can be used together. The group condition is evaluated first — if the group is hidden, line conditions are not checked.
-
-### Can players toggle their own nametag visibility preferences?
-
-**Yes.** Enable **`allowPerPlayerShowOwnWhenGlobalDisabled: true`** under `visibility:` and give players the `unt.preferences` permission. They can then use `/unt preferences showown true|false`. See [Commands & Permissions](commands-permissions.md).
+### Can players customize their own name tag visibility?
+* **Yes**: Ensure `allowPerPlayerShowOwnWhenGlobalDisabled: true` is configured under `visibility:` in `settings.yml` and grant players the `unt.preferences` permission. Players can then toggle their settings in-game using the command `/unt preferences showown <true/false>`.
 
 ---
 
 ## PlaceholderAPI
 
-### Placeholders feel slow to update
+### How can I resolve delayed placeholder updates?
+* Placeholders refresh periodically on the main plugin task. Increase their update rate by lowering the global `behavior.taskInterval` ticks in `settings.yml`, keeping in mind this increases CPU usage. (See [Performance Tuning](performance.md)).
 
-The server only refreshes tags every **`taskInterval`** ticks. **Lowering** that number updates more often but costs more CPU — see [Performance](performance.md).
+### How do I enable relational (viewer vs. target) placeholders?
+* Set `performance.enableRelationalPlaceholders: true` in your `settings.yml` configuration. 
 
-### Relational placeholders (viewer vs target) don’t work
+> [!WARNING]
+> Relational placeholders require per-viewer computations and will increase server CPU usage, especially on high-population servers.
 
-Turn **`enableRelationalPlaceholders`** **on** in your settings. That can cost more on busy networks because more combinations are evaluated.
+### How can I format or customize raw placeholder outputs?
+* Define rules in the `placeholdersReplacements` section to translate raw placeholder returns (e.g., translating `Yes`/`No` outputs to formatted indicators). 
 
-### How do I change the raw text PlaceholderAPI returns?
+> [!IMPORTANT]
+> Because YAML parses terms like `Yes`, `No`, `On`, `Off`, `True`, and `False` as booleans, **always enclose these placeholders in quotation marks** (e.g., `"Yes"`, `"No"`).
 
-Use **`placeholdersReplacements`**: match the exact output and substitute nicer text. If the output is literally `Yes` or `No`, wrap it in **quotes** in YAML. [Placeholder replacements](features/placeholders-replacements.md).
-
----
-
-## Look & behaviour
-
-### Default Minecraft nametag still shows / overlaps
-
-Set **`disableDefaultNameTag: true`**. If NPCs share a real player’s name, try **`forceDisableDefaultNameTag: true`**.
-
-### I want to see my own nametag
-
-**`showCurrentNameTag: true`** and give the player permission **`unt.showownnametag`** if your setup uses it.
-
-### Tag sits too high / low with a custom hat
-
-Prefer automatic pack hooks (Nexo, Oraxen, …) where they exist. Otherwise use **`advanced.yml`** rules. Some builds do not auto-detect every item plugin — see [Integrations](integrations/integrations.md).
+For details, refer to the [Placeholder Replacements Guide](features/placeholders-replacements.md).
 
 ---
 
-## Performance
+## Look & Behavior
 
-### Through-wall dimming is on but feels laggy
+### How do I prevent vanilla name tags from overlapping?
+* Set `behavior.disableDefaultNameTag: true` in `settings.yml`. If vanilla name tags remain visible on custom NPCs, set `behavior.forceDisableDefaultNameTag: true`.
 
-Raise **`visibility.obscuredNametagCheckInterval`** — it controls how often the line-of-sight raycast runs. The check runs on the **main thread** (required for an accurate ray trace), so raising it to `10`–`20` ticks significantly reduces cost. The visual delay before a tag dims equals this interval, which is usually unnoticeable. See [Performance](performance.md).
+### How can players see their own name tags?
+* Set `visibility.showCurrentNameTag: true` in `settings.yml` and grant the player the permission node `unt.showownnametag`.
 
-### Server struggles with many players
-
-Start with [Performance](performance.md). In short: **raise `taskInterval`**, avoid `UNIVERSAL` formatting unless you need it, turn off wall / “only while looking” extras if unused, slow down heavy animations, and trim down placeholder-heavy lines.
-
-### Animations are smooth but CPU is high
-
-Increase **`displayAnimationInterval`** or the per-row **`animationInterval`**, and use **`cullBeyondBlocks`** on decorative motion so far-away players do not keep animations running.
+### How do I adjust name tag height for custom helmets or items?
+* Automatic height hooks are provided for popular item plugins (such as Nexo or Oraxen). For other custom assets, adjust offset heights manually using rules in `advanced.yml`. (See the [Integrations Guide](integrations/integrations.md)).
 
 ---
 
-## Support & bugs
+## Performance Tuning
 
-### Where is help?
+### How do I optimize through-wall occlusion performance?
+> [!WARNING]
+> Line-of-sight and through-wall checks require raycast calculations on the primary server thread. If enabling through-wall occlusion (`throughWallMode` set to `OBSCURED` or `HIDE`) impacts performance, increase `visibility.throughWallSettings.checkInterval` to `10` or `20` ticks in `settings.yml`. This decreases calculation frequency with negligible visual impact.
 
-[Discord](https://discord.gg/W4Fu8fqCKs). For bugs, say your Paper/Spigot version, UnlimitedNameTags version, paste **relevant** config (no secrets), and what you did vs what you expected.
+### How do I optimize performance on a high-population server?
+* Refer to the [Performance Tuning Guide](performance.md) for full details. 
+* Key actions include:
+  1. Increasing `behavior.taskInterval` (e.g., to `20` or higher).
+  2. Setting `behavior.format` to `MINIMESSAGE`.
+  3. Disabling unused line-of-sight check features.
+  4. Optimizing placeholder updates via `performance.placeholderUpdateRates`.
 
-### `/unt debugger` vs `/unt debug`
+### How do I optimize animation performance?
+* Increase the global `behavior.displayAnimationInterval` or configure custom `animationInterval` values on specific rows. 
+* Define the `cullBeyondBlocks` parameter in your `animation:` configurations to skip animation updates when players are distant.
 
-**`/unt debugger true|false`** toggles **ongoing** debug output for the nametag system. **`/unt debug`** runs **one** debug pass for whoever ran the command. Both need staff-style permissions (`unt.debug`).
+---
+
+## Support & Diagnostics
+
+### Where can I request official support?
+* Join our official **[Discord Server](https://discord.gg/W4Fu8fqCKs)**. 
+* When reporting issues, please provide your Spigot/Paper version, UnlimitedNameTags version, relevant configuration snippets (ensuring you omit sensitive info), and steps to reproduce.
+
+### What is the difference between `/unt debugger` and `/unt debug`?
+* **`/unt debugger <true/false>`**: Toggles persistent, continuous debug logging to the server console.
+* **`/unt debug`**: Executes a single diagnostic pass for the player who ran the command.
+* Both commands require the staff permission node `unt.debug`.

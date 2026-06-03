@@ -1,187 +1,171 @@
 # Commands & Permissions
 
-> [!NOTE]
-> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
+Manage and configure **UnlimitedNameTags** in-game or via console using the command `/unt` (alias `/unlimitednametags`). 
 
-Use **`/unt`** in chat (same idea as **`/unlimitednametags`** — either spelling works).
-
-**Permissions** are the nodes you give with LuckPerms, PermissionsEx, or whatever you already use.
+Permissions can be assigned using **LuckPerms** or any compatible permission management plugin.
 
 ---
 
-## Commands
+## Command Reference
 
-### General
+### General Commands
 
 #### `/unt`
-
-- **Description:** Shows the plugin version and lists subcommands.
-- **Usage:** `/unt`
-- **Permission:** none
+* **Description:** Displays the plugin version and lists all available subcommands.
+* **Usage:** `/unt`
+* **Permission:** None
 
 ---
 
 #### `/unt reload`
-
-- **Description:** Reloads configuration and refreshes nametag state **without** restarting the server.
-- **Usage:** `/unt reload`
-- **Behaviour:** Reloads `settings.yml` and, if present, `advanced.yml`; refreshes the nametag manager and placeholder manager.
-- **Permission:** `unt.reload`
+* **Description:** Reloads all configuration files and refreshes active name tags without requiring a server restart.
+* **Usage:** `/unt reload`
+* **Behavior:** Reloads `settings.yml` and `advanced.yml` (if present), then restarts the name tag and placeholder managers.
+* **Permission:** `unt.reload`
 
 ---
 
 #### `/unt debugger <true|false>`
-
-- **Description:** Turns **persistent debug mode** for the nametag system on or off.
-- **Usage:** `/unt debugger true` or `/unt debugger false`
-- **Permission:** `unt.debug`
+* **Description:** Toggles persistent debug mode for the name tag system.
+* **Usage:** `/unt debugger <true|false>`
+* **Permission:** `unt.debug`
 
 ---
 
 #### `/unt debug`
-
-- **Description:** Runs a **one-shot** debug pass for the command sender (unlike `/unt debugger`, which toggles persistent debug).
-- **Usage:** `/unt debug`
-- **Permission:** `unt.debug`
+* **Description:** Executes a single debug check pass relative to the command executor.
+* **Usage:** `/unt debug`
+* **Permission:** `unt.debug`
 
 ---
 
-### Nametag Management
+### Name Tag Management
 
 #### `/unt show <player>`
-
-- **Description:** Shows the nametag for the given player (server / tracking side).
-- **Usage:** `/unt show <player>`
-- **Example:** `/unt show AlexDev`
-- **Permission:** `unt.show`
+* **Description:** Forces the server-side visibility tracker to show the target player's name tag.
+* **Usage:** `/unt show <player>`
+* **Example:** `/unt show AlexDev`
+* **Permission:** `unt.show`
 
 ---
 
 #### `/unt hide <player>`
-
-- **Description:** Hides the nametag for the given player.
-- **Usage:** `/unt hide <player>`
-- **Example:** `/unt hide AlexDev`
-- **Permission:** `unt.hide`
+* **Description:** Forces the server-side visibility tracker to hide the target player's name tag.
+* **Usage:** `/unt hide <player>`
+* **Example:** `/unt hide AlexDev`
+* **Permission:** `unt.hide`
 
 ---
 
 #### `/unt refresh <player>`
-
-- **Description:** Refreshes how **you** see that player's nametag (command sender only).
-- **Usage:** `/unt refresh <player>` *(player sender only)*
-- **Example:** `/unt refresh AlexDev`
-- **Permission:** `unt.refresh`
+* **Description:** Refreshes the visual rendering of the target player's name tag specifically for the command sender.
+* **Usage:** `/unt refresh <player>` *(Must be executed by a player)*
+* **Example:** `/unt refresh AlexDev`
+* **Permission:** `unt.refresh`
 
 ---
 
-### Customisation
+### Configuration Modifiers
 
 #### `/unt billboard <type>`
-
-- **Description:** Sets the default billboard mode (`CENTER`, `HORIZONTAL`, `VERTICAL`, `FIXED`). Persisted to `settings.yml`.
-- **Usage:** `/unt billboard <type>`
-- **Example:** `/unt billboard CENTER`
-- **Permission:** `unt.billboard`
+* **Description:** Updates and persists the default billboard mode in `settings.yml`.
+* **Accepted Values:** `CENTER`, `HORIZONTAL`, `VERTICAL`, `FIXED` (See [Billboard Settings](features/billboards.md)).
+* **Usage:** `/unt billboard <type>`
+* **Example:** `/unt billboard CENTER`
+* **Permission:** `unt.billboard`
 
 ---
 
 #### `/unt formatter <formatter>`
-
-- **Description:** Sets the default text formatter (`MINIMESSAGE`, `MINEDOWN`, `LEGACY`, `UNIVERSAL`). Persisted to `settings.yml`.
-- **Usage:** `/unt formatter <formatter>`
-- **Example:** `/unt formatter MINIMESSAGE`
-- **Permission:** `unt.formatter`
+* **Description:** Updates and persists the default text formatter in `settings.yml`.
+* **Accepted Values:** `MINIMESSAGE`, `MINEDOWN`, `LEGACY`, `UNIVERSAL`.
+* **Usage:** `/unt formatter <formatter>`
+* **Example:** `/unt formatter MINIMESSAGE`
+* **Permission:** `unt.formatter`
 
 ---
 
-### Other Players' Nametags (Per Viewer)
+### Visibility Controls (Per-Viewer)
 
 #### `/unt hideOtherNametags [silent]`
-
-- **Description:** Hides other players' nametags for the command sender.
-- **Usage:** `/unt hideOtherNametags` or `/unt hideOtherNametags true` *(suppress confirmation message)*
-- **Permission:** `unt.hideOtherNametags`
+* **Description:** Hides all other players' name tags from the executor's view.
+* **Usage:** `/unt hideOtherNametags [true]` *(Pass `true` to suppress confirmation messages)*
+* **Permission:** `unt.hideOtherNametags`
 
 ---
 
 #### `/unt showOtherNametags [silent]`
-
-- **Description:** Shows other players' nametags again for the command sender.
-- **Usage:** `/unt showOtherNametags` or `/unt showOtherNametags true` *(suppress confirmation message)*
-- **Permission:** `unt.showOtherNametags`
+* **Description:** Restores the visibility of other players' name tags for the executor.
+* **Usage:** `/unt showOtherNametags [true]` *(Pass `true` to suppress confirmation messages)*
+* **Permission:** `unt.showOtherNametags`
 
 ---
 
-### Per-Player Preferences
+### Player Preferences
 
-Preferences are stored per-player via PersistentDataContainer and persist across restarts.
+Player preferences are stored via the player's `PersistentDataContainer` and persist across server restarts.
 
 #### `/unt preferences`
-
-- **Description:** Lists the available preference sub-commands.
-- **Usage:** `/unt preferences`
-- **Permission:** `unt.preferences`
+* **Description:** Lists all available preference subcommands.
+* **Usage:** `/unt preferences`
+* **Permission:** `unt.preferences`
 
 ---
 
 #### `/unt preferences get [player]`
-
-- **Description:** Shows the current nametag preferences for yourself, or for a target player.
-- **Usage:** `/unt preferences get` or `/unt preferences get <player>`
-- **Note:** Viewing another player's preferences requires `unt.preferences.others`.
-- **Permission:** `unt.preferences` (self), `unt.preferences.others` (target)
+* **Description:** Displays active name tag preferences for yourself or a target player.
+* **Usage:** `/unt preferences get [player]`
+* **Permission:** `unt.preferences` (for self), `unt.preferences.others` (to view another player)
 
 ---
 
 #### `/unt preferences seeothers <true|false> [player]`
-
-- **Description:** Toggles whether you (or a target player) see other players' nametags. `false` is equivalent to `/unt hideOtherNametags`; `true` is equivalent to `/unt showOtherNametags`. Preference is persisted.
-- **Usage:** `/unt preferences seeothers true|false [player]`
-- **Permission:** `unt.preferences` (self), `unt.preferences.others` (target)
+* **Description:** Toggles whether you (or the target player) can see other players' name tags. Setting this to `false` functions identically to `/unt hideOtherNametags`.
+* **Usage:** `/unt preferences seeothers <true/false> [player]`
+* **Permission:** `unt.preferences` (for self), `unt.preferences.others` (to modify another player)
 
 ---
 
 #### `/unt preferences showown <true|false> [player]`
+* **Description:** Toggles whether you (or the target player) can see your own name tag.
+* **Usage:** `/unt preferences showown <true/false> [player]`
+* **Permission:** `unt.preferences` (for self), `unt.preferences.others` (to modify another player)
 
-- **Description:** Toggles whether you (or a target player) see your **own** nametag above your head.
-- **Usage:** `/unt preferences showown true|false [player]`
-- **Note:** Requires `allowPerPlayerShowOwnWhenGlobalDisabled: true` in `settings.yml` when the global `showCurrentNameTag` is `false`.
-- **Permission:** `unt.preferences` (self), `unt.preferences.others` (target)
+> [!IMPORTANT]
+> To allow players to toggle their own name tag visibility when the global `showCurrentNameTag` setting is disabled, you must enable `allowPerPlayerShowOwnWhenGlobalDisabled: true` in `settings.yml`.
 
 ---
 
 #### `/unt preferences showothers <true|false> [player]`
-
-- **Description:** Toggles whether your (or a target player's) nametag is visible to **other players**.
-- **Usage:** `/unt preferences showothers true|false [player]`
-- **Permission:** `unt.preferences` (self), `unt.preferences.others` (target)
+* **Description:** Toggles whether your (or the target player's) name tag is visible to other players on the server.
+* **Usage:** `/unt preferences showothers <true/false> [player]`
+* **Permission:** `unt.preferences` (for self), `unt.preferences.others` (to modify another player)
 
 ---
 
 ## Default Permissions
 
-Configure in your permissions plugin (e.g. LuckPerms).
+Assign these nodes within your permissions plugin (e.g., LuckPerms) to control basic visibility behaviors:
 
-| Permission | Default | Purpose |
-|------------|---------|---------|
-| `unt.shownametags` | **true** | See other players' nametags. If removed, that player will not see any custom nametags. |
-| `unt.showownnametag` | **true** | See your own nametag (when `showCurrentNameTag` is enabled in config). |
+| Permission | Default Status | Purpose |
+| :--- | :--- | :--- |
+| **`unt.shownametags`** | `true` | Allows the player to see other players' custom name tags. If revoked, the player will not see any custom name tags. |
+| **`unt.showownnametag`** | `true` | Allows the player to see their own name tag (only active if `showCurrentNameTag` is set to `true` globally). |
 
 ---
 
-## Command Permissions (Summary)
+## Command Permissions Summary
 
-| Permission | Default | Commands |
-|------------|---------|----------|
-| `unt.reload` | op | `/unt reload` |
-| `unt.debug` | op | `/unt debug`, `/unt debugger` |
-| `unt.show` | op | `/unt show` |
-| `unt.hide` | op | `/unt hide` |
-| `unt.refresh` | op | `/unt refresh` |
-| `unt.billboard` | op | `/unt billboard` |
-| `unt.formatter` | op | `/unt formatter` |
-| `unt.hideOtherNametags` | true | `/unt hideOtherNametags` |
-| `unt.showOtherNametags` | true | `/unt showOtherNametags` |
-| `unt.preferences` | true | `/unt preferences` (self) |
-| `unt.preferences.others` | op | `/unt preferences … <player>` |
+| Permission | Default Group | Bound Commands |
+| :--- | :--- | :--- |
+| **`unt.reload`** | `op` | `/unt reload` |
+| **`unt.debug`** | `op` | `/unt debug`, `/unt debugger` |
+| **`unt.show`** | `op` | `/unt show` |
+| **`unt.hide`** | `op` | `/unt hide` |
+| **`unt.refresh`** | `op` | `/unt refresh` |
+| **`unt.billboard`** | `op` | `/unt billboard` |
+| **`unt.formatter`** | `op` | `/unt formatter` |
+| **`unt.hideOtherNametags`** | `true` | `/unt hideOtherNametags` |
+| **`unt.showOtherNametags`** | `true` | `/unt showOtherNametags` |
+| **`unt.preferences`** | `true` | `/unt preferences` (self) |
+| **`unt.preferences.others`** | `op` | `/unt preferences ... <player>` |

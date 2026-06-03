@@ -1,111 +1,132 @@
 # Animations
 
+**UnlimitedNameTags** supports two primary categories of visual effects to make player name tags dynamic:
+
+1. **Text Phase Placeholders**: Inline text tokens (e.g., `#phase-mm#`) that shift text color or gradients periodically.
+2. **Display Group Motion**: Configured via the `animation:` block of a display group, causing the physical display entity to move (e.g., rotate, bob, pulse, or orbit).
+
+---
+
+## Text Phase Placeholders
+
+Phase placeholders are shortcodes defined directly within a display group's text lines. These are parsed inline and update on each placeholder refresh cycle:
+
+| Token | Formatting Engine | Effect |
+| :--- | :--- | :--- |
+| **`#phase-mm#`** | MiniMessage | Standard color transition phase. |
+| **`#phase-mm-g#`** | MiniMessage | Multi-color gradient transition phase. |
+| **`#phase-md#`** | MineDown | MineDown formatting color transition phase. |
+| **`#-phase-mm#`** | MiniMessage | Reverse-direction color transition phase. |
+| **`#-phase-mm-g#`** | MiniMessage | Reverse-direction gradient transition phase. |
+| **`#-phase-md#`** | MineDown | Reverse-direction MineDown color transition phase. |
+
+### PlaceholderAPI Integration
+You can query phase values using the following PlaceholderAPI expansion variables:
+* `%unt_phase-mm%`
+* `%unt_phase-md%`
+* `%unt_phase-mm-g%`
+* `%unt_-phase-mm%`
+* `%unt_-phase-md%`
+
 > [!NOTE]
-> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](../v1/README.md).
+> There is no `%unt_-phase-mm-g%` placeholder. To render reverse-direction gradient transitions, insert the inline token **`#-phase-mm-g#`** directly into the text.
 
-Two kinds of effects you can use:
-
-1. **Text “phase” tokens** — special pieces inside a line (like `#phase-mm#`) that cycle colours or gradients when the tag refreshes.
-2. **Whole-tag motion** — an **`animation:`** block under a row makes the display **move** (spin, bob, etc.).
+> [!IMPORTANT]
+> The speed of text phase transitions is directly linked to the global **`taskInterval`** setting. Lowering the interval speeds up the color cycle but increases CPU utilization. For details, refer to the [Performance Tuning Guide](../performance.md).
 
 ---
 
-## Phase placeholders (inside line text)
+## Animation Intervals
 
-These are **not** the same as the YAML **`animation:`** section — they are **short codes** written directly in TEXT lines. They update whenever placeholders refresh.
+Animation update frequencies are controlled by the following parameters:
 
-| Token | Role |
-|-------|------|
-| `#phase-mm#` | MiniMessage rainbow / phase value |
-| `#phase-mm-g#` | MiniMessage gradient phase |
-| `#phase-md#` | MineDown phase |
-| `#-phase-mm#` | Negative phase (MiniMessage) |
-| `#-phase-mm-g#` | Negative phase (gradient) |
-| `#-phase-md#` | Negative phase (MineDown) |
+| Parameter | Scope | Description |
+| :--- | :--- | :--- |
+| **`behavior.taskInterval`** | Global | Defines the refresh frequency for placeholders and text phase placeholders. |
+| **`behavior.displayAnimationInterval`** | Global | Defines the tick interval between entity pose updates for all groups lacking a specific interval override. Set to `0` to match `taskInterval`. |
+| **`animationInterval`** | Local | Set within a display group to override the global update frequency for that specific group. |
 
-PlaceholderAPI expansion **`unt`** also offers: `%unt_phase-mm%`, `%unt_phase-md%`, `%unt_phase-mm-g%`, `%unt_-phase-mm%`, `%unt_-phase-md%`. There is **no** `%unt_-phase-mm-g%` — use **`#-phase-mm-g#`** in the line text instead.
-
-How “fast” phases feel ties to **`taskInterval`** — more refreshes per second = faster cycling but more CPU. See [Performance](../performance.md).
+* **Higher Values**: Decreases packet payload frequency, reducing server CPU overhead and network traffic.
+* **Lower Values**: Yields smoother physical animations at the cost of higher server payload tracking.
 
 ---
 
-## Refresh rate vs display animations
+## Display Group Animations (`animation:`)
 
-| Setting | Controls |
-|---------|----------|
-| **`taskInterval`** | How often placeholders and phase tokens refresh. |
-| **`displayAnimationInterval`** | Time between **pose** updates if the row has no `animationInterval`. `0` = follow `taskInterval`. |
-| **`animationInterval`** (per row) | Override for that row only. |
+Display group animations modify the visual translation or scale of an entity. The parent `animation:` block contains several general configuration fields:
 
-**Higher** numbers = slower motion / refresh and usually **less load**.
+| Field | Default | Description |
+| :--- | :--- | :--- |
+| **`enabled`** | `true` | When set to `false`, the animation is disabled and does not consume resources. |
+| **`speed`** | `1.0` | Motion speed multiplier. |
+| **`cullBeyondBlocks`** | `0` | Radius (in blocks) within which at least one viewer must be present to update the animation. Set to `0` to disable culling. |
+| **`customProperties`** | `{}` | Key-value pairs for third-party developer integrations. |
+
+> [!TIP]
+> **Animation Culling:** To optimize performance, always configure **`cullBeyondBlocks`** on complex animations. If no players are within the specified radius, the server will stop sending position update packets for that entity.
 
 ---
 
-## Display animations (`animation:`)
+## Animation Types
 
-Every **`animation:`** block has a **`type`** and optional fields shared by **all** types:
+### 1. `rotate`
+Rotates the display group entity around the player.
 
-| Field | Default | Notes |
-|-------|---------|--------|
-| `enabled` | `true` | If `false`, animation does nothing. |
-| `speed` | `1.0` | Speed multiplier (1 = default for that type). |
-| `cullBeyondBlocks` | `0` | If &gt; 0, pose updates may be skipped when no viewer is within this distance (blocks). `0` = no culling. |
-| `customProperties` | `{}` | Extra string pairs for APIs; built-in types ignore unknown keys. |
+| Option | Default | Description |
+| :--- | :--- | :--- |
+| **`axis`** | `"Y"` | Rotation axis. `Y` creates a flat spin; `X` or `Z` tilts the alignment plane; `XYZ` tumbles on all axes. |
+| **`degreesPerSecond`** | `90` | Degrees of rotation per second at a speed of `1.0`. |
 
-Then each **`type`** adds its own fields (defaults below).
+### 2. `bob`
+Causes the display group to slide vertically in a smooth sine wave.
 
-### `rotate`
+| Option | Default | Description |
+| :--- | :--- | :--- |
+| **`amplitude`** | `0.06` | Maximum height displacement (in blocks) from the origin. |
+| **`bobsPerSecond`** | `1.0` | Full up-and-down cycles completed per second at a speed of `1.0`. |
 
-| Field | Default | Notes |
-|-------|---------|--------|
-| `axis` | `"Y"` | `Y` = turntable spin; `X` / `Z` = tilt plane; `XYZ` = slow tumble (combined axes). |
-| `degreesPerSecond` | `90` | Degrees per second at `speed` 1. |
+### 3. `dvd_bounce`
+Translates the display group along a rectangular 2D plane (horizontal screensaver style bounce).
 
-### `bob`
+| Option | Default | Description |
+| :--- | :--- | :--- |
+| **`halfWidth`** | `0.12` | Half-width of the horizontal bounce bounds (in blocks, local X). |
+| **`halfDepth`** | `0.1` | Half-depth of the horizontal bounce bounds (in blocks, local Z). |
+| **`pace`** | `0.35` | Travel speed of the entity (blocks per second at a speed of `1.0`). |
 
-| Field | Default | Notes |
-|-------|---------|--------|
-| `amplitude` | `0.06` | Vertical motion amplitude (blocks, local Y). |
-| `bobsPerSecond` | `1.0` | Full up–down cycles per second at `speed` 1. |
+### 4. `pulse_scale`
+Cycles the scale of the display group in a breathing rhythm.
 
-### `dvd_bounce`
+| Option | Default | Description |
+| :--- | :--- | :--- |
+| **`minMultiplier`** | `0.92` | Minimum scale factor relative to the display group's configured scale. |
+| **`maxMultiplier`** | `1.08` | Maximum scale factor relative to the display group's configured scale. |
+| **`pulsesPerSecond`** | `1.0` | Full breathing cycles completed per second at a speed of `1.0`. |
 
-| Field | Default | Notes |
-|-------|---------|--------|
-| `halfWidth` | `0.12` | Half-width of the bounce box along local X (blocks). |
-| `halfDepth` | `0.1` | Half-depth along local Z (blocks); DVD-style motion in the horizontal plane above the tag. |
-| `pace` | `0.35` | Travel speed scale (blocks/s at `speed` 1). |
+### 5. `wiggle`
+Tilts the display group back and forth along its rotation axis.
 
-### `pulse_scale`
+| Option | Default | Description |
+| :--- | :--- | :--- |
+| **`amplitudeDegrees`** | `10` | Peak rotation deflection (in degrees). |
+| **`wigglesPerSecond`** | `2.0` | Full back-and-forth cycles completed per second at a speed of `1.0`. |
 
-| Field | Default | Notes |
-|-------|---------|--------|
-| `minMultiplier` | `0.92` | Minimum scale multiplier (relative to the row’s scale). |
-| `maxMultiplier` | `1.08` | Maximum scale multiplier. |
-| `pulsesPerSecond` | `1.0` | Full breathe cycles per second at `speed` 1. |
+### 6. `orbit`
+Translates the display group in a circular orbit around the central axis.
 
-### `wiggle`
+| Option | Default | Description |
+| :--- | :--- | :--- |
+| **`radius`** | `0.1` | Distance radius of the orbit (in blocks, local XZ plane). |
+| **`rotationsPerSecond`** | `0.5` | Full orbital rotations completed per second at a speed of `1.0`. |
 
-| Field | Default | Notes |
-|-------|---------|--------|
-| `amplitudeDegrees` | `10` | Peak tilt amplitude (degrees). |
-| `wigglesPerSecond` | `2.0` | Wiggle cycles per second at `speed` 1. |
+### 7. `custom`
+Hooks into custom animation loops registered programmatically by developers.
 
-### `orbit`
+| Option | Default | Description |
+| :--- | :--- | :--- |
+| **`id`** | `""` | The unique ID of the handler registered via `UNTPaperAPI` or `UNTAPI`. |
 
-| Field | Default | Notes |
-|-------|---------|--------|
-| `radius` | `0.1` | Orbit radius (blocks, local XZ plane). |
-| `rotationsPerSecond` | `0.5` | Full orbits per second at `speed` 1. |
-
-### `custom`
-
-| Field | Default | Notes |
-|-------|---------|--------|
-| `id` | `""` | Must match a handler id registered with **`registerNametagCustomAnimation`** (`UNTAPI` / `UnlimitedNameTagsPlugin`). |
-
-In YAML:
-
+#### Custom Animation YAML Syntax
 ```yaml
 animation:
   type: custom
@@ -115,8 +136,9 @@ animation:
 
 ---
 
-## Example: Rotating Item
+## Configuration Examples
 
+### Example: Rotating Item Display
 ```yaml
 displayGroups:
   - displayType: ITEM
@@ -132,8 +154,7 @@ displayGroups:
       cullBeyondBlocks: 32
 ```
 
-## Example: Pulsing Text
-
+### Example: Pulsing Text Display
 ```yaml
 displayGroups:
   - lines:
@@ -151,21 +172,7 @@ displayGroups:
 
 ---
 
-## Summary: all built-in `type` values
+## See Also
 
-| `type` | Purpose |
-|--------|---------|
-| `rotate` | Spin / tilt / tumble |
-| `bob` | Vertical bob |
-| `dvd_bounce` | Horizontal plane screensaver bounce |
-| `pulse_scale` | Breathing scale |
-| `wiggle` | Tilt wiggle |
-| `orbit` | Circular motion in XZ |
-| `custom` | For **developers** hooking custom motion |
-
----
-
-## See also
-
-- [Display groups](display-groups.md)  
-- [Performance](../performance.md)  
+* [Display Groups Guide](display-groups.md)
+* [Performance Tuning Guide](../performance.md)

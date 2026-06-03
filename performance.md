@@ -1,26 +1,21 @@
-# Performance
+# Performance Optimization
 
-> [!NOTE]
-> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
-
-Nametags redraw and ask PlaceholderAPI for fresh text on a schedule. When lots of players are online, or lines use heavy placeholders, small changes in **`settings.yml`** can keep things smooth.
-
-**Ticks:** on most servers **20 ticks ≈ 1 second**. Settings often say “every N ticks.”
+On high-population servers or configurations utilizing complex placeholders, optimizing the `settings.yml` file is essential to maintain high server performance. Name tags periodically query PlaceholderAPI and refresh display packets. Small configuration adjustments can significantly reduce CPU overhead.
 
 ---
 
-## Where to look in the file (newer layouts)
+## Configuration Categories
 
-Recent plugin versions group “global” switches under three **headings** in `settings.yml`:
+Global optimization switches are grouped under three main sections in `settings.yml`:
 
-- **`behavior:`** — how often things update, how far tags are sent, text format, default facing mode, etc.
-- **`visibility:`** — sneaking fade, “only while looking,” seeing through walls, seeing your own tag, …
-- **`performance:`** — optional caching, slowing down specific placeholders, relational PlaceholderAPI mode
+* **`behavior`**: Defines task update intervals, client-side render distances, formatting engines, and camera alignment modes.
+* **`visibility`**: Configures sneak transparency, raycast visibility checks, through-wall dimming, and self-view toggles.
+* **`performance`**: Manages caching mechanisms, custom placeholder refresh rates, and relational placeholder processing.
 
-If your file is older, some keys may sit at the **top level** until you upgrade and the plugin reorganises them. The **names** of the options are the same — they just move under the right heading.
+If you are using an older configuration format, these options may appear at the root level of the file. The plugin will automatically restructure them into their designated categories upon startup.
 
 ```yaml
-configVersion: 4
+configVersion: 5
 
 behavior:
   taskInterval: 20
@@ -40,10 +35,11 @@ visibility:
   showWhileLooking: false
   showCurrentNameTag: false
   allowPerPlayerShowOwnWhenGlobalDisabled: false
-  obscuredNametagThroughWalls: false
-  obscuredNametagOpacity: 55
-  obscuredNametagMaxDistance: 48.0
-  obscuredNametagCheckInterval: 5
+  throughWallMode: SEE_THROUGH
+  throughWallSettings:
+    opacity: 55
+    maxDistance: 48.0
+    checkInterval: 5
 
 performance:
   componentCaching: false
@@ -52,114 +48,102 @@ performance:
   placeholderUpdateRates: {}
 
 nameTags:
-  # your presets…
+  # your presets...
 ```
 
-Per-option explanations: [Configuration](configuration.md).
+For a comprehensive explanation of every configuration setting, refer to the [Configuration Guide](configuration.md).
 
 ---
 
-## What usually costs the most
+## Key Performance Factors
 
-| Area | Plain-English effect |
-|------|----------------------|
-| **PlaceholderAPI** | Every refresh asks placeholders again — slow or fancy expansions add up with many players and many lines. |
-| **Refresh speed** | **`behavior.taskInterval`** — lower = snappier tags, busier server. |
-| **Moving tag animations** | Pose updates on a timer; you can slow them or stop updating when nobody is near. |
-| **“Relational” placeholders** | Some placeholders need “viewer + target”; turning that **on** can multiply work. |
-| **Text format** | **`UNIVERSAL`** is the richest and **heaviest**; **`MINIMESSAGE`** is the usual sweet spot. |
-| **Special visibility modes** | “Only while looking” and “through walls” run extra checks. |
-| **View distance** | **`behavior.viewDistance`** — how far the game **bothers** drawing the tag; lower often means less work for people far away. |
+| System | Impact Description |
+| :--- | :--- |
+| **PlaceholderAPI** | Querying placeholders is a primary driver of CPU usage. Complex or poorly optimized expansions aggregate quickly when queried per player, per line, at frequent intervals. |
+| **Refresh Intervals** | Defined by `behavior.taskInterval`. Lower values yield responsive tags but increase server load. |
+| **Animations** | Updates display entity positions on a timer. These can be culled when players are distant or out of sight. |
+| **Relational Placeholders** | Requires the plugin to evaluate placeholders on a per-viewer, per-target basis, multiplying computation costs. |
+| **Text Formatting** | The `UNIVERSAL` formatter is rich but resource-heavy. `MINIMESSAGE` represents the optimal performance-to-feature ratio. |
+| **Visibility Checks** | Line-of-sight checks ("Show While Looking" and "Through Walls") require active raycasting calculations. |
+| **View Distance** | Defined by `behavior.viewDistance`. Decreasing client-side draw distances reduces packets sent to distant players. |
 
 ---
 
 ## `behavior.taskInterval`
 
-Seconds-per-refresh is roughly **`taskInterval / 20`**.
+The refresh interval in seconds is calculated as `taskInterval / 20`.
 
-- **Bigger number** (e.g. `40`): updates less often, lighter server, leaderboards / money text feel slower.
-- **Smaller number** (e.g. `10`): livelier, heavier.
-
-For many servers **`20`** (about once per second) is a good starting point.
+* **Higher Values** (e.g., `40`): Reduces CPU load. Economy balances, leaderboard positions, and placeholder updates will feel slower.
+* **Lower Values** (e.g., `10`): Provides highly responsive tags but increases CPU utilization.
+* **Default Recommended:** `20` (once per second) is optimal for most production servers.
 
 ---
 
-## `behavior.displayAnimationInterval` and per-row `animationInterval`
+## `behavior.displayAnimationInterval` & `animationInterval`
 
-Controls how often **moving** parts of the tag update. If a row sets its own **`animationInterval`**, that wins; otherwise the global **`displayAnimationInterval`** applies. **`0`** means “match `taskInterval`.”
+These settings control the refresh rate of moving display elements.
+* **Global Rate:** `behavior.displayAnimationInterval` defines the global tick interval.
+* **Local Override:** Setting an `animationInterval` within a specific display group overrides the global rate.
+* **Disabled/Match:** Setting this to `0` forces animations to sync with the main `taskInterval`.
 
-Rainbow-style **text** tokens like `#phase-mm#` still follow the main placeholder refresh.
+> [!NOTE]
+> Rainbow text formatting tags (such as `#phase-mm#`) follow the main placeholder refresh rate (`taskInterval`) rather than the animation intervals.
 
-More: [Animations](features/animations.md).
+For details, refer to the [Animations Guide](features/animations.md).
 
 ---
 
 ## `behavior.format`
 
-| Value | When to use |
-|-------|-------------|
-| `MINIMESSAGE` | Default recommendation — modern `<…>` style colours. |
-| `MINEDOWN` | If you write lines in MineDown syntax. |
-| `LEGACY` | Classic `&` colour codes. |
-| `UNIVERSAL` | Supports almost everything — **most CPU**. |
+Select the least complex formatter that meets your styling needs:
+
+| Formatter | Recommended Use |
+| :--- | :--- |
+| **`MINIMESSAGE`** | **Highly Recommended**. Modern, highly optimized, and uses standard `<color>` syntax. |
+| **`MINEDOWN`** | Use only if your configurations are specifically written in MineDown syntax. |
+| **`LEGACY`** | Classic character-based styling (`&` codes). |
+| **`UNIVERSAL`** | Parses both legacy and modern formats. **Consumes the most CPU**. |
 
 ---
 
 ## `behavior.viewDistance`
 
-The number in the file is **scaled** before it goes to players’ clients — it is not “exact blocks.” **Lower** usually means the tag stops being drawn sooner as you walk away, which can help on huge worlds.
+Defines client-side render distance. This value is scaled internally before transmission. Lowering this value ensures that client-side rendering stops at shorter distances, reducing packet overhead.
 
 ---
 
-## `behavior.compactDisplayGroupStack` and `displayGroupLineHeightBlocks`
+## Compact Stacking Options
 
-When **`compactDisplayGroupStack: true`**, empty or hidden rows do not reserve vertical space — the stack packs tighter. Mostly a visual choice; it does not replace tuning placeholders.
-
-**`displayGroupLineHeightBlocks`** (default `0.25`) is the estimated height per resolved text line used to calculate compact spacing. Adjust if your scale or font size differs significantly from the default.
-
----
-
-## `behavior.removeEmptyLines`
-
-Hides blank lines when placeholders come back empty — less clutter, tiny bit less work.
+* **`behavior.compactDisplayGroupStack`**: When set to `true`, hidden or empty rows do not reserve vertical space, ensuring name tags pack tightly.
+* **`behavior.displayGroupLineHeightBlocks`** (Default: `0.25`): The estimated vertical size (in blocks) of a text line, used by the compact stack calculations. Adjust this if you use custom text scales or non-standard fonts.
+* **`behavior.removeEmptyLines`**: When set to `true`, empty text lines (resulting from empty placeholders) are stripped from the packet, reducing processing costs.
 
 ---
 
-## `visibility.showWhileLooking`
+## Raycast Visibility Features
 
-Tag only if the viewer is **aiming at** that player. Can feel lighter for some setups but adds its own checks. [Show while looking](features/show-while-looking.md).
+* **`visibility.showWhileLooking`**: Only displays name tags to a viewer looking directly at the owner. (See [Show While Looking Guide](features/show-while-looking.md)).
+* **`visibility.throughWallMode`**: Direct line-of-sight visibility mode (`SEE_THROUGH`, `OBSCURED`, `HIDE`). (See [Show While Looking Guide](features/show-while-looking.md)).
+* **`visibility.throughWallSettings.checkInterval`** (Default: `5`): Ticks between line-of-sight checks.
 
-## `visibility.obscuredNametagThroughWalls`
-
-Fades tags when there is no clear line of sight. Applies to TEXT rows only. See `obscuredNametagCheckInterval` below.
-
-## `visibility.obscuredNametagCheckInterval`
-
-How often (ticks) the plugin rechecks line of sight for through-wall dimming. Default is `5`. The raycast runs on the **main thread** — raising this to `10`–`20` on busy servers reduces cost significantly. The visual delay before a tag dims equals this interval, which is usually imperceptible to players.
-
-Only relevant when `obscuredNametagThroughWalls: true`.
+> [!WARNING]
+> Line-of-sight and through-wall checks perform raycasts on the **primary server thread**. If you configure `throughWallMode` to `OBSCURED` or `HIDE` on a high-population server, it is highly recommended to increase `throughWallSettings.checkInterval` to `10` or `20` ticks to prevent performance degradation.
 
 ---
 
-## PlaceholderAPI extras
+## PlaceholderAPI Optimizations
 
 ### `performance.placeholderCacheTime`
-
-How long (in ticks) a placeholder result may be **remembered** for a player before asking PlaceholderAPI again. Higher = fewer repeats, possibly “older” numbers on screen.
-
-Placeholders listed under **`placeholderUpdateRates`** use their own timing instead (see below).
+Defines the cache duration (in ticks) for individual placeholder results. Increasing this value reduces repetitive queries to external plugins at the cost of slight display delays for dynamic data.
 
 ### `performance.componentCaching`
-
-Can speed up repeating fancy formatting (gradients) but may act odd with **very** live placeholders — leave **off** unless you know you need it. Try on a test server first.
+Caches parsed text components. While helpful for static or complex gradient text styles, it may cause display anomalies when used with highly dynamic placeholder data. Keep disabled unless specifically needed for optimization testing.
 
 ---
-
-<a id="performanceplaceholderupdaterates"></a>
 
 ## `performance.placeholderUpdateRates`
 
-A small list of **“this placeholder may wait X ticks between updates”** — great for expensive values that rarely change (balance, rank from a slow plugin, …).
+Defines custom, longer caching intervals for specific, heavy placeholders (e.g., economy balances, level stats, guild names) that do not require tick-by-tick updates.
 
 ```yaml
 performance:
@@ -168,47 +152,51 @@ performance:
     "%some_heavy_placeholder%": 80
 ```
 
-The server will **not** refresh that placeholder faster than **`behavior.taskInterval`**, even if you type a smaller number. So if the global refresh is every `20` ticks, `5` here still waits at least `20`.
-
-Leave combat / health-style placeholders **out** of this list so they stay responsive.
+> [!IMPORTANT]
+> The plugin will never update a placeholder faster than the global `behavior.taskInterval`. If `taskInterval` is set to `20` ticks, a placeholder update rate of `5` will still wait a minimum of `20` ticks.
 
 ---
 
 ## `performance.enableRelationalPlaceholders`
 
-**Off** by default. Turn **on** only if you use placeholders that **compare viewer and target**. Costs more on large servers.
+Set to `false` by default. Enable only if you use viewer-dependent placeholders (such as `%rel_...%`).
+
+> [!TIP]
+> **Relational Performance Optimization:** Name tag rendering for relational placeholders has been heavily optimized using Adventure's `replaceText` API. The plugin parses the formatting (like MiniMessage) **once** per owner and caches it, then performs a fast, lightweight replacement of relational placeholders for each viewer. This drastically reduces CPU overhead compared to older versions where formatting had to be parsed from scratch for every single viewer.
 
 ---
 
-## Animation distance culling: `cullBeyondBlocks`
+## Animation Distance Culling: `cullBeyondBlocks`
 
-On each **`animation:`** block you can set **`cullBeyondBlocks`**. If nobody is within that many blocks, the server may **skip** pose updates for that animation — handy for sparkly tags nobody is looking at.
+You can add `cullBeyondBlocks` within any `animation:` block. If no players are within the specified block radius, the server skips pose updates for that animation. This is highly effective for reducing unnecessary packet updates in unoccupied areas.
 
 ---
 
-## Fewer lines = less work
+## Layout Optimization Guidelines
 
-- Each **`displayGroup`** row has a cost — keep only what you need.
-- Use **`when:`** so expensive lines are **off** when they do not matter (see [Display groups](features/display-groups.md)).
+* Keep the number of active `displayGroup` rows to a minimum.
+* Use the group-level `when:` field to disable rendering of display groups when they are not relevant (see [Display Groups Guide](features/display-groups.md)).
 
 ---
 
 ## Busy-Server Checklist
 
-1. **`behavior.taskInterval`** at least **20** unless you truly need faster text.
-2. **`behavior.format: MINIMESSAGE`** unless you need `UNIVERSAL`.
-3. **`performance.enableRelationalPlaceholders: false`** if you do not use relational placeholders.
-4. Slow down animations or add **`cullBeyondBlocks`** on decorative motion.
-5. Turn off wall / aim-based extras (`showWhileLooking`, `obscuredNametagThroughWalls`) if unused.
-6. Lower **`behavior.viewDistance`** if tags only need to read up close.
-7. Add **`performance.placeholderUpdateRates`** for slow-changing heavy placeholders.
-8. Raise **`visibility.obscuredNametagCheckInterval`** to `10`–`20` if through-wall dimming is on with many players.
-9. Enable **`behavior.compactDisplayGroupStack`** if many rows are conditionally hidden to reduce unused packet space.
+For servers experiencing high CPU usage, verify the following configuration parameters:
+
+1. **`behavior.taskInterval`**: Set to at least `20` ticks.
+2. **`behavior.format`**: Set to `MINIMESSAGE`.
+3. **`performance.enableRelationalPlaceholders`**: Set to `false` if viewer-dependent placeholders are not in use.
+4. **Animations**: Add `cullBeyondBlocks` or increase animation intervals.
+5. **Visibility Settings**: Disable `showWhileLooking` and set `throughWallMode` to `SEE_THROUGH` if raycast features are not actively needed.
+6. **`behavior.viewDistance`**: Reduce the client render distance to limit packet delivery.
+7. **`performance.placeholderUpdateRates`**: Define custom, longer intervals for heavy placeholders.
+8. **`visibility.throughWallSettings.checkInterval`**: If through-wall occlusion (`OBSCURED` or `HIDE`) is enabled, increase the interval to `10` or `20` ticks.
+9. **`behavior.compactDisplayGroupStack`**: Enable (`true`) if many rows are hidden conditionally, reducing payload overhead.
 
 ---
 
-## See also
+## See Also
 
-- [Configuration](configuration.md)
-- [Animations](features/animations.md)
-- [Display groups](features/display-groups.md)
+* [Configuration Guide](configuration.md)
+* [Animations Guide](features/animations.md)
+* [Display Groups Guide](features/display-groups.md)

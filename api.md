@@ -1,20 +1,17 @@
 # Developer API
 
-> [!NOTE]
-> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
-
-UnlimitedNameTags exposes a Java API for other plugins to control nametags at runtime — override text, inject items/blocks, register custom animations, integrate vanish systems, and more.
+**UnlimitedNameTags** exposes a comprehensive Java API that allows other plugins to dynamically control player name tags at runtime. You can programmatically override name tag text, inject item/block entities, register custom animations, implement custom vanish integrations, and adjust cosmetic height offsets.
 
 ---
 
 ## Adding the Dependency
 
-The API is published on **Maven Central** (and also available via local build `publishToMavenLocal`). Add it as a **compile-only** dependency (do not shade it — the plugin jar must already be present on the server).
+The API is published to **Maven Central** (and can also be installed locally using `gradle publishToMavenLocal`). It must be declared as a **compile-only** dependency; do not shade or bundle it within your plugin artifact, as the **UnlimitedNameTags** jar must be present on the server at runtime.
 
-* Use **`unlimitednametags-api-paper`** if your plugin is built for Paper/Bukkit and you want convenient `Player` overloads.
-* Use **`unlimitednametags-api`** if you only need the platform-neutral UUID-based API.
+* **`unlimitednametags-api-paper`**: Recommended for Paper/Bukkit plugins. Provides helper methods utilizing the standard Bukkit `Player` object.
+* **`unlimitednametags-api`**: Platform-neutral API utilizing player `UUID` identifiers.
 
-**Gradle (Kotlin DSL):**
+### Gradle (Kotlin DSL)
 ```kotlin
 repositories {
     mavenCentral()
@@ -29,7 +26,7 @@ dependencies {
 }
 ```
 
-**Maven:**
+### Maven
 ```xml
 <dependencies>
     <!-- For Paper/Bukkit development (recommended): -->
@@ -51,70 +48,73 @@ dependencies {
 </dependencies>
 ```
 
-Add `UnlimitedNameTags` to your `plugin.yml` so Bukkit loads it before your plugin:
+### Plugin Configuration (`plugin.yml`)
+To ensure the server loads **UnlimitedNameTags** before your plugin, declare the dependency in your `plugin.yml` file:
 
 ```yaml
-# hard dependency
+# Hard dependency (required for startup)
 depend: [UnlimitedNameTags]
 
-# or soft dependency (handle absence gracefully)
+# Or soft dependency (handle absence gracefully in code)
 softdepend: [UnlimitedNameTags]
 ```
 
 ---
 
-## Getting the API Instance
+## Retrieving the API Instance
 
-Depending on whether you are using the platform-neutral API or the Paper-specific API, retrieve the instance accordingly:
+Acquire the appropriate API singleton instance depending on your platform dependency:
 
-**For Paper/Bukkit (recommended):**
-```java
-UNTPaperAPI api = UNTPaperAPI.getInstance();
-```
+* **Paper/Bukkit API (Recommended):**
+  ```java
+  UNTPaperAPI api = UNTPaperAPI.getInstance();
+  ```
 
-**For Platform-neutral (UUID-based):**
-```java
-UNTAPI api = UNTAPI.getInstance();
-```
+* **Platform-Neutral API (UUID-based):**
+  ```java
+  UNTAPI api = UNTAPI.getInstance();
+  ```
 
-> **Note:** `getInstance()` throws `IllegalStateException` if called before your plugin's `onEnable`, or if UnlimitedNameTags failed to load. For soft-depends, guard with `Bukkit.getPluginManager().isPluginEnabled("UnlimitedNameTags")` first.
-
-
----
-
-## Core Types
-
-| Type | Purpose |
-|------|---------|
-| `UNTAPI` | Entry point — all operations go through this class |
-| `UnlimitedNameTagsPlugin` | Plugin interface; holds the custom animation registry |
-| `Settings.NameTag` | Immutable record: permission + list of `DisplayGroup`s |
-| `Settings.DisplayGroup` | One stacked row (type, lines, background, scale, offset, conditions, animation, billboard) |
-| `Settings.NametagLine` | One line within a TEXT group: `text` + optional `when` condition |
-| `Settings.Background` | Background panel settings (color, opacity, shadowed, seeThrough) |
-| `DisplayAnimation` | Base for the 7 built-in animation types |
-| `UntNametagDisplay` | Live display entity interface |
-| `NametagCustomAnimationHandler` | Functional interface for custom animations |
-| `VanishIntegration` | Interface to implement for custom vanish plugins |
-| `HatHook` | Interface to implement for custom hat height offsets |
+> [!WARNING]
+> Calling `getInstance()` before your plugin's `onEnable()` execution or when **UnlimitedNameTags** is disabled will throw an `IllegalStateException`. For soft-dependent setups, always verify plugin status using `Bukkit.getPluginManager().isPluginEnabled("UnlimitedNameTags")` before retrieving the instance.
 
 ---
 
-## Nametag Overrides
+## Core Types Reference
 
-Every player has a **config nametag** (resolved from `settings.yml`) and optionally an **override** set by API. The override wins over the config. The override is not persisted across restarts.
+| Type | Description |
+| :--- | :--- |
+| **`UNTAPI`** | Core platform-neutral entry point. All base API operations are defined here. |
+| **`UNTPaperAPI`** | Paper-specific entry point providing `Player` object mapping overloads. |
+| **`UnlimitedNameTagsPlugin`** | Internal plugin interface, managing components such as the custom animation registry. |
+| **`Settings.NameTag`** | Immutable configuration record representing a permission mapping and its associated `DisplayGroup` list. |
+| **`Settings.DisplayGroup`** | Immutable record representing a single display row, including its type, lines, scale, offsets, conditions, animations, and billboard overrides. |
+| **`Settings.NametagLine`** | A line configuration containing formatting text and optional visibility check conditions. |
+| **`Settings.Background`** | Background plate properties (color, opacity, drop-shadow, and block transparency rendering). |
+| **`DisplayAnimation`** | Base class for built-in name tag animations. |
+| **`UntNametagDisplay`** | Interface representing a live client-side display entity. |
+| **`NametagCustomAnimationHandler`** | Functional interface for creating and registering custom animations. |
+| **`VanishIntegration`** | Interface to connect custom or third-party vanish plugin systems. |
+| **`HatHook`** | Interface for registering custom cosmetic offset height calculations. |
+
+---
+
+## Name Tag Overrides
+
+Player name tags are resolved from `settings.yml` (the config name tag) unless an active override is registered via the API. Overrides take precedence over config settings, are stored in memory, and do not persist across server restarts.
 
 | Method | Description |
-|--------|-------------|
-| `setNametagOverride(player, nameTag)` | Replace the player's nametag with a full override |
-| `removeNametagOverride(player)` | Revert to the config nametag |
-| `hasNametagOverride(player)` | `true` if an override is active |
-| `getNametagOverride(player)` | `Optional<Settings.NameTag>` — the override, or empty |
-| `getEffectiveNametag(player)` | Override if present, otherwise config |
-| `getConfigNametag(player)` | Config nametag only (ignores any override) |
-| `modifyNametagProperty(player, modifier)` | Clone effective nametag, apply function, save as override |
+| :--- | :--- |
+| **`setNametagOverride(player, nameTag)`** | Registers a complete custom `Settings.NameTag` override for a player. |
+| **`removeNametagOverride(player)`** | Clears the active override, restoring the default configuration-based layout. |
+| **`hasNametagOverride(player)`** | Returns `true` if the player currently has an active override. |
+| **`getNametagOverride(player)`** | Returns an `Optional<Settings.NameTag>` containing the override layout if present. |
+| **`getEffectiveNametag(player)`** | Returns the active override layout if present, falling back to the configuration layout. |
+| **`getConfigNametag(player)`** | Retrieves the player's default configuration layout, ignoring active overrides. |
+| **`modifyNametagProperty(player, modifier)`** | Retrieves the effective layout, applies a mapping function, and registers the result as an override. |
 
-**Example — append an extra row to a player's nametag:**
+### Example: Appending a Row to an Active Name Tag
+
 ```java
 UNTAPI api = UNTAPI.getInstance();
 
@@ -139,41 +139,42 @@ api.modifyNametagProperty(player, current -> {
 
 ---
 
-## Common Property Shortcuts
+## Configuration Property Shortcuts
 
-These methods clone the effective nametag, apply the change, and save it as an override in one call.
+These convenience methods retrieve the player's active layout, apply the specified modification, and register the updated state as an override in a single operation:
 
 | Method | Description |
-|--------|-------------|
-| `setNametagScale(player, scale)` | Set scale on all display groups |
-| `setNametagBackground(player, background)` | Set background on all display groups |
-| `setNametagDisplayGroups(player, list)` | Replace the full list of display groups |
-| `setNametagShadowed(player, shadowed)` | Set shadowed flag on all display groups |
-| `setNametagSeeThrough(player, seeThrough)` | Set seeThrough flag on all display groups |
-| `setNametagBillboard(player, billboard)` | Set billboard mode on all active display entities |
+| :--- | :--- |
+| **`setNametagScale(player, scale)`** | Updates the scale factor across all display groups. |
+| **`setNametagBackground(player, background)`** | Applies a background plate style across all display groups. |
+| **`setNametagDisplayGroups(player, list)`** | Overwrites the entire list of display groups for the player. |
+| **`setNametagShadowed(player, shadowed)`** | Toggles drop-shadow rendering across all text lines. |
+| **`setNametagSeeThrough(player, seeThrough)`** | Toggles block-transparency rendering across all text lines. |
+| **`setNametagBillboard(player, billboard)`** | Updates the camera-alignment billboard mode for all player display groups. |
 
 ---
 
-## Forced Nametags
+## Forced Packet-Level Name Tags
 
-A forced nametag overrides the rendered text at the packet level, bypassing config and overrides entirely. Applies only to the **first** display entity (to avoid duplicating text on stacked rows).
+Forced name tags overwrite the text components at the packet level, bypassing configurations and registered layout overrides. A forced name tag only applies to the **first** display entity in the stack to prevent visual duplication.
 
-| Method | Scope |
-|--------|-------|
-| `setForcedNametag(player, component)` | All viewers see this component |
-| `setForcedNametag(player, viewer, component)` | Only `viewer` sees this component |
-| `clearForcedNametag(player)` | Remove forced text for all viewers |
-| `clearForcedNametag(player, viewer)` | Remove forced text for one viewer |
+| Method | Description |
+| :--- | :--- |
+| **`setForcedNametag(player, component)`** | Displays a static component to all tracked viewers. |
+| **`setForcedNametag(player, viewer, component)`** | Displays a static component exclusively to a target viewer player. |
+| **`clearForcedNametag(player)`** | Removes the forced component override for all viewers. |
+| **`clearForcedNametag(player, viewer)`** | Removes the forced component override for a specific viewer. |
 
-**Example:**
+### Example: Conditional Visibility Toggles
+
 ```java
-// Show a hidden name to all players (e.g., spectator mode)
+// Show a generic label to general spectators
 api.setForcedNametag(target, Component.text("???", NamedTextColor.GRAY));
 
-// Show real name only to the admin who is spectating
+// Show the true username only to an admin spectator
 api.setForcedNametag(target, admin, Component.text(target.getName(), NamedTextColor.WHITE));
 
-// Clear when done
+// Restore default rendering when complete
 api.clearForcedNametag(target);
 ```
 
@@ -181,21 +182,22 @@ api.clearForcedNametag(target);
 
 ## Animations
 
-### Per-Group Animation (Programmatic)
+### Programmatic Animation Overrides
+Apply or clear animations on specific display group rows by their index:
 
 ```java
-// Set a Y-axis rotation on the first display group (index 0)
+// Apply a Y-axis rotation to the first display group (index 0)
 api.setNametagDisplayGroupAnimation(player, 0, new DisplayAnimation.RotateDisplayAnimation(...));
 
-// Remove animation from group 0
+// Clear active animations on the first display group
 api.clearNametagDisplayGroupAnimation(player, 0);
 ```
 
-`displayGroupIndex` is 0-based. Throws `IllegalArgumentException` if the index is out of range.
+> [!NOTE]
+> The display group index parameter is 0-based. If the index exceeds the size of the player's active display group list, an `IllegalArgumentException` is thrown.
 
 ### Custom Animations
-
-Implement `NametagCustomAnimationHandler` and register it. In `settings.yml`, use `animation.type: custom` with the matching `id:`.
+Register a dynamic pose modifier by implementing the functional interface `NametagCustomAnimationHandler`. To apply this animation in `settings.yml`, define `animation.type: custom` and matching `id`.
 
 ```java
 api.registerNametagCustomAnimation("my_pulse", (target, animation, elapsedMs) -> {
@@ -204,47 +206,56 @@ api.registerNametagCustomAnimation("my_pulse", (target, animation, elapsedMs) ->
 });
 ```
 
-`NametagCustomAnimationHandler` receives:
-- `target` — `NametagAnimationTarget`: writable pose interface
-- `animation` — the `DisplayAnimation.CustomDisplayAnimation` instance (access `customProperties` here)
-- `elapsedMs` — time in milliseconds since the animation started
+The handler interface provides three parameters:
+* **`target`** (`NametagAnimationTarget`): An interface allowing updates to the display's scale and positional offsets.
+* **`animation`** (`DisplayAnimation.CustomDisplayAnimation`): The animation configuration containing custom configuration properties.
+* **`elapsedMs`**: The total elapsed time in milliseconds since the animation execution was initialized.
 
 ```java
+// Unregister a custom handler
 api.unregisterNametagCustomAnimation("my_pulse");
-api.getNametagCustomAnimationHandler("my_pulse"); // returns null if not registered
+
+// Retrieve an active handler (returns null if unregistered)
+api.getNametagCustomAnimationHandler("my_pulse");
 ```
 
 ---
 
-## Refresh & Visibility
+## Refresh & Visibility Controls
 
 | Method | Description |
-|--------|-------------|
-| `forceRefresh(player)` | Immediately refresh placeholder text and update all packets |
-| `forceRefresh(player, force)` | Same with explicit force flag |
-| `hideNametag(player)` | Remove nametag display entities from all viewers |
-| `showNametag(player)` | Re-show nametag to all currently tracked players |
-| `getPacketDisplayText(player)` | `Collection<? extends UntNametagDisplay>` — direct access to live display entities |
+| :--- | :--- |
+| **`forceRefresh(player)`** | Immediately evaluates placeholders and updates display packets sent to viewers. |
+| **`forceRefresh(player, force)`** | Executes a manual refresh with a forced packet reconstruction override flag. |
+| **`hideNametag(player)`** | Despawns name tag display entities for all tracking viewers. |
+| **`showNametag(player)`** | Spawns name tag display entities for all currently tracking players. |
+| **`getPacketDisplayText(player)`** | Accesses the active collection of name tag display entities. |
 
-> **Note:** Prefer `forceRefresh` over direct display manipulation for most use cases.
+> [!NOTE]
+> For general rendering updates, prefer calling `forceRefresh` over direct display entity manipulation.
 
 ---
 
-## Sneak System (Shift Opacity)
+## Sneak Opacity Controls
 
-The shift system applies reduced opacity when a player is sneaking. You can block it per-player (useful in arenas where you do not want opacity changes).
+By default, the plugin reduces name tag opacity when players sneak. You can disable this behavior on a per-player basis (e.g., inside PvP arenas or mini-game zones).
 
 ```java
-api.setShiftSystemBlocked(player, true);   // disable sneak opacity for this player
-api.isShiftSystemBlocked(player);          // check current state
-api.setShiftSystemBlocked(player, false);  // re-enable
+// Disables sneaking opacity changes for this player
+api.setShiftSystemBlocked(player, true);
+
+// Returns true if the sneaking opacity system is currently blocked
+api.isShiftSystemBlocked(player);
+
+// Restores standard sneaking opacity behavior
+api.setShiftSystemBlocked(player, false);
 ```
 
 ---
 
-## Vanish Integration
+## Vanish Integrations
 
-Implement `VanishIntegration` to connect your own vanish plugin. The integration controls which players' nametags are visible to which viewers.
+Implement the `VanishIntegration` interface to hook your custom or third-party vanish plugin into the visibility engine. This regulates which players' name tag display packets are sent to viewers.
 
 ```java
 api.setVanishIntegration(new VanishIntegration() {
@@ -260,18 +271,21 @@ api.setVanishIntegration(new VanishIntegration() {
 });
 ```
 
-Direct vanish state helpers (useful for tab/scoreboard sync):
+The API also exposes utility methods to manage player presence in the tab list and server scoreboards (useful for soft vanish implementations):
 
 ```java
-api.vanishPlayer(player);    // hide from tab + scoreboard
-api.unVanishPlayer(player);  // show in tab + scoreboard
+// Hide the player from the tab list and scoreboard tracking
+api.vanishPlayer(player);
+
+// Restore the player's presence in the tab list and scoreboard tracking
+api.unVanishPlayer(player);
 ```
 
 ---
 
-## Hat Hooks
+## Hat Offset Hooks
 
-Implement `HatHook` to provide custom nametag height offsets for cosmetic items that are not auto-detected.
+Implement the functional interface `HatHook` to supply custom height offsets for headwear or cosmetics that are not automatically detected by built-in integrations.
 
 ```java
 HatHook hook = player -> {
@@ -279,15 +293,19 @@ HatHook hook = player -> {
     return hat != null ? hat.getHeightOffset() : 0.0;
 };
 
+// Register the custom hook
 api.addHatHook(hook);
-// later:
+
+// Unregister the custom hook when disabled
 api.removeHatHook(hook);
 ```
 
-Return `0.0` (or any non-positive value) if the hook does not apply to the given player. For config-based height rules, prefer [advanced.yml](features/advanced-yml.md) instead.
+> [!NOTE]
+> If a registered hook does not apply to the queried player, return `0.0`. For file-based helmet height adjustment rules, prefer configuring `advanced.yml` instead.
 
 ---
 
-## Direct Display Access (`UntNametagDisplay`)
+## Direct Display Entity Access
 
-`getPacketDisplayText(player)` returns the live display entity collection. Use this only for advanced scenarios (inspecting packet state, per-viewer packet manipulation). For normal control, prefer the high-level methods above.
+> [!CAUTION]
+> The method `getPacketDisplayText(player)` exposes the active list of `UntNametagDisplay` entities. This method should only be used in advanced cases (e.g., low-level packet modification, custom viewer filtering). Under normal circumstances, use high-level API methods to ensure stability.

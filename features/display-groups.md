@@ -1,31 +1,27 @@
 # Display Groups
 
-> [!NOTE]
-> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](../v1/README.md).
-
-Each entry under **`nameTags`** has a list called **`displayGroups`**. That list is the **stack of rows** above the player's head — text, a floating item, or a block. **Order in the file = top to bottom** in-game.
+The `displayGroups` list under each **`nameTags`** preset defines the layout stack rendered above a player's head. You can stack different types of elements (text lines, floating items, or blocks) in a single configuration. The order in which display groups are defined determines their vertical stack layout from top to bottom above the player.
 
 ---
-## Row Types (`displayType`)
 
-UnlimitedNameTags allows you to stack different types of elements to create beautiful multi-layered nametags. You can mix and match text, items, and blocks in a single configuration.
+## Display Group Types (`displayType`)
 
-| Type | What it is | Primary Configuration | Supports PAPI |
-|------|------------|-----------------------|:-------------:|
-| **`TEXT`** (default) | One or more lines of high-performance text | Use **`lines`** array (supports MiniMessage & legacy) | Yes |
-| **`ITEM`** | Floating 3D item models and custom textures | Use **`itemMaterial`** (and optional `itemDisplayMode`) | Yes |
-| **`BLOCK`** | Floating 3D block models (vanilla or custom) | Use **`blockMaterial`** | Yes |
+| Type | Description | Primary Key | PlaceholderAPI Support |
+| :--- | :--- | :--- | :---: |
+| **`TEXT`** (Default) | One or more lines of formatted text. | `lines` | Yes |
+| **`ITEM`** | Floating 3D item models and custom textures. | `itemMaterial` | Yes |
+| **`BLOCK`** | Static 3D block geometry (vanilla blocks or custom models). | `blockMaterial` | Yes |
 
 ---
 
 ## 📝 TEXT Rows (`displayType: TEXT`)
 
-This is the default type. It renders high-definition, customizable text lines.
+This is the default display type. It renders high-definition, customizable text lines.
 
 ### Features
 * **Multi-Line Stacking**: Define one or more lines in the same display group.
-* **MiniMessage Formatting**: Out-of-the-box support for gradients, hex colors, shadows, fonts, and bold/italic styles.
-* **Line-Level Conditions**: Toggle visibility of individual lines using the `when` filter.
+* **MiniMessage Formatting**: Out-of-the-box support for gradients, hex colors, shadows, custom fonts, and styling.
+* **Line-Level Conditions**: Toggle the visibility of individual text lines using the `when` condition.
 
 ### Example
 ```yaml
@@ -43,52 +39,52 @@ displayGroups:
 ```
 
 > [!TIP]
-> Line-level `when` conditions are extremely efficient for toggling text layers (like latency indicators or status modes) without creating separate display groups.
+> Line-level `when` conditions are highly efficient for toggling text layers (such as latency indicators or combat status) without creating separate display group entities.
 
 ---
 
 ## 👑 ITEM Rows (`displayType: ITEM`)
 
-Allows you to render any Minecraft item or custom item model (including resource packs, Oraxen, Nexo, and ItemsAdder) floating above the player's head.
+Renders a floating Minecraft item or custom item model (including resources from Nexo, Oraxen, ItemsAdder, etc.) above the player's head.
 
 ### Features
-* **Custom Model Data**: Render complex cosmetic items like floating crowns, wings, or emblems.
-* **`itemDisplayMode` Positioning**: Fine-tune how the item is rendered relative to the player.
-* **PAPI Integration**: Resolve item names dynamically (e.g., render the player's active held item, or change icons based on rank).
+* **Custom Model Data**: Renders complex cosmetic items like floating crowns, wings, or shields.
+* **Positioning**: Fine-tune item display postures using the `itemDisplayMode` key.
+* **Dynamic Resolution**: Supports PlaceholderAPI to resolve item types dynamically (e.g., matching a player's active hand item).
 
-### Example: Floating Crown/Badge
+### Example: Floating Crown
 ```yaml
 - displayType: ITEM
   itemMaterial: GOLDEN_HELMET
-  itemDisplayMode: HEAD  # Positions the item naturally above the head
+  itemDisplayMode: HEAD  # Positions the item above the player head
   scale: 0.7
-  yOffset: 0.4           # Raise it above the text row
+  yOffset: 0.4           # Vertically offsets it above the text row
   animation:
     type: rotate
     axis: Y
     degreesPerSecond: 90
 ```
 
-### `itemDisplayMode` Options
+### `itemDisplayMode` Reference
 | Mode | Description | Recommended Use |
-|------|-------------|-----------------|
-| **`HEAD`** (default) | Worn naturally — matches the orientation of a helmet on an armor stand | Floating crowns, hats, badges |
-| **`FIXED`** | Fixed absolute orientation, facing flat | Standard 2D icons or custom UI badges |
-| **`GROUND`** | Renders flat on the ground | Loot effects or status displays |
-| **`GUI`** | Standard 2D inventory model style | Clean UI icons |
+| :--- | :--- | :--- |
+| **`HEAD`** (Default) | Renders the item as if equipped on an armor stand helmet slot. | Floating crowns, hats, and helmets |
+| **`FIXED`** | Renders the item with a fixed flat posture facing the camera. | 2D UI emblems, badges, or flat icons |
+| **`GROUND`** | Renders the item flat on the ground plane. | Drop loot icons or ground indicators |
+| **`GUI`** | Renders the item in 2D inventory icon format. | Clean status indicators |
 
 ---
 
 ## 💎 BLOCK Rows (`displayType: BLOCK`)
 
-Render actual 3D blocks (like diamonds, custom block models, or animated crystals) as part of the nametag.
+Renders 3D blocks (such as diamond blocks, custom block geometry, or crystals) as part of the name tag stack.
 
 ### Features
-* **Full 3D Block Models**: Renders block geometry accurately.
-* **PAPI Support**: Change the block type dynamically based on game stats.
-* **Visibility Rules**: Bind blocks to player conditions (e.g., show an emerald block when a player goes rich).
+* **Full 3D Block Models**: Renders actual block geometry.
+* **Dynamic Material Binding**: Swap block materials dynamically based on player stats or placeholders.
+* **Conditional Rendering**: Display blocks based on logical conditions (e.g., showing a status block when a player goes AFK).
 
-### Example: Spinning Wealth Crystal
+### Example: Spinning Wealth Indicator
 ```yaml
 - displayType: BLOCK
   blockMaterial: AMETHYST_CLUSTER
@@ -103,12 +99,12 @@ Render actual 3D blocks (like diamonds, custom block models, or animated crystal
 
 ---
 
-## 🛡️ Row Visibility & Conditions (`when`)
+## 🛡️ Visibility & Logical Conditions (`when`)
 
-You can conditionally show or hide any individual display group or single lines using powerful expressions.
+Use the `when` condition parameter to conditionally display rows or specific text lines using mathematical or logical string evaluations.
 
 ### Group-Level Visibility
-Hides or shows the entire row entity:
+Controls the visibility of the entire display group entity:
 ```yaml
 displayGroups:
   - lines:
@@ -121,22 +117,27 @@ displayGroups:
     yOffset: 0.15
 ```
 
-### Per-Viewer Conditions (`relationalConditions`)
-Evaluate the `when` condition relative to the viewer instead of just the tag owner. This lets you show unique tags (e.g. showing "Friend" only to mutual friends, or showing "Target" only to assassins):
+### Per-Viewer Conditions
+Evaluate conditions relative to the viewing player rather than the name tag owner. This allows you to show viewer-dependent details (e.g., showing a "Friend" tag only to players on the owner's friend list).
+
+#### Automatic Detection of Relational Conditions
+The plugin automatically detects if the `when` condition contains relational placeholders (e.g., `%rel_` or `%relational_`) and evaluates the condition per-viewer automatically. You do not need to manually configure `relationalConditions: true`, though you may declare it to explicitly force this behavior.
 
 ```yaml
 - lines:
     - text: '<light_purple>❤ Friend</light_purple>'
-  when: '%friendsplugin_is_friend%'
-  relationalConditions: true
+  when: '%rel_friendsplugin_is_friend% == '\''true'\'''
 ```
 
+> [!TIP]
+> **Relational Performance Optimization:** Name tag rendering for relational placeholders has been heavily optimized using Adventure's `replaceText` API. The plugin compiles and parses formatting (like MiniMessage or legacy colors) **only once** for the tag owner, then performs a lightweight substitution of relational placeholders for each viewer. This drastically reduces CPU overhead compared to previous versions.
+
 > [!WARNING]
-> Relational conditions require `enableRelationalPlaceholders: true` in your main `settings.yml`. They carry a performance cost proportional to the number of nearby players.
+> Relational conditions (both auto-detected and explicit) still carry a layout-calculation cost. Because display rows may be hidden for some viewers but shown to others, the plugin must compute and send stacked Y-offset packet updates individually for each viewer.
 
 ---
 
-## 🎨 Background (`background`)
+## 🎨 Background Layout (`background`)
 
 For `TEXT` rows, you can define a custom background panel behind the text lines.
 
@@ -153,21 +154,21 @@ background:
 
 ## 📐 Scale and Offset
 
-Adjust positioning and sizing per row to prevent clipping:
-* **`scale`**: Multiplier for the display size (`1.0` = normal, `0.7` = 70%).
-* **`yOffset`**: Vertically offsets the row in blocks relative to the base height (`0.0` = base, positive = higher, negative = lower).
+Positioning and sizing parameters per row:
+* **`scale`**: Sizing multiplier for the row display (`1.0` = default size, `0.7` = 70% scale).
+* **`yOffset`**: Vertical offset (in blocks) relative to the group stack's base position. Positive values raise the row; negative values lower it.
 
 ---
 
 ## 🌐 Per-Row Billboard
 
-Adjust how individual rows rotate toward the camera using **`billboard`**: `CENTER`, `HORIZONTAL`, `VERTICAL`, or `FIXED`. (See [Billboard](billboards.md) for a deep dive).
+Adjust how individual rows rotate toward the camera using **`billboard`**: `CENTER`, `HORIZONTAL`, `VERTICAL`, or `FIXED`. (See [Billboard Settings](billboards.md)).
 
 ---
 
-## 🚀 Full Stacking Example (The Ultimate Nametag)
+## 🚀 Advanced Stacking Example
 
-This example combines **TEXT**, **ITEM**, and **BLOCK** types into a single premium nametag stack:
+This example combines **TEXT**, **ITEM**, and **BLOCK** types into a single premium name tag layout:
 
 ```yaml
 nameTags:
@@ -207,19 +208,18 @@ nameTags:
 
 ---
 
-## 🛡️ Permissions and Order
+## Permissions & Priority Evaluation
 
-Each preset under **`nameTags`** can set **`permission`**. The plugin walks the list in file order and picks the **first** preset the player qualifies for. Put VIP / staff entries **above** `default`.
+Each configuration preset under **`nameTags`** can define a `permission` node. The plugin evaluates these presets sequentially from top to bottom, applying the **first** preset for which the player holds the required permission. 
 
-Keep a **`default`** entry (no `permission:`) as the catch-all for everyone else.
-
+> [!NOTE]
+> Custom group presets (e.g., Staff, VIP) must be ordered **above** the `default` preset. The `default` preset (which contains no `permission:` key) acts as the catch-all fallback and must always be positioned at the bottom of the list.
 
 ---
 
-## Animations
+## Animation Overrides
 
-Optional **`animation`** block on any row. See [Animations](animations.md) for all types and fields.
+You can apply an optional `animation` block on any row. (See [Animations Guide](animations.md) for full configuration options).
 
-**`animationInterval`** (ticks) on a row overrides the global **`displayAnimationInterval`** for that row only. **`cullBeyondBlocks`** pauses pose updates when no viewer is nearby — good for decorative effects on busy servers.
-
-See also: [Performance](../performance.md).
+* **`animationInterval`** (in ticks): Overrides the global `behavior.displayAnimationInterval` for this specific row.
+* **`cullBeyondBlocks`**: Pauses animation calculations when no players are within the specified block radius. (See [Performance Tuning Guide](../performance.md)).

@@ -1,48 +1,55 @@
 # Getting Started
 
-> [!NOTE]
-> This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
+This page covers the requirements, installation steps, and basic setup needed to get **UnlimitedNameTags** running on your server.
 
 ---
 
 ## Requirements
 
-| Requirement | Notes |
-|-------------|-------|
-| **Paper 1.21.4+** | Paper is highly recommended |
-| **PacketEvents** | Required — download and install like any other plugin |
-| **Java 21** | Required to run the plugin jar |
-| **Client 1.19.4+** | Older Java clients cannot render custom nametags at all |
+### Server Requirements
+| Requirement | Description |
+| :--- | :--- |
+| **Server Software** | **Paper 1.21.4+** (Highly recommended for optimal packet handling) |
+| **Dependencies** | **PacketEvents** (Download and place in the `plugins/` directory) |
+| **Java Version** | **Java 21** or newer (Required to execute the plugin jar) |
 
-> **Note:** Bedrock clients (via Geyser/Floodgate) have partial support — some features like backgrounds or shadows may not match Java. See [Integrations](integrations/integrations.md).
+### Client Compatibility
+> [!WARNING]
+> **Minecraft Java 1.19.4 or newer** is strictly required for clients to render custom displays. Older game versions cannot display these custom name tags due to client-side engine limitations. Protocol translation tools (e.g., **ViaVersion**) do not bypass this limitation.
+
+> [!NOTE]
+> **Bedrock Edition (Geyser/Floodgate)** clients are only partially supported. Specific rendering options, such as custom text shadows and background plates, may not display accurately or at all on Bedrock clients. For details, see the [Integrations](integrations/integrations.md) guide.
 
 ---
 
 ## Installation
 
-1. Download **PacketEvents** from [Modrinth](https://modrinth.com/plugin/packetevents) and drop the jar into `plugins/`.
-2. Download **UnlimitedNameTags** and drop the jar into `plugins/`.
-3. Start (or restart) the server. Both plugins must show a green success line in the console.
-4. The plugin creates `plugins/UnlimitedNameTags/settings.yml` on first run.
-5. Edit `settings.yml` to your liking, then run **`/unt reload`** to apply changes.
+Follow these steps to install the plugin on your server:
+
+1. Download **PacketEvents** from [Modrinth](https://modrinth.com/plugin/packetevents) and place the `.jar` file into the `plugins/` directory.
+2. Download **UnlimitedNameTags** and place the `.jar` file into the `plugins/` directory.
+3. Start (or restart) the server. Verify that both plugins enable successfully without error messages in the server console.
+4. The plugin will automatically generate the configuration directory and file at `plugins/UnlimitedNameTags/settings.yml` upon its initial execution.
+5. Modify `settings.yml` to fit your server's needs, then execute the `/unt reload` command to apply your changes.
 
 ---
 
 ## First-Run Checklist
 
-- [ ] Console shows `[UnlimitedNameTags] Plugin enabled` without errors
-- [ ] Console shows no PacketEvents errors
-- [ ] `plugins/UnlimitedNameTags/settings.yml` exists
-- [ ] A Java 1.19.4+ client sees custom nametags in-game
+Confirm your setup is correct by verifying the following:
+* [ ] The console outputs `[UnlimitedNameTags] Plugin enabled` without errors.
+* [ ] The console reports no startup issues from **PacketEvents**.
+* [ ] The file `plugins/UnlimitedNameTags/settings.yml` has been successfully created.
+* [ ] A player joining from a Minecraft Java 1.19.4+ client can see the custom name tags.
 
 ---
 
-## Minimal Working Config
+## Minimal Working Configuration
 
-Below is a complete, valid `settings.yml` at the current schema version. It creates one default nametag preset showing the player's name.
+Below is a complete, valid `settings.yml` using the current schema version. It configures a single `default` name tag preset that displays the player's username.
 
 ```yaml
-configVersion: 4
+configVersion: 5
 
 behavior:
   taskInterval: 20
@@ -62,10 +69,11 @@ visibility:
   showWhileLooking: false
   showCurrentNameTag: false
   allowPerPlayerShowOwnWhenGlobalDisabled: false
-  obscuredNametagThroughWalls: false
-  obscuredNametagOpacity: 55
-  obscuredNametagMaxDistance: 48.0
-  obscuredNametagCheckInterval: 5
+  throughWallMode: SEE_THROUGH
+  throughWallSettings:
+    opacity: 55
+    maxDistance: 48.0
+    checkInterval: 5
 
 performance:
   componentCaching: false
@@ -82,22 +90,27 @@ nameTags:
         yOffset: 0.0
 ```
 
-> **Note:** `default` (no `permission:` field) is the fallback preset. Every player who does not match a higher-priority preset gets this one.
+> [!NOTE]
+> The `default` entry (which contains no `permission:` field) acts as the fallback preset. Any player who does not match a higher-priority custom preset will be assigned this layout.
 
 ---
 
 ## Applying Changes
 
-Run **`/unt reload`** in-game or from the console to reload both `settings.yml` and `advanced.yml` (if present) without restarting the server.
+To apply edits made to `settings.yml` or `advanced.yml` (if present) without restarting the Minecraft server, execute the following command:
+
+* **Command:** `/unt reload` (run in-game or via the console)
 
 ---
 
 ## Next Steps
 
-| Page | What you will find |
-|------|--------------------|
-| [Configuration](configuration.md) | Every config option explained |
-| [Display Groups](features/display-groups.md) | Text, item, and block rows |
-| [Animations](features/animations.md) | Rotate, bob, pulse, and more |
-| [Performance](performance.md) | Tuning for busy servers |
-| [Migration Guide](migration.md) | Upgrading from an older config version |
+To continue configuring and tuning **UnlimitedNameTags**, consult these dedicated guides:
+
+| Guide | Description |
+| :--- | :--- |
+| **[Configuration](configuration.md)** | A detailed breakdown of every main configuration option. |
+| **[Display Groups](features/display-groups.md)** | Learn how to stack lines, adjust layouts, and use custom elements. |
+| **[Animations](features/animations.md)** | Add movement, colors, and dynamic effects to name tags. |
+| **[Performance Tuning](performance.md)** | Best practices for running the plugin on active or large servers. |
+| **[Migration Guide](migration.md)** | Step-by-step instructions for upgrading from older configuration versions. |
