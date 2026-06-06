@@ -9,11 +9,17 @@ implement custom vanish integrations, and adjust cosmetic height offsets.
 
 ## Adding the Dependency
 
-Addon libraries use Maven coordinates **`org.alexdev`** (version from your server plugin, e.g.
-**`2.0.0`**). Match the API version to the **UnlimitedNameTags** JAR on the server.
+Published library artifacts use Maven group **`io.github.alexdev03`** (see root `build.gradle.kts`
+in the plugin repo). Set the version to match your server plugin (e.g. **`2.0.0`**).
 
-Artifacts are published to **Maven Central** (`common`, `api`, `api-paper`). You can also install
-locally from the plugin source tree:
+| Module (artifact) | Use when |
+| :--- | :--- |
+| **`unlimitednametags-api-paper`** | Paper/Bukkit addons — `UNTPaperAPI`, `Player` overloads, Bukkit events, `Formatter`, custom glow handlers. **Recommended.** |
+| **`unlimitednametags-api`** | UUID-only / headless integrations — `UNTAPI` without Paper types. |
+| **`unlimitednametags-common`** | Shared config types (`Settings`, `GlowOverride`, `DisplayAnimation`, …). Pulled in transitively; declare separately only if you need `common` alone. |
+
+Artifacts are published to **Maven Central** on release tags (`v*`) via GitHub Actions. For local
+development, install from source:
 
 ```bash
 ./gradlew :common:publishToMavenLocal :api:publishToMavenLocal :api-paper:publishToMavenLocal
@@ -22,15 +28,9 @@ locally from the plugin source tree:
 Declare the dependency as **compile-only** (`provided` in Maven). Do not shade or bundle it in
 your plugin JAR — **UnlimitedNameTags** must be present on the server at runtime.
 
-| Module (artifact) | Use when |
-| :--- | :--- |
-| **`unlimitednametags-api-paper`** | Paper/Bukkit addons — `UNTPaperAPI`, `Player` overloads, Bukkit events, `Formatter`. **Recommended.** |
-| **`unlimitednametags-api`** | UUID-only / headless integrations — `UNTAPI` without Paper types. |
-| **`unlimitednametags-common`** | Shared config types (`Settings`, `GlowOverride`, `DisplayAnimation`, …). Pulled in transitively; declare separately only if you need `common` alone. |
-
 > [!NOTE]
 > **`api-paper`** depends on **`api`**, which depends on **`common`**. For most Paper addons,
-> `compileOnly("org.alexdev:unlimitednametags-api-paper:…")` is enough.
+> `compileOnly("io.github.alexdev03:unlimitednametags-api-paper:…")` is enough.
 
 ### Gradle (Kotlin DSL)
 ```kotlin
@@ -39,20 +39,18 @@ repositories {
 }
 
 dependencies {
-    // Paper/Bukkit addons (Player, UNTPaperAPI, Formatter):
-    compileOnly("org.alexdev:unlimitednametags-api-paper:2.0.0")
+    compileOnly("io.github.alexdev03:unlimitednametags-api-paper:2.0.0")
 
     // UUID-only / headless integrations:
-    // compileOnly("org.alexdev:unlimitednametags-api:2.0.0")
+    // compileOnly("io.github.alexdev03:unlimitednametags-api:2.0.0")
 }
 ```
 
 ### Maven
 ```xml
 <dependencies>
-    <!-- Paper/Bukkit addons (recommended): -->
     <dependency>
-        <groupId>org.alexdev</groupId>
+        <groupId>io.github.alexdev03</groupId>
         <artifactId>unlimitednametags-api-paper</artifactId>
         <version>2.0.0</version>
         <scope>provided</scope>
@@ -60,7 +58,7 @@ dependencies {
 
     <!-- UUID-only / headless integrations:
     <dependency>
-        <groupId>org.alexdev</groupId>
+        <groupId>io.github.alexdev03</groupId>
         <artifactId>unlimitednametags-api</artifactId>
         <version>2.0.0</version>
         <scope>provided</scope>
@@ -120,7 +118,8 @@ Acquire the appropriate API singleton instance depending on your platform depend
 | **`DisplayAnimation`** | Built-in and custom physical animation definitions. |
 | **`UntNametagDisplay`** | A live client-side display entity (one stacked row). |
 | **`NametagCustomAnimationHandler`** | Functional interface for custom pose animations. |
-| **`NametagCustomGlowHandler`** | Functional interface for custom glow color animations. |
+| **`NametagCustomGlowHandler`** | Functional interface for custom glow color animations (`api-paper`). |
+| **`NametagCustomGlowContext`** | Tick context passed to custom glow handlers (elapsed time, row interval, owner UUID). |
 | **`VanishIntegration`** | Hook for third-party vanish plugins. |
 | **`HatHook`** | Hook for custom helmet/cosmetic height offsets. |
 
@@ -251,13 +250,15 @@ api.setDisplayGroupFixedGlow(player, 0, "#ff0000");
 // Rainbow glow on row 1 (persisted)
 api.setDisplayGroupGlow(player, 1, NametagGlowOverrides.rainbow(1.5), true);
 
-// Reference a preset from settings.yml glowAnimations or an API-registered preset
+// Reference the built-in gold_pulse preset (handler default_gold_pulse is registered by the plugin)
 api.setDisplayGroupGlow(player, 0, NametagGlowOverrides.reference("gold_pulse"));
 ```
 
 ### Registering Glow Presets and Custom Handlers
 
-Available on **`UNTPaperAPI`** (and **`UnlimitedNameTagsInstancePaper`**):
+Available on **`UNTPaperAPI`** (and **`UnlimitedNameTagsInstancePaper`**). The plugin registers
+built-in presets on enable (`rainbow`, `gradient`, `gold_pulse`) and the custom handler
+**`default_gold_pulse`** used by the `gold_pulse` preset.
 
 | Method | Description |
 | :--- | :--- |
@@ -272,16 +273,23 @@ Available on **`UNTPaperAPI`** (and **`UnlimitedNameTagsInstancePaper`**):
 api.registerNametagGlowAnimation("staff_glow",
     NametagGlowOverrides.gradient(List.of("#ff5555", "#ffff55"), 8));
 
-// Custom animated glow (return 24-bit RGB, or null to disable)
-api.registerNametagCustomGlowHandler("pulse_gold", ctx -> {
-    double t = ctx.scaledElapsedSeconds();
-    int gold = 0xFFD700;
-    return (t % 1.0 < 0.5) ? gold : null;
+// Custom animated glow — return 24-bit RGB (0xRRGGBB) or null to clear glow for this tick
+api.registerNametagCustomGlowHandler("my_pulse", ctx -> {
+    double wave = 0.5 + 0.5 * Math.sin(ctx.scaledElapsedSeconds() * Math.PI * 2.0);
+    int bright = 0xFFAA00;
+    int dim = 0x553300;
+    int r = (int) (((bright >> 16) & 0xFF) * wave + ((dim >> 16) & 0xFF) * (1.0 - wave));
+    int g = (int) (((bright >> 8) & 0xFF) * wave + ((dim >> 8) & 0xFF) * (1.0 - wave));
+    int b = (int) ((bright & 0xFF) * wave + (dim & 0xFF) * (1.0 - wave));
+    return (r << 16) | (g << 8) | b;
 });
 ```
 
-Use **`type: custom`** with matching **`id`** in YAML, or reference API presets with
-**`type: reference`** and **`ref: pulse_gold`**.
+`NametagCustomGlowContext` fields: **`glow()`**, **`scaledElapsedSeconds()`**,
+**`monotonicTick()`**, **`effectiveGlowTickInterval()`**, **`ownerId()`**.
+
+Use **`type: custom`** with matching **`id`** in YAML, or reference presets with
+**`type: reference`** and **`ref: staff_glow`**.
 
 ---
 

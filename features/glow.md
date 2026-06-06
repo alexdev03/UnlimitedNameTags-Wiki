@@ -11,7 +11,9 @@ in-game with `/unt glow`.
 Reusable glow definitions live at the root of `settings.yml` under **`glowAnimations`**. Reference
 them from any display group with `glow.type: reference` and `ref: <id>`.
 
-The migrator adds three built-in presets when upgrading to **`configVersion: 6`**:
+The migrator adds three built-in presets when upgrading to **`configVersion: 6`**. On plugin
+enable, **`default_gold_pulse`** is registered as the custom handler behind the **`gold_pulse`**
+preset (you do not need to register it yourself).
 
 ```yaml
 configVersion: 6
