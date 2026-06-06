@@ -55,7 +55,7 @@ integrations.
   option.
 - **[Commands & Permissions](commands-permissions.md)**: Full list of `/unt` command usage and
   permission nodes.
-- **[Developer API](api.md)**: Java API (Application Programming Interface) integration
+- **[Developer API](api/README.md)**: Java API integration for addon plugins
   documentation for custom developers.
 - **[Integrations](integrations/integrations.md)**: External plugin compatibility details (Nexo,
   Oraxen, Geyser, etc.).

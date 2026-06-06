@@ -112,7 +112,7 @@ Permissions: **`unt.glow`** (self), **`unt.glow.others`** (modify other players)
 ## Developer API
 
 Programmatic glow overrides, preset registration, and custom handlers are documented in the
-[Developer API Guide](../api.md#display-group-glow-api).
+[Developer API — Glow](api/glow.md).
 
 ---
 

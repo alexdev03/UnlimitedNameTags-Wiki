@@ -110,10 +110,10 @@ Each stacked row (text, item, or block) can carry a colored outline glow:
 Addon plugins can listen to nametag lifecycle events:
 * **`PlayerNametagVisibilityEvent`** — intercept show/hide decisions before packets are sent.
 * **`PlayerNametagShowEvent`**, **`PlayerNametagHideEvent`**, **`PlayerNametagRefreshEvent`** — observe row lifecycle per viewer.
-* Documented in the [Developer API Guide](api.md#bukkit-events).
+* Documented in the [Developer API — Events](api/events.md).
 
 ### 5. Maven Central API Artifacts
-The multi-module API is published to **Maven Central** under **`io.github.alexdev03`** on release tags. See the [Developer API Guide](api.md#adding-the-dependency).
+The multi-module API is published to **Maven Central** under **`io.github.alexdev03`** on release tags. See [API Setup](api/setup.md).
 
 ---
 

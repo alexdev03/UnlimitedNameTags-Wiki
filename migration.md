@@ -176,7 +176,7 @@ under any `displayGroups` entry. See the [Glow Guide](features/glow.md).
 > **`UNTPaperAPI.setNametagLines(Player, List<Settings.DisplayGroup>)`** is **deprecated** (since
 > 2.0.0, marked for removal). Replace all calls with
 > **`setNametagDisplayGroups(Player, List<Settings.DisplayGroup>)`**. See the
-> [Developer API Guide](api.md).
+> [Developer API Guide](api/README.md).
 
 ---
 
