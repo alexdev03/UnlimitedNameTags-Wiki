@@ -2,21 +2,27 @@
 
 **UnlimitedNameTags** exposes a comprehensive Java API that allows other plugins to dynamically
 control player name tags at runtime. You can programmatically override name tag text, inject
-item/block entities, register custom animations, implement custom vanish integrations, and adjust
-cosmetic height offsets.
+item/block entities, register custom animations and glow effects, listen to Bukkit lifecycle events,
+implement custom vanish integrations, and adjust cosmetic height offsets.
 
 ---
 
 ## Adding the Dependency
 
-The API is published to **Maven Central** (and can also be installed locally using
-`gradle publishToMavenLocal`). It must be declared as a **compile-only** dependency; do not shade
-or bundle it within your plugin artifact, as the **UnlimitedNameTags** jar must be present on the
-server at runtime.
+The API is published to **Maven Central** under the `io.github.alexdev03` group. You can also
+install artifacts locally with `./gradlew publishToMavenLocal`.
 
-- **`unlimitednametags-api-paper`**: Recommended for Paper/Bukkit plugins. Provides helper methods
-  utilizing the standard Bukkit `Player` object.
-- **`unlimitednametags-api`**: Platform-neutral API utilizing player `UUID` identifiers.
+Declare the dependency as **compile-only** (`provided` in Maven). Do not shade or bundle it in
+your plugin JAR — **UnlimitedNameTags** must be present on the server at runtime.
+
+| Artifact | Use when |
+| :--- | :--- |
+| **`unlimitednametags-api-paper`** | Paper/Bukkit plugins (recommended). Includes `Player` overloads, Bukkit events, and glow/animation registration. |
+| **`unlimitednametags-api`** | Platform-neutral development using player `UUID`s only. |
+| **`unlimitednametags-common`** | Transitive dependency of the modules above. Shared config types (`Settings`, `GlowOverride`, `DisplayAnimation`, …). You normally do not declare it separately. |
+
+> [!NOTE]
+> **`unlimitednametags-api-paper`** depends on **`unlimitednametags-api`**, which in turn depends on **`unlimitednametags-common`**. Adding `api-paper` alone is enough for most addon plugins.
 
 ### Gradle (Kotlin DSL)
 ```kotlin
@@ -25,28 +31,28 @@ repositories {
 }
 
 dependencies {
-    // For Paper/Bukkit development (recommended):
-    compileOnly("org.alexdev:unlimitednametags-api-paper:2.0.0")
+    // Paper/Bukkit (recommended):
+    compileOnly("io.github.alexdev03:unlimitednametags-api-paper:2.0.0")
 
-    // Or, for platform-neutral UUID-only development:
-    // compileOnly("org.alexdev:unlimitednametags-api:2.0.0")
+    // Platform-neutral UUID API only:
+    // compileOnly("io.github.alexdev03:unlimitednametags-api:2.0.0")
 }
 ```
 
 ### Maven
 ```xml
 <dependencies>
-    <!-- For Paper/Bukkit development (recommended): -->
+    <!-- Paper/Bukkit (recommended): -->
     <dependency>
-        <groupId>org.alexdev</groupId>
+        <groupId>io.github.alexdev03</groupId>
         <artifactId>unlimitednametags-api-paper</artifactId>
         <version>2.0.0</version>
         <scope>provided</scope>
     </dependency>
 
-    <!-- Or, for platform-neutral UUID-only development:
+    <!-- Platform-neutral UUID API only:
     <dependency>
-        <groupId>org.alexdev</groupId>
+        <groupId>io.github.alexdev03</groupId>
         <artifactId>unlimitednametags-api</artifactId>
         <version>2.0.0</version>
         <scope>provided</scope>
@@ -94,55 +100,101 @@ Acquire the appropriate API singleton instance depending on your platform depend
 
 | Type | Description |
 | :--- | :--- |
-| **`UNTAPI`** | Core platform-neutral entry point. All base API operations are defined here. |
-| **`UNTPaperAPI`** | Paper-specific entry point providing `Player` object mapping overloads. |
-| **`UnlimitedNameTagsPlugin`** | Internal plugin interface, managing components such as the custom animation registry. |
-| **`Settings.NameTag`** | Immutable configuration record representing a permission mapping and its associated `DisplayGroup` list. |
-| **`Settings.DisplayGroup`** | Immutable record representing a single display row, including its type, lines, scale, offsets, conditions, animations, and billboard overrides. |
-| **`Settings.NametagLine`** | A line configuration containing formatting text and optional visibility check conditions. |
-| **`Settings.Background`** | Background plate properties (color, opacity, drop-shadow, and block transparency rendering). |
-| **`DisplayAnimation`** | Base class for built-in name tag animations. |
-| **`UntNametagDisplay`** | Interface representing a live client-side display entity. |
-| **`NametagCustomAnimationHandler`** | Functional interface for creating and registering custom animations. |
-| **`VanishIntegration`** | Interface to connect custom or third-party vanish plugin systems. |
-| **`HatHook`** | Interface for registering custom cosmetic offset height calculations. |
+| **`UNTAPI`** | Core platform-neutral entry point (UUID-based). |
+| **`UNTPaperAPI`** | Paper/Bukkit entry point with `Player` overloads, custom animation/glow registration, and forced nametag helpers. |
+| **`UnlimitedNameTagsInstancePaper`** | Extended plugin interface reachable via `UNTPaperAPI.paperPlugin()`. |
+| **`UntNametagManager` / `UntNametagManagerPaper`** | Nametag override, glow, refresh, and visibility operations (`api.nametagManager()`). |
+| **`Settings.NameTag`** | Immutable configuration record for a permission preset and its `displayGroups` list. |
+| **`Settings.DisplayGroup`** | A single stacked row (text, item, or block), including optional `glow` and `animation`. |
+| **`Settings.NametagLine`** | A text line with optional `when` visibility condition. |
+| **`Settings.Background`** | Background plate properties (color, opacity, shadow, see-through). |
+| **`GlowOverride`** | Per-row glow configuration (`fixed`, `reference`, `rainbow`, `gradient`, `custom`). |
+| **`DisplayAnimation`** | Built-in and custom physical animation definitions. |
+| **`UntNametagDisplay`** | A live client-side display entity (one stacked row). |
+| **`NametagCustomAnimationHandler`** | Functional interface for custom pose animations. |
+| **`NametagCustomGlowHandler`** | Functional interface for custom glow color animations. |
+| **`VanishIntegration`** | Hook for third-party vanish plugins. |
+| **`HatHook`** | Hook for custom helmet/cosmetic height offsets. |
+
+---
+
+## Bukkit Events
+
+Events ship in the **`unlimitednametags-api-paper`** module (`org.alexdev.unlimitednametags.api.event`).
+Register them like any other Bukkit event.
+
+All lifecycle events extend **`PlayerNametagLifecycleEvent`**, which exposes:
+
+| Method | Description |
+| :--- | :--- |
+| **`getOwner()`** | The player whose nametag row is affected. |
+| **`getViewer()`** | The player receiving (or losing) the row. |
+| **`getDisplay()`** | The `UntNametagDisplay` row instance. |
+| **`isOwnerViewingOwnNametag()`** | `true` when owner and viewer are the same player. |
+
+### Event Reference
+
+| Event | When it fires |
+| :--- | :--- |
+| **`PlayerNametagVisibilityEvent`** | Before a row is shown or hidden for a viewer. Listeners can override the final decision with **`setVisible(boolean)`**. |
+| **`PlayerNametagShowEvent`** | After visibility is approved and the row is sent to a viewer. |
+| **`PlayerNametagHideEvent`** | After visibility is denied and the row is removed from a viewer. |
+| **`PlayerNametagRefreshEvent`** | When an existing row is refreshed for a viewer (placeholder or layout update). |
+
+### Example: Block nametags in a custom region
+
+```java
+@EventHandler(ignoreCancelled = true)
+public void onNametagVisibility(PlayerNametagVisibilityEvent event) {
+    if (myRegion.contains(event.getOwner()) && !event.getViewer().hasPermission("myplugin.seetags")) {
+        event.setVisible(false);
+    }
+}
+```
+
+> [!NOTE]
+> **`PlayerNametagVisibilityEvent`** is the single decision point for show/hide. It runs before
+> lifecycle show/hide events and receives the plugin's initial visibility (`isVisible()`), plus
+> **`isViewerAlreadySeeing()`** to indicate whether the viewer already has the row spawned.
 
 ---
 
 ## Name Tag Overrides
 
-Player name tags are resolved from `settings.yml` (the config name tag) unless an active override is registered via the API. Overrides take precedence over config settings, are stored in memory, and do not persist across server restarts.
+Player name tags are resolved from `settings.yml` unless an active override is registered via the
+API. Overrides take precedence over config settings.
+
+By default, overrides are **in-memory only** and are cleared on disconnect or restart. Pass
+**`persist = true`** on supported methods to store the override in the player's persistent data
+(so it survives relog).
 
 | Method | Description |
 | :--- | :--- |
-| **`setNametagOverride(player, nameTag)`** | Registers a complete custom `Settings.NameTag` override for a player. |
-| **`removeNametagOverride(player)`** | Clears the active override, restoring the default configuration-based layout. |
+| **`setNametagOverride(player, nameTag)`** | Registers a complete custom `Settings.NameTag` override. |
+| **`setNametagOverride(player, nameTag, persist)`** | Same as above; persists across relog when `persist` is `true`. |
+| **`removeNametagOverride(player)`** | Clears the active override, restoring the configuration layout. |
+| **`removeNametagOverride(player, persist)`** | Also removes a stored persistent override when `persist` is `true`. |
 | **`hasNametagOverride(player)`** | Returns `true` if the player currently has an active override. |
 | **`getNametagOverride(player)`** | Returns an `Optional<Settings.NameTag>` containing the override layout if present. |
 | **`getEffectiveNametag(player)`** | Returns the active override layout if present, falling back to the configuration layout. |
 | **`getConfigNametag(player)`** | Retrieves the player's default configuration layout, ignoring active overrides. |
-| **`modifyNametagProperty(player, modifier)`** | Retrieves the effective layout, applies a mapping function, and registers the result as an override. |
+| **`modifyNametagProperty(player, modifier)`** | Applies a mapping function to the effective layout and registers the result as an override. |
+
+> [!WARNING]
+> **`setNametagLines(Player, List)`** on **`UNTPaperAPI`** is **deprecated** (since 2.0.0). Use
+> **`setNametagDisplayGroups(Player, List)`** instead.
 
 ### Example: Appending a Row to an Active Name Tag
 
 ```java
-UNTAPI api = UNTAPI.getInstance();
+UNTPaperAPI api = UNTPaperAPI.getInstance();
 
 api.modifyNametagProperty(player, current -> {
     List<Settings.DisplayGroup> groups = new ArrayList<>(current.displayGroups());
-    groups.add(new Settings.DisplayGroup(
-        List.of(new Settings.NametagLine("<red>Staff</red>", null)),
-        null,       // background
-        1.0f,       // scale
-        0.0f,       // yOffset
-        null,       // when condition
-        false,      // relationalConditions
-        Settings.DisplayType.TEXT,
-        null, null, null,  // itemMaterial, blockMaterial, itemDisplayMode
-        null,       // animation
-        null,       // animationInterval
-        null        // billboard override
-    ));
+    groups.add(Settings.DisplayGroup.builder()
+        .line("<red>Staff</red>")
+        .scale(1.0f)
+        .build());
     return current.withDisplayGroups(groups);
 });
 ```
@@ -161,6 +213,64 @@ These convenience methods retrieve the player's active layout, apply the specifi
 | **`setNametagShadowed(player, shadowed)`** | Toggles drop-shadow rendering across all text lines. |
 | **`setNametagSeeThrough(player, seeThrough)`** | Toggles block-transparency rendering across all text lines. |
 | **`setNametagBillboard(player, billboard)`** | Updates the camera-alignment billboard mode for all player display groups. |
+
+---
+
+## Display Group Glow (API)
+
+Glow tints the outline of text, item, and block display rows. Overrides can be applied per display
+group index (0-based). See the [Glow Guide](features/glow.md) for YAML configuration.
+
+| Method | Description |
+| :--- | :--- |
+| **`setDisplayGroupGlow(player, groupIndex, glow)`** | Applies a `GlowOverride` to one row. |
+| **`setDisplayGroupGlow(player, groupIndex, glow, persist)`** | Persists the glow override across relog when `persist` is `true`. |
+| **`setDisplayGroupFixedGlow(player, groupIndex, color)`** | Shortcut for a fixed hex/RGB glow color. |
+| **`clearDisplayGroupGlow(player, groupIndex)`** | Removes the API glow override for one row. |
+| **`getDisplayGroupGlowOverride(player, groupIndex)`** | Returns the active API glow override, if any. |
+
+Factory helpers live in **`NametagGlowOverrides`**:
+
+```java
+UNTPaperAPI api = UNTPaperAPI.getInstance();
+
+// Fixed red glow on row 0
+api.setDisplayGroupFixedGlow(player, 0, "#ff0000");
+
+// Rainbow glow on row 1 (persisted)
+api.setDisplayGroupGlow(player, 1, NametagGlowOverrides.rainbow(1.5), true);
+
+// Reference a preset from settings.yml glowAnimations or an API-registered preset
+api.setDisplayGroupGlow(player, 0, NametagGlowOverrides.reference("gold_pulse"));
+```
+
+### Registering Glow Presets and Custom Handlers
+
+Available on **`UNTPaperAPI`** (and **`UnlimitedNameTagsInstancePaper`**):
+
+| Method | Description |
+| :--- | :--- |
+| **`registerNametagGlowAnimation(id, glow)`** | Registers a reusable glow preset (referenceable via `type: reference` in YAML). |
+| **`unregisterNametagGlowAnimation(id)`** | Removes an API-registered preset. |
+| **`getAllKnownGlowAnimationIds()`** | Union of `settings.yml` `glowAnimations` keys and API presets. |
+| **`registerNametagCustomGlowHandler(id, handler)`** | Registers a handler for `GlowOverride` with `type: custom`. |
+| **`unregisterNametagCustomGlowHandler(id)`** | Removes a custom glow handler. |
+
+```java
+// Register a reusable gradient preset
+api.registerNametagGlowAnimation("staff_glow",
+    NametagGlowOverrides.gradient(List.of("#ff5555", "#ffff55"), 8));
+
+// Custom animated glow (return 24-bit RGB, or null to disable)
+api.registerNametagCustomGlowHandler("pulse_gold", ctx -> {
+    double t = ctx.scaledElapsedSeconds();
+    int gold = 0xFFD700;
+    return (t % 1.0 < 0.5) ? gold : null;
+});
+```
+
+Use **`type: custom`** with matching **`id`** in YAML, or reference API presets with
+**`type: reference`** and **`ref: pulse_gold`**.
 
 ---
 
@@ -201,6 +311,9 @@ api.setNametagDisplayGroupAnimation(player, 0, new DisplayAnimation.RotateDispla
 
 // Clear active animations on the first display group
 api.clearNametagDisplayGroupAnimation(player, 0);
+
+// Persist the animation override across relog
+api.setNametagDisplayGroupAnimation(player, 0, animation, true);
 ```
 
 > [!NOTE]
@@ -210,8 +323,8 @@ api.clearNametagDisplayGroupAnimation(player, 0);
 Register a dynamic pose modifier by implementing the functional interface `NametagCustomAnimationHandler`. To apply this animation in `settings.yml`, define `animation.type: custom` and matching `id`.
 
 ```java
-api.registerNametagCustomAnimation("my_pulse", (target, animation, elapsedMs) -> {
-    float scale = 1.0f + 0.1f * (float) Math.sin(elapsedMs / 500.0 * Math.PI * 2);
+api.registerNametagCustomAnimation("my_pulse", (target, animation, scaledElapsedSeconds) -> {
+    float scale = 1.0f + 0.1f * (float) Math.sin(scaledElapsedSeconds * Math.PI * 2);
     target.setAnimationScale(scale);
 });
 ```
@@ -221,8 +334,8 @@ The handler interface provides three parameters:
   and positional offsets.
 - **`animation`** (`DisplayAnimation.CustomDisplayAnimation`): The animation configuration containing
   custom configuration properties.
-- **`elapsedMs`**: The total elapsed time in milliseconds since the animation execution was
-  initialized.
+- **`scaledElapsedSeconds`**: Elapsed wall time since the animation started, multiplied by the row's
+  configured speed.
 
 ```java
 // Unregister a custom handler
@@ -321,4 +434,4 @@ api.removeHatHook(hook);
 ## Direct Display Entity Access
 
 > [!CAUTION]
-> The method `getPacketDisplayText(player)` exposes the active list of `UntNametagDisplay` entities. This method should only be used in advanced cases (e.g., low-level packet modification, custom viewer filtering). Under normal circumstances, use high-level API methods to ensure stability.
+> The method `getPacketDisplayText(player)` exposes the active list of `UntNametagDisplay` entities. This method should only be used in advanced cases (e.g., low-level packet modification, custom viewer filtering). Under normal circumstances, use high-level API methods or Bukkit events to ensure stability.

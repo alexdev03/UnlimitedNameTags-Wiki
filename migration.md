@@ -3,7 +3,7 @@
 > [!NOTE]
 > This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
 
-This document provides step-by-step instructions for upgrading your configuration format to **UnlimitedNameTags v2.x** (`configVersion: 5`).
+This document provides step-by-step instructions for upgrading your configuration format to **UnlimitedNameTags v2.x** (`configVersion: 6`).
 
 ---
 
@@ -15,7 +15,8 @@ This document provides step-by-step instructions for upgrading your configuratio
 | **2** | Introduced the `displayGroups` list. The `lines` configuration was defined as a simple string list (e.g., `- 'text'`). |
 | **3** | Updated the `lines` list format to structured objects, supporting conditional parameters (e.g., `- {text: 'text', when: 'condition'}`). |
 | **4** | Grouped global variables into `behavior`, `visibility`, and `performance` sections. Standardized the `background` block by unifying background parameters under a single `color` option. |
-| **5** (Current) | Replaced `obscuredNametagThroughWalls` and related parameters with `throughWallMode` (`SEE_THROUGH`, `OBSCURED`, `HIDE`) and nested `throughWallSettings`. |
+| **5** | Replaced `obscuredNametagThroughWalls` and related parameters with `throughWallMode` (`SEE_THROUGH`, `OBSCURED`, `HIDE`) and nested `throughWallSettings`. |
+| **6** (Current) | Introduced `glowAnimations` presets and optional per-display-group `glow` / `glowInterval` fields. |
 
 ---
 
@@ -29,7 +30,9 @@ The plugin executes an automatic migration routine whenever it starts or when `/
 4. Translates old background structures (`type: integer` or `type: hex`) into the unified `color:` format.
 5. Restructures top-level global settings under their respective `behavior`, `visibility`, or `performance` categories.
 6. Converts `obscuredNametagThroughWalls` and related settings to the unified `throughWallMode` and nested `throughWallSettings` layout.
-7. Sets `configVersion: 5` in the rewritten configuration file.
+7. Converts `obscuredNametagThroughWalls` and related settings to `throughWallMode` and nested `throughWallSettings` (v5).
+8. Adds default `glowAnimations` presets when upgrading to v6.
+9. Sets `configVersion: 6` in the rewritten configuration file.
 
 Under normal circumstances, restarting the server or executing `/unt reload` is sufficient to complete the migration.
 
@@ -157,12 +160,23 @@ The legacy internal setting `linesGroups` is automatically renamed to `displayGr
 
 ---
 
-### API Method Removal: `setNametagLines`
+### Migration to Glow Presets (v6)
+
+Schema version 6 adds a root-level **`glowAnimations`** map with default presets (`rainbow`,
+`gradient`, `gold_pulse`). The migrator inserts these automatically if the section is missing.
+
+Per-row glow is optional and does not change existing layouts. To use glow, add a `glow:` block
+under any `displayGroups` entry. See the [Glow Guide](features/glow.md).
+
+---
+
+### API: `setNametagLines` Deprecated
 
 > [!WARNING]
-> The deprecated API method `UNTAPI.setNametagLines(Player, List<Settings.DisplayGroup>)` has been **completely removed** as of configuration schema version 5 (v2.1.0+).
-> 
-> Developers must replace all instances of this call with `setNametagDisplayGroups(Player, List<Settings.DisplayGroup>)`. For more information, refer to the [Developer API Guide](api.md).
+> **`UNTPaperAPI.setNametagLines(Player, List<Settings.DisplayGroup>)`** is **deprecated** (since
+> 2.0.0, marked for removal). Replace all calls with
+> **`setNametagDisplayGroups(Player, List<Settings.DisplayGroup>)`**. See the
+> [Developer API Guide](api.md).
 
 ---
 

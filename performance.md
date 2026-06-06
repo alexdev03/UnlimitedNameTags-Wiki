@@ -22,7 +22,7 @@ If you are using an older configuration format, these options may appear at the 
 file. The plugin will automatically restructure them into their designated categories upon startup.
 
 ```yaml
-configVersion: 5
+configVersion: 6
 
 behavior:
   taskInterval: 20

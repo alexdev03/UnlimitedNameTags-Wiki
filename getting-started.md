@@ -54,7 +54,7 @@ Confirm your setup is correct by verifying the following:
 Below is a complete, valid `settings.yml` using the current schema version. It configures a single `default` name tag preset that displays the player's username.
 
 ```yaml
-configVersion: 5
+configVersion: 6
 
 behavior:
   taskInterval: 20

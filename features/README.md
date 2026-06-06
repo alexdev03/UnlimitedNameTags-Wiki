@@ -12,6 +12,7 @@ Explore the core features and customization options of **UnlimitedNameTags**:
   from PlaceholderAPI variables.
 - **[Show While Looking](show-while-looking.md)**: Only display name tags when a viewer looks
   directly at the player.
+- **[Glow](glow.md)**: Colored outline glow on text, item, and block display rows.
 - **[Advanced Configuration](advanced-yml.md)**: Manually configure custom helmet offset
   adjustments using `advanced.yml`.
 

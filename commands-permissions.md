@@ -28,6 +28,7 @@ Below is a quick-reference table for all available commands. Click on a command 
 | [**`/unt preferences seeothers <true/false> [player]`**](#cmd-preferences-seeothers) | `unt.preferences` | Toggles whether you can see other players' name tags. |
 | [**`/unt preferences showown <true/false> [player]`**](#cmd-preferences-showown) | `unt.preferences` | Toggles whether you can see your own name tag. |
 | [**`/unt preferences showothers <true/false> [player]`**](#cmd-preferences-showothers) | `unt.preferences` | Toggles whether your tag is visible to other players. |
+| [**`/unt glow …`**](#cmd-glow) | `unt.glow` | Per-player display-group glow overrides. |
 
 ---
 
@@ -191,6 +192,23 @@ restarts.
 
 ---
 
+<a id="cmd-glow"></a>
+#### `/unt glow …`
+- **Description:** Manage per-player glow overrides on display group rows. Overrides set via these
+  commands are persisted across relog. Run `/unt glow` without arguments for the full subcommand list.
+- **Usage:**
+  - `/unt glow fixed <player> <group> <color>`
+  - `/unt glow animation <id> [player] [group]`
+  - `/unt glow rate <rate> <id> [player] [group]`
+  - `/unt glow rainbow <player> <group> [speed]`
+  - `/unt glow gradient <player> <group> <color...> [interval]`
+  - `/unt glow clear <player> [group]`
+  - `/unt glow get [player]`
+- **Permission:** `unt.glow` (self), `unt.glow.others` (target other players)
+- **Details:** See the [Glow Guide](features/glow.md).
+
+---
+
 ## Default Permissions
 
 Assign these nodes within your permissions plugin (e.g., LuckPerms) to control basic visibility behaviors:
@@ -217,3 +235,5 @@ Assign these nodes within your permissions plugin (e.g., LuckPerms) to control b
 | **`unt.showOtherNametags`** | `true` | `/unt showOtherNametags` |
 | **`unt.preferences`** | `true` | `/unt preferences` (self) |
 | **`unt.preferences.others`** | `op` | `/unt preferences ... <player>` |
+| **`unt.glow`** | `true` | `/unt glow` (self) |
+| **`unt.glow.others`** | `op` | `/unt glow ... <player>` |

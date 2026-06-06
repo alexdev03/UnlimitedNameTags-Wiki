@@ -99,6 +99,22 @@ All commands (`/unt`) have been moved to the modern Brigadier engine. This gives
 ### 2. Per-Player Preferences
 Players can now toggle custom name tag visibility on/off using client-friendly command preferences, which respect permissions and default rules.
 
+### 3. Display Group Glow ✨
+Each stacked row (text, item, or block) can carry a colored outline glow:
+* **Fixed colors**, **rainbow**, **gradient**, and **custom** animated glow types.
+* Reusable presets under `glowAnimations` in `settings.yml`.
+* Runtime overrides via `/unt glow` and the Java API (with optional persistence across relog).
+* Learn more in the [Glow Guide](features/glow.md).
+
+### 4. Developer Bukkit Events
+Addon plugins can listen to nametag lifecycle events:
+* **`PlayerNametagVisibilityEvent`** — intercept show/hide decisions before packets are sent.
+* **`PlayerNametagShowEvent`**, **`PlayerNametagHideEvent`**, **`PlayerNametagRefreshEvent`** — observe row lifecycle per viewer.
+* Documented in the [Developer API Guide](api.md#bukkit-events).
+
+### 5. Maven Central API Artifacts
+The multi-module API (`unlimitednametags-api-paper`, `unlimitednametags-api`, `unlimitednametags-common`) is published to **Maven Central** under `io.github.alexdev03`. See the [Developer API Guide](api.md#adding-the-dependency).
+
 ---
 
 ## 📊 Summary Comparison: v1 vs. v2
@@ -115,6 +131,9 @@ Players can now toggle custom name tag visibility on/off using client-friendly c
 | **Conditional Toggling** | Limited to entire groups | **Per-row and per-line conditional visibility** (`when: '...'`) |
 | **Placeholder Formatting** | Raw values only | **Placeholder Replacements engine** (map raw values to styled text) |
 | **Command System** | Legacy parser | **Brigadier Engine** (tab-completion & error highlighting) |
+| **Row Glow** | None | **Fixed, rainbow, gradient, custom, and preset reference glow** |
+| **Developer Events** | None | **Bukkit visibility and lifecycle events** |
+| **API Distribution** | JitPack / shaded | **Maven Central** (`io.github.alexdev03`) |
 | **Migration** | Manual rewrite | **Automatic Config Migrator** (safe auto-upgrade from v1 configuration) |
 
 ---

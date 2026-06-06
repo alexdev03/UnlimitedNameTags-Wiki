@@ -16,6 +16,7 @@
   * [Billboard](features/billboards.md)
   * [Placeholder replacements](features/placeholders-replacements.md)
   * [Show while looking](features/show-while-looking.md)
+  * [Glow](features/glow.md)
   * [Advanced (`advanced.yml`)](features/advanced-yml.md)
 * [Full `advanced.example.yml`](reference/advanced.example.yml)
 

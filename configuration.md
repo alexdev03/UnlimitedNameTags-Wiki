@@ -22,6 +22,8 @@ The `settings.yml` file is structured into three distinct layers:
    `default` preset is applied.
 1. **Placeholder Replacements (`placeholdersReplacements`)**: Custom rules designed to format or
    clean raw PlaceholderAPI returns before they render on name tags.
+1. **Glow Presets (`glowAnimations`)**: Reusable glow animation definitions referenced from display
+   groups. See the [Glow Guide](features/glow.md).
 
 Each name tag preset contains one or more **`displayGroups`**, which represent the stacked layout
 rows (comprising text lines, items, or blocks) rendered above the player's head. The stack is
@@ -38,12 +40,26 @@ Time-based values within the configuration are defined in **ticks**.
 
 ---
 
-## Complete Example (`configVersion: 5`)
+## Complete Example (`configVersion: 6`)
 
 Below is a reference `settings.yml` configuration demonstrating a two-preset setup and a placeholder replacement rule:
 
 ```yaml
-configVersion: 5
+configVersion: 6
+
+glowAnimations:
+  rainbow:
+    type: rainbow
+    speed: 1.0
+  gradient:
+    type: gradient
+    colors: ['#FF5555', '#55FF55', '#5555FF']
+    refreshInterval: 10
+    speed: 1.0
+  gold_pulse:
+    type: custom
+    id: default_gold_pulse
+    speed: 1.0
 
 behavior:
   taskInterval: 20
@@ -109,6 +125,12 @@ placeholdersReplacements:
 ---
 
 ## Global Options
+
+### `glowAnimations` Section
+
+Root-level map of reusable glow presets. Keys are referenced from display groups via
+`glow.type: reference` and `ref: <key>`. The migrator seeds `rainbow`, `gradient`, and
+`gold_pulse` when upgrading to `configVersion: 6`. Full reference: [Glow Guide](features/glow.md).
 
 ### `behavior` Section
 

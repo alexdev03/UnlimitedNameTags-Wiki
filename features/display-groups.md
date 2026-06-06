@@ -172,6 +172,25 @@ Adjust how individual rows rotate toward the camera using **`billboard`**: `CENT
 
 ---
 
+## ✨ Per-Row Glow
+
+Apply a colored outline glow to any display row (text, item, or block):
+
+```yaml
+- lines:
+    - text: '<gold>%player_name%</gold>'
+  glow:
+    type: reference
+    ref: rainbow
+    speed: 1.0
+  glowInterval: 2   # optional; ticks between glow color updates
+```
+
+Supported types: `fixed`, `reference`, `rainbow`, `gradient`, `custom`. Presets are defined under
+root **`glowAnimations`** in `settings.yml`. See the full [Glow Guide](glow.md).
+
+---
+
 ## 🚀 Advanced Stacking Example
 
 This example combines **TEXT**, **ITEM**, and **BLOCK** types into a single premium name tag layout:
