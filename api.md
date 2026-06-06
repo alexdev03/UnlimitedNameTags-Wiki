@@ -9,28 +9,9 @@ implement custom vanish integrations, and adjust cosmetic height offsets.
 
 ## Adding the Dependency
 
-Published library artifacts use Maven group **`io.github.alexdev03`** (see root `build.gradle.kts`
-in the plugin repo). Set the version to match your server plugin (e.g. **`2.0.0`**).
-
-| Module (artifact) | Use when |
-| :--- | :--- |
-| **`unlimitednametags-api-paper`** | Paper/Bukkit addons — `UNTPaperAPI`, `Player` overloads, Bukkit events, `Formatter`, custom glow handlers. **Recommended.** |
-| **`unlimitednametags-api`** | UUID-only / headless integrations — `UNTAPI` without Paper types. |
-| **`unlimitednametags-common`** | Shared config types (`Settings`, `GlowOverride`, `DisplayAnimation`, …). Pulled in transitively; declare separately only if you need `common` alone. |
-
-Artifacts are published to **Maven Central** on release tags (`v*`) via GitHub Actions. For local
-development, install from source:
-
-```bash
-./gradlew :common:publishToMavenLocal :api:publishToMavenLocal :api-paper:publishToMavenLocal
-```
-
-Declare the dependency as **compile-only** (`provided` in Maven). Do not shade or bundle it in
-your plugin JAR — **UnlimitedNameTags** must be present on the server at runtime.
-
-> [!NOTE]
-> **`api-paper`** depends on **`api`**, which depends on **`common`**. For most Paper addons,
-> `compileOnly("io.github.alexdev03:unlimitednametags-api-paper:…")` is enough.
+Add **`unlimitednametags-api-paper`** from Maven Central as **compile-only** (`provided` in Maven).
+Use the same version as the **UnlimitedNameTags** plugin on your server. Do not shade or bundle the
+API — the plugin JAR must be on the server at runtime.
 
 ### Gradle (Kotlin DSL)
 ```kotlin
@@ -40,32 +21,23 @@ repositories {
 
 dependencies {
     compileOnly("io.github.alexdev03:unlimitednametags-api-paper:2.0.0")
-
-    // UUID-only / headless integrations:
-    // compileOnly("io.github.alexdev03:unlimitednametags-api:2.0.0")
 }
 ```
 
 ### Maven
 ```xml
-<dependencies>
-    <dependency>
-        <groupId>io.github.alexdev03</groupId>
-        <artifactId>unlimitednametags-api-paper</artifactId>
-        <version>2.0.0</version>
-        <scope>provided</scope>
-    </dependency>
-
-    <!-- UUID-only / headless integrations:
-    <dependency>
-        <groupId>io.github.alexdev03</groupId>
-        <artifactId>unlimitednametags-api</artifactId>
-        <version>2.0.0</version>
-        <scope>provided</scope>
-    </dependency>
-    -->
-</dependencies>
+<dependency>
+    <groupId>io.github.alexdev03</groupId>
+    <artifactId>unlimitednametags-api-paper</artifactId>
+    <version>2.0.0</version>
+    <scope>provided</scope>
+</dependency>
 ```
+
+> [!NOTE]
+> For UUID-only integrations without Paper types, use artifact **`unlimitednametags-api`** instead.
+> It is pulled in transitively when you depend on **`api-paper`** — you normally do not need
+> **`unlimitednametags-common`** separately.
 
 ### Plugin Configuration (`plugin.yml`)
 To ensure the server loads **UnlimitedNameTags** before your plugin, declare the dependency in your `plugin.yml` file:
