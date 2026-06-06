@@ -113,7 +113,7 @@ Addon plugins can listen to nametag lifecycle events:
 * Documented in the [Developer API Guide](api.md#bukkit-events).
 
 ### 5. Maven Central API Artifacts
-The multi-module API (`unlimitednametags-api-paper`, `unlimitednametags-api`, `unlimitednametags-common`) is published to **Maven Central** under `io.github.alexdev03`. See the [Developer API Guide](api.md#adding-the-dependency).
+The multi-module API (`unlimitednametags-api-paper`, `unlimitednametags-api`, `unlimitednametags-common`) is published to **Maven Central** under **`org.alexdev`**. See the [Developer API Guide](api.md#adding-the-dependency).
 
 ---
 
@@ -133,7 +133,7 @@ The multi-module API (`unlimitednametags-api-paper`, `unlimitednametags-api`, `u
 | **Command System** | Legacy parser | **Brigadier Engine** (tab-completion & error highlighting) |
 | **Row Glow** | None | **Fixed, rainbow, gradient, custom, and preset reference glow** |
 | **Developer Events** | None | **Bukkit visibility and lifecycle events** |
-| **API Distribution** | JitPack / shaded | **Maven Central** (`io.github.alexdev03`) |
+| **API Distribution** | JitPack / shaded | **Maven Central** (`org.alexdev`) |
 | **Migration** | Manual rewrite | **Automatic Config Migrator** (safe auto-upgrade from v1 configuration) |
 
 ---

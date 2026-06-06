@@ -9,20 +9,28 @@ implement custom vanish integrations, and adjust cosmetic height offsets.
 
 ## Adding the Dependency
 
-The API is published to **Maven Central** under the `io.github.alexdev03` group. You can also
-install artifacts locally with `./gradlew publishToMavenLocal`.
+Addon libraries use Maven coordinates **`org.alexdev`** (version from your server plugin, e.g.
+**`2.0.0`**). Match the API version to the **UnlimitedNameTags** JAR on the server.
+
+Artifacts are published to **Maven Central** (`common`, `api`, `api-paper`). You can also install
+locally from the plugin source tree:
+
+```bash
+./gradlew :common:publishToMavenLocal :api:publishToMavenLocal :api-paper:publishToMavenLocal
+```
 
 Declare the dependency as **compile-only** (`provided` in Maven). Do not shade or bundle it in
 your plugin JAR — **UnlimitedNameTags** must be present on the server at runtime.
 
-| Artifact | Use when |
+| Module (artifact) | Use when |
 | :--- | :--- |
-| **`unlimitednametags-api-paper`** | Paper/Bukkit plugins (recommended). Includes `Player` overloads, Bukkit events, and glow/animation registration. |
-| **`unlimitednametags-api`** | Platform-neutral development using player `UUID`s only. |
-| **`unlimitednametags-common`** | Transitive dependency of the modules above. Shared config types (`Settings`, `GlowOverride`, `DisplayAnimation`, …). You normally do not declare it separately. |
+| **`unlimitednametags-api-paper`** | Paper/Bukkit addons — `UNTPaperAPI`, `Player` overloads, Bukkit events, `Formatter`. **Recommended.** |
+| **`unlimitednametags-api`** | UUID-only / headless integrations — `UNTAPI` without Paper types. |
+| **`unlimitednametags-common`** | Shared config types (`Settings`, `GlowOverride`, `DisplayAnimation`, …). Pulled in transitively; declare separately only if you need `common` alone. |
 
 > [!NOTE]
-> **`unlimitednametags-api-paper`** depends on **`unlimitednametags-api`**, which in turn depends on **`unlimitednametags-common`**. Adding `api-paper` alone is enough for most addon plugins.
+> **`api-paper`** depends on **`api`**, which depends on **`common`**. For most Paper addons,
+> `compileOnly("org.alexdev:unlimitednametags-api-paper:…")` is enough.
 
 ### Gradle (Kotlin DSL)
 ```kotlin
@@ -31,28 +39,28 @@ repositories {
 }
 
 dependencies {
-    // Paper/Bukkit (recommended):
-    compileOnly("io.github.alexdev03:unlimitednametags-api-paper:2.0.0")
+    // Paper/Bukkit addons (Player, UNTPaperAPI, Formatter):
+    compileOnly("org.alexdev:unlimitednametags-api-paper:2.0.0")
 
-    // Platform-neutral UUID API only:
-    // compileOnly("io.github.alexdev03:unlimitednametags-api:2.0.0")
+    // UUID-only / headless integrations:
+    // compileOnly("org.alexdev:unlimitednametags-api:2.0.0")
 }
 ```
 
 ### Maven
 ```xml
 <dependencies>
-    <!-- Paper/Bukkit (recommended): -->
+    <!-- Paper/Bukkit addons (recommended): -->
     <dependency>
-        <groupId>io.github.alexdev03</groupId>
+        <groupId>org.alexdev</groupId>
         <artifactId>unlimitednametags-api-paper</artifactId>
         <version>2.0.0</version>
         <scope>provided</scope>
     </dependency>
 
-    <!-- Platform-neutral UUID API only:
+    <!-- UUID-only / headless integrations:
     <dependency>
-        <groupId>io.github.alexdev03</groupId>
+        <groupId>org.alexdev</groupId>
         <artifactId>unlimitednametags-api</artifactId>
         <version>2.0.0</version>
         <scope>provided</scope>
@@ -137,8 +145,8 @@ All lifecycle events extend **`PlayerNametagLifecycleEvent`**, which exposes:
 | Event | When it fires |
 | :--- | :--- |
 | **`PlayerNametagVisibilityEvent`** | Before a row is shown or hidden for a viewer. Listeners can override the final decision with **`setVisible(boolean)`**. |
-| **`PlayerNametagShowEvent`** | After visibility is approved and the row is sent to a viewer. |
-| **`PlayerNametagHideEvent`** | After visibility is denied and the row is removed from a viewer. |
+| **`PlayerNametagShowEvent`** | When a row is shown to a viewer (after visibility checks pass). |
+| **`PlayerNametagHideEvent`** | When a row is hidden from a viewer. |
 | **`PlayerNametagRefreshEvent`** | When an existing row is refreshed for a viewer (placeholder or layout update). |
 
 ### Example: Block nametags in a custom region
@@ -164,16 +172,19 @@ public void onNametagVisibility(PlayerNametagVisibilityEvent event) {
 Player name tags are resolved from `settings.yml` unless an active override is registered via the
 API. Overrides take precedence over config settings.
 
-By default, overrides are **in-memory only** and are cleared on disconnect or restart. Pass
-**`persist = true`** on supported methods to store the override in the player's persistent data
-(so it survives relog).
+By default, overrides are **in-memory only** and are cleared on disconnect or restart.
+
+On **`UNTAPI`**, pass **`persist = true`** on supported methods to store overrides in the player's
+persistent data (survives relog). On **`UNTPaperAPI`**, the `persist` flag is available for glow
+and animation overrides; for full nametag layout overrides with persistence, use the UUID overloads
+on **`UNTAPI`**.
 
 | Method | Description |
 | :--- | :--- |
 | **`setNametagOverride(player, nameTag)`** | Registers a complete custom `Settings.NameTag` override. |
-| **`setNametagOverride(player, nameTag, persist)`** | Same as above; persists across relog when `persist` is `true`. |
+| **`setNametagOverride(uuid, nameTag, persist)`** | UUID overload; persists across relog when `persist` is `true`. |
 | **`removeNametagOverride(player)`** | Clears the active override, restoring the configuration layout. |
-| **`removeNametagOverride(player, persist)`** | Also removes a stored persistent override when `persist` is `true`. |
+| **`removeNametagOverride(uuid, persist)`** | UUID overload; also removes a stored persistent override when `persist` is `true`. |
 | **`hasNametagOverride(player)`** | Returns `true` if the player currently has an active override. |
 | **`getNametagOverride(player)`** | Returns an `Optional<Settings.NameTag>` containing the override layout if present. |
 | **`getEffectiveNametag(player)`** | Returns the active override layout if present, falling back to the configuration layout. |
@@ -227,7 +238,7 @@ group index (0-based). See the [Glow Guide](features/glow.md) for YAML configura
 | **`setDisplayGroupGlow(player, groupIndex, glow, persist)`** | Persists the glow override across relog when `persist` is `true`. |
 | **`setDisplayGroupFixedGlow(player, groupIndex, color)`** | Shortcut for a fixed hex/RGB glow color. |
 | **`clearDisplayGroupGlow(player, groupIndex)`** | Removes the API glow override for one row. |
-| **`getDisplayGroupGlowOverride(player, groupIndex)`** | Returns the active API glow override, if any. |
+| **`getDisplayGroupGlowOverride(uuid, groupIndex)`** | Returns the active API glow override, if any (`UNTAPI` / UUID). |
 
 Factory helpers live in **`NametagGlowOverrides`**:
 
