@@ -50,6 +50,15 @@ api.removeHatHook(hook);
 ## Direct Display Entity Access
 
 > [!CAUTION]
-> **`getPacketDisplayText(player)`** exposes live **`UntNametagDisplay`** instances. Use only for
-> advanced cases (low-level packets, custom viewer filtering). Prefer high-level API methods or
+> **`getPacketDisplayText(player)`** on **`UNTPaperAPI`** exposes live **`UntNametagDisplay`**
+> instances — the supported low-level row type for addon plugins. Use only for advanced cases
+> (custom viewer filtering, display metadata). Prefer high-level API methods or
 > [Bukkit events](events.md).
+
+> [!WARNING]
+> **`PacketNameTag`** and other internal packet/implementation classes are **not** part of the
+> public API. Do not reference them in addon code or documentation; use **`UntNametagDisplay`**
+> and **`UNTPaperAPI`** instead.
+
+If your integration touches EntityLib types (e.g. **`BillboardConstraints`**), add EntityLib as
+**compile-only** — see [API Setup — EntityLib](setup.md#entitylib-optional-compile-only).

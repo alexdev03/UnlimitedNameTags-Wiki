@@ -32,6 +32,46 @@ dependencies {
 > It is pulled in transitively when you depend on **`api-paper`** — you normally do not need
 > **`unlimitednametags-common`** separately.
 
+> [!IMPORTANT]
+> **Maven coordinates vs Java packages:** artifacts are published under Maven groupId
+> **`io.github.alexdev03`**. Java types live under package **`org.alexdev.unlimitednametags…`**
+> — that package name is correct in import statements and is not a dependency typo.
+
+### EntityLib (optional, compile-only)
+
+**`unlimitednametags-api-paper` does not bundle EntityLib.** The artifact exposes only the UNT
+public API; EntityLib types are not on your compile classpath unless you add them yourself.
+
+Add EntityLib as **compile-only** when your addon references EntityLib types exposed through UNT
+config or low-level display APIs — for example
+**`AbstractDisplayMeta.BillboardConstraints`**, display metadata, or similar.
+
+```kotlin
+repositories {
+    mavenCentral()
+    maven("https://maven.pvphub.me/tofaa") // required for EntityLib snapshots
+}
+
+dependencies {
+    compileOnly("io.github.alexdev03:unlimitednametags-api-paper:2.0.0")
+    compileOnly("io.github.tofaa2:spigot:3.0.3-SNAPSHOT") // match your UNT release
+}
+```
+
+```xml
+<dependency>
+    <groupId>io.github.tofaa2</groupId>
+    <artifactId>spigot</artifactId>
+    <version>3.0.3-SNAPSHOT</version>
+    <scope>provided</scope>
+</dependency>
+```
+
+> [!WARNING]
+> Do **not** shade or bundle EntityLib in your addon JAR. **UnlimitedNameTags** ships EntityLib at
+> runtime; your dependency is only for compilation. Use the same EntityLib version as the
+> **UnlimitedNameTags** build on your server.
+
 ### Plugin Configuration (`plugin.yml`)
 
 ```yaml
@@ -60,6 +100,17 @@ softdepend: [UnlimitedNameTags]
 > Calling `getInstance()` before your plugin's `onEnable()` or when **UnlimitedNameTags** is
 > disabled throws `IllegalStateException`. For soft dependencies, guard with
 > `Bukkit.getPluginManager().isPluginEnabled("UnlimitedNameTags")` first.
+
+---
+
+## Public API vs internal types
+
+Integrate through **`UNTPaperAPI`** (Paper/Bukkit) or **`UNTAPI`** (UUID-based). For live row
+instances, use **`UntNametagDisplay`** via **`getPacketDisplayText(player)`** — see
+[Integrations — Direct Display Entity Access](integrations.md).
+
+**Do not depend on internal implementation types** such as **`PacketNameTag`**. They are not part
+of the supported addon surface and may change without notice.
 
 ---
 

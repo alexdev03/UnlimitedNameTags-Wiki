@@ -1,6 +1,7 @@
 # Bukkit Events
 
-Events ship in **`unlimitednametags-api-paper`** (`org.alexdev.unlimitednametags.api.event`).
+Events ship in **`unlimitednametags-api-paper`**. Package:
+**`org.alexdev.unlimitednametags.api.event`** (Maven groupId is **`io.github.alexdev03`**).
 Register them like any other Bukkit event.
 
 All lifecycle events extend **`PlayerNametagLifecycleEvent`**, which exposes:

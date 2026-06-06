@@ -3,7 +3,8 @@
 **UnlimitedNameTags** exposes a Java API for other plugins to control name tags at runtime:
 overrides, glow, animations, Bukkit events, vanish hooks, and more.
 
-- **[Setup](setup.md)**: Maven dependency, `plugin.yml`, `getInstance()`, core types
+- **[Setup](setup.md)**: Maven dependency (`io.github.alexdev03`), optional EntityLib compile-only,
+  `plugin.yml`, `getInstance()`, public vs internal types
 - **[Overrides](overrides.md)**: Layout overrides, property shortcuts, persistence
 - **[Events](events.md)**: Bukkit visibility and lifecycle events
 - **[Glow](glow.md)**: Per-row glow overrides and custom handlers
