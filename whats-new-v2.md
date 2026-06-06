@@ -52,13 +52,14 @@ Bring your server to life with smooth, client-side physical animations applied t
 ### 1. Show While Looking 🎯
 When enabled, name tags only appear when you look directly at a player with your crosshair. The moment you look away, the name tag disappears.
 * Perfect for immersive roleplay, tactical minigames, or clean server screenshots.
-* Learn more in the [Show While Looking Guide](features/show-while-looking.md).
+* Learn more in the [Show While Looking & Through-Wall Guide](features/show-while-looking.md).
 
 ### 2. Through-Wall Occlusion Modes (`throughWallMode`)
 Customize exactly what happens to name tags when players walk behind walls or solid geometry:
 * **`SEE_THROUGH`** (Default): Vanilla behavior; name tags remain visible through walls.
 * **`OBSCURED`**: Visible through walls, but **dims the opacity** to a custom level (e.g., 50%) so players know their target is behind cover.
 * **`HIDE`**: Completely hides the name tag behind solid blocks. **Acts as a native anti-wallhack system!**
+* Configured via **`throughWallMode`** in `settings.yml` — see [Show While Looking & Through-Wall](features/show-while-looking.md#companion-feature-through-wall-occlusion-throughwallmode).
 
 ---
 
@@ -97,7 +98,7 @@ All commands (`/unt`) have been moved to the modern Brigadier engine. This gives
 * Clear visual errors in the chat box if a command is typed incorrectly.
 
 ### 2. Per-Player Preferences
-Players can now toggle custom name tag visibility on/off using client-friendly command preferences, which respect permissions and default rules.
+Players can now toggle custom name tag visibility on/off using **`/unt preferences`**, which respect permissions and default rules. See the [Player Preferences Guide](features/player-preferences.md).
 
 ### 3. Display Group Glow ✨
 Each stacked row (text, item, or block) can carry a colored outline glow:
