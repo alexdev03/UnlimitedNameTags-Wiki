@@ -65,12 +65,27 @@ dependencies {
 {% endtab %}
 {% tab title="Maven" %}
 ```xml
-<dependency>
-    <groupId>io.github.tofaa2</groupId>
-    <artifactId>spigot</artifactId>
-    <version>3.0.3-SNAPSHOT</version>
-    <scope>provided</scope>
-</dependency>
+<repositories>
+    <repository>
+        <id>tofaa</id>
+        <url>https://maven.pvphub.me/tofaa</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>io.github.alexdev03</groupId>
+        <artifactId>unlimitednametags-api-paper</artifactId>
+        <version>2.0.0</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>io.github.tofaa2</groupId>
+        <artifactId>spigot</artifactId>
+        <version>3.0.3-SNAPSHOT</version>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
 ```
 {% endtab %}
 {% endtabs %}
