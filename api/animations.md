@@ -12,6 +12,10 @@ api.clearNametagDisplayGroupAnimation(player, 0);
 api.setNametagDisplayGroupAnimation(player, 0, animation, true); // persist across relog
 ```
 
+> [!IMPORTANT]
+> Physical animations apply only to **`ITEM`** and **`BLOCK`** rows. They have no effect on
+> **`TEXT`** rows.
+
 > [!NOTE]
 > The display group index is 0-based. An out-of-range index throws `IllegalArgumentException`.
 

@@ -174,11 +174,12 @@ Adjust how individual rows rotate toward the camera using **`billboard`**: `CENT
 
 ## ✨ Per-Row Glow
 
-Apply a colored outline glow to any display row (text, item, or block):
+Apply a colored outline glow to **`ITEM`** and **`BLOCK`** rows only:
 
 ```yaml
-- lines:
-    - text: '<gold>%player_name%</gold>'
+- displayType: ITEM
+  itemMaterial: NETHER_STAR
+  scale: 0.6
   glow:
     type: reference
     ref: rainbow

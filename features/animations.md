@@ -57,6 +57,11 @@ Animation update frequencies are controlled by the following parameters:
 
 Display group animations modify the visual translation or scale of an entity. The parent `animation:` block contains several general configuration fields:
 
+> [!IMPORTANT]
+> Physical **display group animations** (`animation:`) apply only to **`ITEM`** and **`BLOCK`** rows.
+> They have no effect on **`TEXT`** rows. For animated text colors, use
+> [phase placeholders](#text-phase-placeholders) instead.
+
 | Field | Default | Description |
 | :--- | :--- | :--- |
 | **`enabled`** | `true` | When set to `false`, the animation is disabled and does not consume resources. |
@@ -156,11 +161,11 @@ displayGroups:
       cullBeyondBlocks: 32
 ```
 
-### Example: Pulsing Text Display
+### Example: Pulsing Item Display
 ```yaml
 displayGroups:
-  - lines:
-      - text: '<gold>VIP</gold>'
+  - displayType: ITEM
+    itemMaterial: NETHER_STAR
     scale: 1.0
     yOffset: 0.0
     animation:

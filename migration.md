@@ -45,7 +45,8 @@ Under normal circumstances, restarting the server or executing `/unt reload` is 
 > [!WARNING]
 > The automatic migration utility **deletes** the legacy `modifiers:` block. The old multi-condition parameter structure cannot be automatically translated due to changes in syntax. You must manually rewrite these rules using the new `when:` condition string.
 
-**Before (Legacy v1/v2 format):**
+{% tabs %}
+{% tab title="Before (Legacy v1/v2)" %}
 ```yaml
 modifiers:
   - type: conditional
@@ -53,11 +54,13 @@ modifiers:
     condition: ">"
     value: "1000"
 ```
-
-**After (v2.0.0+ / configVersion 4+ format):**
+{% endtab %}
+{% tab title="After (v4+)" %}
 ```yaml
 when: '%vault_eco_balance% > 1000'
 ```
+{% endtab %}
+{% endtabs %}
 
 - **Group-level conditional**: Place the `when:` key directly under the display group entry to
   show/hide the entire line row.
@@ -70,7 +73,8 @@ when: '%vault_eco_balance% > 1000'
 
 The parameters `type: integer` and `type: hex` are no longer supported.
 
-**Before (`type: integer`):**
+{% tabs %}
+{% tab title="Before (integer)" %}
 ```yaml
 background:
   type: integer
@@ -82,8 +86,8 @@ background:
   shadowed: false
   seeThrough: false
 ```
-
-**Before (`type: hex`):**
+{% endtab %}
+{% tab title="Before (hex)" %}
 ```yaml
 background:
   type: hex
@@ -93,8 +97,8 @@ background:
   shadowed: false
   seeThrough: false
 ```
-
-**After (v4):**
+{% endtab %}
+{% tab title="After (v4)" %}
 ```yaml
 background:
   enabled: true
@@ -103,6 +107,8 @@ background:
   shadowed: false
   seeThrough: false
 ```
+{% endtab %}
+{% endtabs %}
 
 The built-in migrator automatically standardizes these structures upon initialization.
 
@@ -112,7 +118,8 @@ The built-in migrator automatically standardizes these structures upon initializ
 
 The old visibility parameters `obscuredNametagThroughWalls`, `obscuredNametagOpacity`, `obscuredNametagMaxDistance`, and `obscuredNametagCheckInterval` have been unified into `throughWallMode` and a nested `throughWallSettings` map.
 
-**Before (v4):**
+{% tabs %}
+{% tab title="Before (v4)" %}
 ```yaml
 visibility:
   obscuredNametagThroughWalls: false # or true
@@ -120,8 +127,8 @@ visibility:
   obscuredNametagMaxDistance: 48.0
   obscuredNametagCheckInterval: 5
 ```
-
-**After (v5):**
+{% endtab %}
+{% tab title="After (v5)" %}
 ```yaml
 visibility:
   throughWallMode: SEE_THROUGH # Becomes OBSCURED if obscuredNametagThroughWalls was true
@@ -130,6 +137,8 @@ visibility:
     maxDistance: 48.0
     checkInterval: 5
 ```
+{% endtab %}
+{% endtabs %}
 
 The built-in migrator automatically performs this conversion.
 
@@ -137,20 +146,23 @@ The built-in migrator automatically performs this conversion.
 
 ### Conversion of `lines` to Objects
 
-**Before (Plain String Format):**
+{% tabs %}
+{% tab title="Before (Plain String)" %}
 ```yaml
 lines:
   - '%luckperms_prefix% %player_name%'
   - '%player_ping%ms'
 ```
-
-**After (v4 Object Format):**
+{% endtab %}
+{% tab title="After (v4 Object)" %}
 ```yaml
 lines:
   - text: '%luckperms_prefix% %player_name%'
   - text: '%player_ping%ms'
     when: '%player_ping% > 0'   # Optional per-line visibility check
 ```
+{% endtab %}
+{% endtabs %}
 
 ---
 
@@ -166,7 +178,8 @@ Schema version 6 adds a root-level **`glowAnimations`** map with default presets
 `gradient`, `gold_pulse`). The migrator inserts these automatically if the section is missing.
 
 Per-row glow is optional and does not change existing layouts. To use glow, add a `glow:` block
-under any `displayGroups` entry. See the [Glow Guide](features/glow.md).
+under an **`ITEM`** or **`BLOCK`** `displayGroups` entry (glow has no effect on **`TEXT`** rows).
+See the [Glow Guide](features/glow.md).
 
 ---
 

@@ -6,7 +6,8 @@ Add **`unlimitednametags-api-paper`** from Maven Central as **compile-only** (`p
 Use the same version as the **UnlimitedNameTags** plugin on your server. Do not shade or bundle the
 API — the plugin JAR must be on the server at runtime.
 
-### Gradle (Kotlin DSL)
+{% tabs %}
+{% tab title="Gradle (Kotlin DSL)" %}
 ```kotlin
 repositories {
     mavenCentral()
@@ -16,8 +17,8 @@ dependencies {
     compileOnly("io.github.alexdev03:unlimitednametags-api-paper:2.0.0")
 }
 ```
-
-### Maven
+{% endtab %}
+{% tab title="Maven" %}
 ```xml
 <dependency>
     <groupId>io.github.alexdev03</groupId>
@@ -26,6 +27,8 @@ dependencies {
     <scope>provided</scope>
 </dependency>
 ```
+{% endtab %}
+{% endtabs %}
 
 > [!NOTE]
 > For UUID-only integrations without Paper types, use artifact **`unlimitednametags-api`** instead.
@@ -46,6 +49,8 @@ Add EntityLib as **compile-only** when your addon references EntityLib types exp
 config or low-level display APIs — for example
 **`AbstractDisplayMeta.BillboardConstraints`**, display metadata, or similar.
 
+{% tabs %}
+{% tab title="Gradle (Kotlin DSL)" %}
 ```kotlin
 repositories {
     mavenCentral()
@@ -57,7 +62,8 @@ dependencies {
     compileOnly("io.github.tofaa2:spigot:3.0.3-SNAPSHOT") // match your UNT release
 }
 ```
-
+{% endtab %}
+{% tab title="Maven" %}
 ```xml
 <dependency>
     <groupId>io.github.tofaa2</groupId>
@@ -66,6 +72,8 @@ dependencies {
     <scope>provided</scope>
 </dependency>
 ```
+{% endtab %}
+{% endtabs %}
 
 > [!WARNING]
 > Do **not** shade or bundle EntityLib in your addon JAR. **UnlimitedNameTags** ships EntityLib at
@@ -86,15 +94,18 @@ softdepend: [UnlimitedNameTags]
 
 ## Retrieving the API Instance
 
-- **Paper/Bukkit (recommended):**
-  ```java
-  UNTPaperAPI api = UNTPaperAPI.getInstance();
-  ```
-
-- **Platform-neutral (UUID-based):**
-  ```java
-  UNTAPI api = UNTAPI.getInstance();
-  ```
+{% tabs %}
+{% tab title="Paper/Bukkit (recommended)" %}
+```java
+UNTPaperAPI api = UNTPaperAPI.getInstance();
+```
+{% endtab %}
+{% tab title="Platform-neutral (UUID)" %}
+```java
+UNTAPI api = UNTAPI.getInstance();
+```
+{% endtab %}
+{% endtabs %}
 
 > [!WARNING]
 > Calling `getInstance()` before your plugin's `onEnable()` or when **UnlimitedNameTags** is
@@ -123,7 +134,7 @@ of the supported addon surface and may change without notice.
 | **`UnlimitedNameTagsInstancePaper`** | Extended plugin interface via `UNTPaperAPI.paperPlugin()`. |
 | **`UntNametagManager` / `UntNametagManagerPaper`** | Override, glow, refresh, and visibility operations (`api.nametagManager()`). |
 | **`Settings.NameTag`** | Permission preset and its `displayGroups` list. |
-| **`Settings.DisplayGroup`** | One stacked row (text, item, or block), with optional `glow` and `animation`. |
+| **`Settings.DisplayGroup`** | One stacked row (text, item, or block), with optional `glow` and `animation` (ITEM/BLOCK only). |
 | **`Settings.NametagLine`** | Text line with optional `when` condition. |
 | **`Settings.Background`** | Background plate (color, opacity, shadow, see-through). |
 | **`GlowOverride`** | Per-row glow (`fixed`, `reference`, `rainbow`, `gradient`, `custom`). |

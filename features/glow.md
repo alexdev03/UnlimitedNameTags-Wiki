@@ -1,8 +1,12 @@
 # Display Group Glow
 
-**UnlimitedNameTags v2** supports colored outline glow on every display row — text, items, and
-blocks. Glow can be configured in `settings.yml`, applied at runtime via the API, or toggled
-in-game with `/unt glow`.
+**UnlimitedNameTags v2** supports colored outline glow on **`ITEM`** and **`BLOCK`** display rows.
+Glow can be configured in `settings.yml`, applied at runtime via the API, or toggled in-game with
+`/unt glow`.
+
+> [!IMPORTANT]
+> **Glow** applies only to **`ITEM`** and **`BLOCK`** rows. It has no effect on **`TEXT`** rows.
+> For animated text colors, use [phase placeholders](animations.md#text-phase-placeholders) instead.
 
 ---
 

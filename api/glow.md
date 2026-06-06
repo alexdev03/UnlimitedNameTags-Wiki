@@ -1,8 +1,11 @@
 # Glow (API)
 
-Glow tints the outline of text, item, and block display rows. Overrides apply per display group
-index (0-based). For YAML configuration and `/unt glow` commands, see the
+Glow tints the outline of **`ITEM`** and **`BLOCK`** display rows. Overrides apply per display
+group index (0-based). For YAML configuration and `/unt glow` commands, see the
 [Glow feature guide](../features/glow.md).
+
+> [!IMPORTANT]
+> Glow applies only to **`ITEM`** and **`BLOCK`** rows. It has no effect on **`TEXT`** rows.
 
 | Method | Description |
 | :--- | :--- |

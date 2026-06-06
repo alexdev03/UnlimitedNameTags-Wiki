@@ -32,10 +32,10 @@ Name tags are no longer limited to plain text! You can now display actual Minecr
 
 ## 🌀 Smooth Physical Animations
 
-Bring your server to life with smooth, client-side physical animations applied to text, items, or blocks! You can configure these directly in your `settings.yml` without any coding:
+Bring your server to life with smooth, client-side physical animations applied to **items** and **blocks**! You can configure these directly in your `settings.yml` without any coding. For animated text colors, use [phase placeholders](features/animations.md#text-phase-placeholders).
 
 1. **Bob**: Makes the display row float gently up and down in a sine wave.
-2. **Rotate**: Spins the text, block, or item on any axis (X, Y, Z) or all of them.
+2. **Rotate**: Spins the item or block on any axis (X, Y, Z) or all of them.
 3. **DVD Bounce**: Bounces the display side-to-side like the classic DVD screensaver.
 4. **Pulse**: Rhythmically grows and shrinks the display row.
 5. **Wiggle**: Tilts the display row back and forth.
@@ -101,7 +101,7 @@ All commands (`/unt`) have been moved to the modern Brigadier engine. This gives
 Players can now toggle custom name tag visibility on/off using **`/unt preferences`**, which respect permissions and default rules. See the [Player Preferences Guide](features/player-preferences.md).
 
 ### 3. Display Group Glow ✨
-Each stacked row (text, item, or block) can carry a colored outline glow:
+Each **`ITEM`** or **`BLOCK`** row can carry a colored outline glow:
 * **Fixed colors**, **rainbow**, **gradient**, and **custom** animated glow types.
 * Reusable presets under `glowAnimations` in `settings.yml`.
 * Runtime overrides via `/unt glow` and the Java API (with optional persistence across relog).
