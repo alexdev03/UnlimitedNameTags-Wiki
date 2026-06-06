@@ -25,6 +25,8 @@ This page covers the requirements, installation steps, and basic setup needed to
 > accurately or at all on Bedrock clients. For details, see the
 > [Integrations](integrations/integrations.md) guide.
 
+For the complete list of known constraints, see [Limitations](limitations.md).
+
 ---
 
 ## Installation

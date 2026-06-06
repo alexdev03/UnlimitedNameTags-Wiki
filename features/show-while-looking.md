@@ -43,6 +43,10 @@ between the viewer and target is blocked by solid blocks.
 - **`OBSCURED`**: Dims the name tag to a specified opacity when behind walls.
 - **`HIDE`**: Completely hides the name tag display when behind walls (acts as a built-in anti-wallhack).
 
+> [!NOTE]
+> `throughWallMode: SEE_THROUGH` controls whole-tag visibility behind walls. It is **not** the same
+> as per-row `background.seeThrough`. See [Limitations](limitations.md#background-see-through).
+
 ### Interaction Matrix
 
 | Configuration State | Rendering Behavior |

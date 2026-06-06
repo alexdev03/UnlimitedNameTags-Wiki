@@ -46,7 +46,7 @@ This ensures the custom name tag is raised above the custom helmet model to prev
 ## ViaVersion
 
 > [!WARNING]
-> While **ViaVersion** allows older client versions to connect to the server and helps the plugin detect client capability profiles, it **does not** enable custom display entity rendering on Java clients older than **1.19.4**. (See the [Supported Versions Guide](../README.md)).
+> While **ViaVersion** allows older client versions to connect to the server and helps the plugin detect client capability profiles, it **does not** enable custom display entity rendering on Java clients older than **1.19.4**. **ViaBackwards is not supported.** (See [Limitations](../limitations.md)).
 
 ---
 
@@ -113,3 +113,16 @@ Name tags fully support standard **PlaceholderAPI** variables.
 
 > [!NOTE]
 > Name tags render on Bedrock Edition clients connected via **Geyser**, but support is only partial. Rendering elements (such as background plates, drop-shadows, and multi-line stacks) may not appear identical to Java Edition clients due to Bedrock rendering limitations.
+
+---
+
+## Unsupported integrations and workarounds
+
+**Simple Voice Chat** is not natively supported. You can use
+[VoiceChatPlaceholders](https://hangar.papermc.io/Tommm/VoiceChatPlaceholders) as an optional
+workaround with PlaceholderAPI lines in your name tags. Placeholder indicators will not match Simple
+Voice Chat's native icons; matching visuals requires a custom resource pack. See
+[Limitations — Simple Voice Chat](limitations.md#simple-voice-chat).
+
+For other known constraints (NPC plugins, ViaBackwards, display entity collisions, and more), see
+[Limitations](limitations.md).

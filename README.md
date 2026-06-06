@@ -64,6 +64,8 @@ integrations.
 - **[Performance Tuning](performance.md)**: Best practices for running the plugin on active or
   large servers.
 - **[FAQ](faq.md)**: Answers to common setup questions and troubleshooting steps.
+- **[Limitations](limitations.md)**: Known compatibility constraints, plugin conflicts, and
+  upstream bugs.
 
 ---
 
@@ -83,6 +85,8 @@ integrations.
 - **Geyser/Bedrock** players are partially supported. However, visual features (e.g., custom
   colors, custom backgrounds, multi-line alignments) may render differently compared to Java Edition
   clients due to Bedrock rendering engine limitations.
+
+See [Limitations](limitations.md) for the full list of known constraints and unsupported setups.
 
 ---
 

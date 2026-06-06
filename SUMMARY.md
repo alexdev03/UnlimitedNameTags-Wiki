@@ -7,6 +7,7 @@
 * [Commands & Permissions](commands-permissions.md)
 * [Performance](performance.md)
 * [FAQ](faq.md)
+* [Limitations](limitations.md)
 * [Migration Guide](migration.md)
 * [Developer API](api/README.md)
   * [Setup](api/setup.md)

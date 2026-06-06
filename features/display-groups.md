@@ -155,6 +155,10 @@ background:
   seeThrough: false     # Allow viewing text through blocks
 ```
 
+> [!NOTE]
+> `background.seeThrough` is separate from `visibility.throughWallMode`. Known client-side bugs can
+> affect see-through behavior. See [Limitations](limitations.md#background-see-through).
+
 ---
 
 ## 📐 Scale and Offset

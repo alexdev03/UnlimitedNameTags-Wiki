@@ -34,6 +34,9 @@ for **UnlimitedNameTags v2.x**.
 
 ## 🔄 Version Compatibility
 
+For a consolidated list of client, plugin, and upstream limitations, see
+[Limitations](limitations.md).
+
 <details>
 <summary><b>Why was a backup of my configuration created automatically?</b></summary>
 
