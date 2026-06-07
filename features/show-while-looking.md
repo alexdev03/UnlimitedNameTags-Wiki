@@ -45,7 +45,23 @@ between the viewer and target is blocked by solid blocks.
 
 > [!NOTE]
 > `throughWallMode: SEE_THROUGH` controls whole-tag visibility behind walls. It is **not** the same
-> as per-row `background.seeThrough`. See [Limitations](limitations.md#background-see-through).
+> as per-row `background.seeThrough`. See [Limitations](../limitations.md#background-see-through).
+
+### `throughWallMode` vs. `background.seeThrough`
+
+These two options are often confused, but they control different layers:
+
+| Option | Scope | What it does |
+| :--- | :--- | :--- |
+| **`visibility.throughWallMode`** | Global visibility system | Decides whether the whole name tag stays visible, is dimmed, or is hidden when the viewer's line of sight is blocked. |
+| **`background.seeThrough`** | Per `TEXT` display group | Enables Minecraft's text-display see-through flag for that row, so the text can render through opaque block geometry while the row is visible. |
+
+Interaction rules:
+
+- `background.seeThrough: true` is honored only when `throughWallMode: SEE_THROUGH` and the owner is not sneaking.
+- `throughWallMode: OBSCURED` manages see-through internally: clear line of sight uses normal rendering; blocked line of sight enables see-through and applies `throughWallSettings.opacity`.
+- `throughWallMode: HIDE` despawns/hides the tag when blocked, so `background.seeThrough` cannot make it visible through walls.
+- `ITEM` and `BLOCK` display groups are not affected by `background.seeThrough`; through-wall opacity/see-through presentation applies to `TEXT` rows.
 
 ### Interaction Matrix
 

@@ -229,7 +229,7 @@ background:
 | **`color`** | Color defined as a hex string (`'#RRGGBB'`) or RGB format (`'R,G,B'`). |
 | **`opacity`** | Transparency control. `0` represents fully transparent, while `255` is fully opaque. |
 | **`shadowed`** | Enables a default text drop-shadow effect. |
-| **`seeThrough`** | Renders the text through opaque block geometry when the group entity is visible. See [Limitations — Background see-through](limitations.md#background-see-through). |
+| **`seeThrough`** | Enables Minecraft's text-display see-through flag for this `TEXT` row. It is honored only with `visibility.throughWallMode: SEE_THROUGH` and while the owner is not sneaking; `OBSCURED`/`HIDE` manage blocked line-of-sight behavior globally. See [Show While Looking & Through-Wall](features/show-while-looking.md#throughwallmode-vs-backgroundseethrough) and [Limitations — Background see-through](limitations.md#background-see-through). |
 
 ### Per-Line Visibility Conditions
 

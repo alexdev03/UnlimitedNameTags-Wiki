@@ -157,7 +157,10 @@ background:
 
 > [!NOTE]
 > `background.seeThrough` is separate from `visibility.throughWallMode`. Known client-side bugs can
-> affect see-through behavior. See [Limitations](limitations.md#background-see-through).
+> affect see-through behavior. See [Limitations](../limitations.md#background-see-through).
+> The per-row flag is used only for `TEXT` rows and only when `throughWallMode: SEE_THROUGH`; in
+> `OBSCURED` or `HIDE` mode the global through-wall system controls blocked line-of-sight behavior.
+> See [Show While Looking & Through-Wall](show-while-looking.md#throughwallmode-vs-backgroundseethrough).
 
 ---
 

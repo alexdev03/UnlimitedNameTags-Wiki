@@ -83,10 +83,19 @@ built-in voice icons on name tags.
 
 ## Background see-through
 
-The per-row `background.seeThrough` option renders the text background through opaque blocks when
-the display group is visible. This is **not** the same setting as `visibility.throughWallMode`
-(which controls whole-tag occlusion: see-through, dimmed, or hidden behind walls). See
-[Show While Looking & Through-Wall](features/show-while-looking.md).
+The per-row `background.seeThrough` option enables Minecraft's text-display see-through flag for a
+`TEXT` display group. It affects the text row while that row is visible. This is **not** the same
+setting as `visibility.throughWallMode` (which controls whole-tag occlusion: see-through, dimmed, or
+hidden behind walls). See [Show While Looking & Through-Wall](features/show-while-looking.md).
+
+Important behavior:
+
+- `background.seeThrough` is honored only when `visibility.throughWallMode: SEE_THROUGH`.
+- In `OBSCURED` mode, the plugin controls see-through dynamically: blocked sightlines use
+  `throughWallSettings.opacity`, clear sightlines render normally.
+- In `HIDE` mode, blocked name tags are hidden/despawned, so `background.seeThrough` cannot force
+  them to render through walls.
+- Sneaking still uses `visibility.sneakOpacity`; see-through is disabled while the owner is sneaking.
 
 When `background.seeThrough` is enabled, behavior may be unreliable due to known upstream issues:
 
@@ -101,11 +110,13 @@ These are not plugin bugs. Expect inconsistent results until Mojang and/or Iris 
 
 ## Passenger and riding plugins
 
-Plugins that attach **passengers** to players, or make players **ride** blocks, stairs, or other
-entities, can cause name tag stack positioning or visibility issues.
+UnlimitedNameTags uses passenger display entities to keep stacked rows attached to the player. When
+another plugin also attaches passengers to players, the plugin preserves the other passengers first
+and appends the name tag display rows after them so vanilla/plugin passenger order is not overwritten.
 
-There is no configuration workaround documented for this class of conflict. Treat it as a known
-incompatibility when combining those plugins with custom display-based name tags.
+Plugins that continuously rewrite passenger packets, make players ride unusual entities, or attach
+large custom passenger stacks may still cause positioning or visibility conflicts. Treat those cases
+as integration-specific conflicts and test them on a staging server before deploying.
 
 ---
 

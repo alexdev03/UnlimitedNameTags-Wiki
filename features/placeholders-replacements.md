@@ -75,6 +75,30 @@ placeholdersReplacements:
 
 ---
 
+## Relational Placeholder Replacements
+
+Replacement rules also work when the placeholder value is resolved per viewer, for example with
+PlaceholderAPI relational placeholders (`%rel_...%` or `%relational_...%`). This lets each viewer see
+the correct mapped output for viewer-dependent states such as friends, parties, vanish status, or
+relationship labels.
+
+```yaml
+placeholdersReplacements:
+  '%rel_friendsplugin_is_friend%':
+    - placeholder: "true"
+      replacement: '<light_purple>❤ Friend</light_purple>'
+    - placeholder: ELSE
+      replacement: ''
+```
+
+> [!IMPORTANT]
+> Viewer-dependent placeholders still require relational placeholder evaluation to be enabled in
+> `settings.yml` (`performance.enableRelationalPlaceholders: true`) or to be used inside a
+> relational `when` condition. See [Integrations — PlaceholderAPI](../integrations/integrations.md#placeholderapi)
+> and [Performance Tuning](../performance.md).
+
+---
+
 ## See Also
 
 * [Configuration Guide (`settings.yml`)](../configuration.md)

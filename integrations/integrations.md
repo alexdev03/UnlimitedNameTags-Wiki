@@ -36,8 +36,9 @@ This ensures the custom name tag is raised above the custom helmet model to prev
 
 ## Cosmetics & Accessories (HMCCosmetics, etc.)
 
-- **HMCCosmetics**: Height offsets are supported when used with a compatible hook source (such as
-  CreativeHook or Nexo).
+- **HMCCosmetics**: Helmet-slot cosmetics are supported for height offsets. The plugin reads the
+  player's active virtual cosmetic item from HMCCosmetics, so packet/virtual hats can be matched by
+  Nexo/CreativeHook data or by custom rules in `advanced.yml`.
 - **CosmeticsCore**: Direct integration is not supported. Custom helmets must be recognized as
   standard items by other supported integration systems for offsets to apply.
 
@@ -122,7 +123,7 @@ Name tags fully support standard **PlaceholderAPI** variables.
 [VoiceChatPlaceholders](https://hangar.papermc.io/Tommm/VoiceChatPlaceholders) as an optional
 workaround with PlaceholderAPI lines in your name tags. Placeholder indicators will not match Simple
 Voice Chat's native icons; matching visuals requires a custom resource pack. See
-[Limitations — Simple Voice Chat](limitations.md#simple-voice-chat).
+[Limitations — Simple Voice Chat](../limitations.md#simple-voice-chat).
 
 For other known constraints (NPC plugins, ViaBackwards, display entity collisions, and more), see
-[Limitations](limitations.md).
+[Limitations](../limitations.md).
