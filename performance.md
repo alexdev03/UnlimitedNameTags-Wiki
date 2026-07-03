@@ -22,7 +22,7 @@ If you are using an older configuration format, these options may appear at the 
 file. The plugin will automatically restructure them into their designated categories upon startup.
 
 ```yaml
-configVersion: 6
+configVersion: 7
 
 behavior:
   taskInterval: 20
@@ -53,6 +53,12 @@ performance:
   placeholderCacheTime: 1
   enableRelationalPlaceholders: false
   placeholderUpdateRates: {}
+  distanceRefreshCulling:
+    enabled: true
+    nearDistance: 24.0
+    maxDistance: 96.0
+    maxInterval: 100
+    curve: 2.0
 
 nameTags:
   # your presets...
@@ -68,6 +74,7 @@ For a comprehensive explanation of every configuration setting, refer to the [Co
 | :--- | :--- |
 | **PlaceholderAPI** | Querying placeholders is a primary driver of CPU usage. Complex or poorly optimized expansions aggregate quickly when queried per player, per line, at frequent intervals. |
 | **Refresh Intervals** | Defined by `behavior.taskInterval`. Lower values yield responsive tags but increase server load. |
+| **Distance Refresh Culling** | Slows periodic placeholder refreshes for far-away owners while keeping nearby viewers responsive. |
 | **Animations** | Updates display entity positions on a timer. These can be culled when players are distant or out of sight. |
 | **Relational Placeholders** | Requires the plugin to evaluate placeholders on a per-viewer, per-target basis, multiplying computation costs. |
 | **Text Formatting** | The `UNIVERSAL` formatter is rich but resource-heavy. `MINIMESSAGE` represents the optimal performance-to-feature ratio. |
@@ -195,6 +202,48 @@ Set to `false` by default. Enable only if you use viewer-dependent placeholders 
 
 ---
 
+## Distance Refresh Culling
+
+`performance.distanceRefreshCulling` reduces periodic placeholder/name tag refresh work for owners whose nearest viewer is far away. It does **not** permanently disable refreshes; it stretches the interval up to a configured maximum.
+
+```yaml
+performance:
+  distanceRefreshCulling:
+    enabled: true
+    nearDistance: 24.0
+    maxDistance: 96.0
+    maxInterval: 100
+    curve: 2.0
+```
+
+### How the interval is calculated
+
+The plugin starts from `behavior.taskInterval` and computes the effective refresh interval from the nearest viewer distance:
+
+```text
+n = clamp((distance - nearDistance) / (maxDistance - nearDistance), 0, 1)
+interval = taskInterval + (maxInterval - taskInterval) * n^curve
+```
+
+- At or below `nearDistance`, refreshes use `behavior.taskInterval`.
+- At or beyond `maxDistance`, refreshes use `maxInterval`.
+- If no viewer is close enough to track the owner meaningfully, the slow interval is used.
+- `curve: 2.0` keeps near players responsive and shifts most slowdown to farther distances.
+
+### Tuning examples
+
+| Scenario | Suggested change |
+| :--- | :--- |
+| Small hub / lobby | Keep defaults or lower `maxInterval` if scoreboard-style tags must update quickly. |
+| Large survival server | Increase `maxInterval` to `120`–`200` for expensive economy/territory placeholders. |
+| PvP or minigames | Lower `nearDistance`/`maxDistance` carefully, or disable culling if all name tags must update at the same cadence. |
+| Debugging a third-party integration | Temporarily set `enabled: false` so all periodic refreshes use `behavior.taskInterval`. |
+
+> [!NOTE]
+> Distance culling only affects the periodic background refresh cadence; manual or forced refreshes can still update a name tag immediately.
+
+---
+
 ## Animation Distance Culling: `cullBeyondBlocks`
 
 You can add `cullBeyondBlocks` within any `animation:` block. If no players are within the
@@ -222,8 +271,9 @@ For servers experiencing high CPU usage, verify the following configuration para
 5. **Visibility Settings**: Disable `showWhileLooking` and set `throughWallMode` to `SEE_THROUGH` if raycast features are not actively needed.
 6. **`behavior.viewDistance`**: Reduce the client render distance to limit packet delivery.
 7. **`performance.placeholderUpdateRates`**: Define custom, longer intervals for heavy placeholders.
-8. **`visibility.throughWallSettings.checkInterval`**: If through-wall occlusion (`OBSCURED` or `HIDE`) is enabled, increase the interval to `10` or `20` ticks.
-9. **`behavior.compactDisplayGroupStack`**: Enable (`true`) if many rows are hidden conditionally, reducing payload overhead.
+8. **`performance.distanceRefreshCulling`**: Keep enabled on large servers; increase `maxInterval` for slow-changing distant tags.
+9. **`visibility.throughWallSettings.checkInterval`**: If through-wall occlusion (`OBSCURED` or `HIDE`) is enabled, increase the interval to `10` or `20` ticks.
+10. **`behavior.compactDisplayGroupStack`**: Enable (`true`) if many rows are hidden conditionally, reducing payload overhead.
 
 ---
 

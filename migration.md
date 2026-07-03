@@ -3,7 +3,7 @@
 > [!NOTE]
 > This is the documentation for **UnlimitedNameTags v2.x (current)**. If you are using the legacy version 1.x, [click here to view the v1 Wiki](v1/README.md).
 
-This document provides step-by-step instructions for upgrading your configuration format to **UnlimitedNameTags v2.x** (`configVersion: 6`).
+This document provides step-by-step instructions for upgrading your configuration format to **UnlimitedNameTags v2.x** (`configVersion: 7`).
 
 ---
 
@@ -16,7 +16,8 @@ This document provides step-by-step instructions for upgrading your configuratio
 | **3** | Updated the `lines` list format to structured objects, supporting conditional parameters (e.g., `- {text: 'text', when: 'condition'}`). |
 | **4** | Grouped global variables into `behavior`, `visibility`, and `performance` sections. Standardized the `background` block by unifying background parameters under a single `color` option. |
 | **5** | Replaced `obscuredNametagThroughWalls` and related parameters with `throughWallMode` (`SEE_THROUGH`, `OBSCURED`, `HIDE`) and nested `throughWallSettings`. |
-| **6** (Current) | Introduced `glowAnimations` presets and optional per-display-group `glow` / `glowInterval` fields. |
+| **6** | Introduced `glowAnimations` presets and optional per-display-group `glow` / `glowInterval` fields. |
+| **7** (Current) | Includes `performance.distanceRefreshCulling` for distance-aware refresh intervals. |
 
 ---
 
@@ -29,10 +30,10 @@ The plugin executes an automatic migration routine whenever it starts or when `/
 3. Converts flat string list entries under `lines` into standard `{text: '...'}` objects.
 4. Translates old background structures (`type: integer` or `type: hex`) into the unified `color:` format.
 5. Restructures top-level global settings under their respective `behavior`, `visibility`, or `performance` categories.
-6. Converts `obscuredNametagThroughWalls` and related settings to the unified `throughWallMode` and nested `throughWallSettings` layout.
-7. Converts `obscuredNametagThroughWalls` and related settings to `throughWallMode` and nested `throughWallSettings` (v5).
-8. Adds default `glowAnimations` presets when upgrading to v6.
-9. Sets `configVersion: 6` in the rewritten configuration file.
+6. Converts `obscuredNametagThroughWalls` and related settings to `throughWallMode` and nested `throughWallSettings` (v5).
+7. Adds default `glowAnimations` presets when upgrading to v6.
+8. Ensures the default `performance.distanceRefreshCulling` block exists when upgrading to v7.
+9. Sets `configVersion: 7` in the rewritten configuration file.
 
 Under normal circumstances, restarting the server or executing `/unt reload` is sufficient to complete the migration.
 

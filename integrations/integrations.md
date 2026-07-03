@@ -11,6 +11,8 @@ Both **Nexo** and **Oraxen** automatically adjust player name tag heights when p
 ### Nexo Offset Rendering
 With Nexo custom helmets (or custom items utilizing merged resource packs), the tag automatically tracks model height offsets.
 
+UnlimitedNameTags reads modern item-model/equippable-model data for Nexo height detection and falls back to resource-pack JSON model data when the direct Creative model lookup is not enough.
+
 ![Nexo nametag offset](../assets/nexo-nametag-offset.gif)
 
 ### Oraxen
@@ -30,6 +32,8 @@ This ensures the custom name tag is raised above the custom helmet model to prev
 ### Integration Details
 * **Automatic Detection**: The plugin registers the ItemsAdder hook automatically when the ItemsAdder plugin is loaded.
 * **Model Lookup**: The hook queries the ItemsAdder API (`CustomStack`) to identify the custom item stack, retrieve its namespace and model path, and extract the corresponding height offset from the resource pack.
+* **JSON Fallback**: If the Creative model reader cannot resolve the height directly, the hook can inspect modern item-model/equippable-model JSON and legacy custom-model-data overrides from `ItemsAdder/output/generated.zip`.
+* **Resilient Pack Reading**: Invalid or non-object `.mcmeta` sidecar files in generated packs are skipped instead of breaking the whole pack load.
 * **Fallback Rules**: If you need to manually override or fine-tune specific ItemsAdder helmet heights, you can still define custom rules in `advanced.yml`. (See the [advanced.yml Guide](../features/advanced-yml.md)).
 
 ---
@@ -37,7 +41,7 @@ This ensures the custom name tag is raised above the custom helmet model to prev
 ## Cosmetics & Accessories (HMCCosmetics, etc.)
 
 - **HMCCosmetics**: Helmet-slot cosmetics are supported for height offsets. The plugin reads the
-  player's active virtual cosmetic item from HMCCosmetics, so packet/virtual hats can be matched by
+  player's active per-user virtual cosmetic item from HMCCosmetics, so packet/virtual hats can be matched by
   Nexo/CreativeHook data or by custom rules in `advanced.yml`.
 - **CosmeticsCore**: Direct integration is not supported. Custom helmets must be recognized as
   standard items by other supported integration systems for offsets to apply.
