@@ -28,11 +28,8 @@
   * [Sneak & own nametag](features/sneak-and-own-nametag.md)
   * [Player preferences](features/player-preferences.md)
   * [Glow](features/glow.md)
-  * [Advanced (`advanced.yml`)](features/advanced-yml.md)
-* [Full `advanced.example.yml`](reference/advanced.example.yml)
-
----
-
+  * [Advanced (advanced.yml)](features/advanced-yml.md)
+* [Full advanced.example.yml](full-advanced.example.yml.md)
 * [Legacy v1.x Wiki](v1/README.md)
   * [v1 Configuration](v1/configuration.md)
   * [v1 Commands & Permissions](v1/commands-permissions.md)
@@ -44,4 +41,3 @@
     * [v1 LinesGroups](v1/features/linesgroups.md)
     * [v1 Placeholder Replacements](v1/features/placeholders-replacements.md)
     * [v1 Show While Looking](v1/features/show-while-looking.md)
-

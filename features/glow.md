@@ -1,23 +1,16 @@
-# Display Group Glow
+# Glow
 
-**UnlimitedNameTags v2** supports colored outline glow on **`ITEM`** and **`BLOCK`** display rows.
-Glow can be configured in `settings.yml`, applied at runtime via the API, or toggled in-game with
-`/unt glow`.
+**UnlimitedNameTags v2** supports colored outline glow on **`ITEM`** and **`BLOCK`** display rows. Glow can be configured in `settings.yml`, applied at runtime via the API, or toggled in-game with `/unt glow`.
 
-> [!IMPORTANT]
-> **Glow** applies only to **`ITEM`** and **`BLOCK`** rows. It has no effect on **`TEXT`** rows.
-> For animated text colors, use [phase placeholders](animations.md#text-phase-placeholders) instead.
+> \[!IMPORTANT] **Glow** applies only to **`ITEM`** and **`BLOCK`** rows. It has no effect on **`TEXT`** rows. For animated text colors, use [phase placeholders](animations.md#text-phase-placeholders) instead.
 
----
+***
 
 ## Global Presets (`glowAnimations`)
 
-Reusable glow definitions live at the root of `settings.yml` under **`glowAnimations`**. Reference
-them from any display group with `glow.type: reference` and `ref: <id>`.
+Reusable glow definitions live at the root of `settings.yml` under **`glowAnimations`**. Reference them from any display group with `glow.type: reference` and `ref: <id>`.
 
-The migrator adds three built-in presets when upgrading to **`configVersion: 6`**. On plugin
-enable, **`default_gold_pulse`** is registered as the custom handler behind the **`gold_pulse`**
-preset (you do not need to register it yourself).
+The migrator adds three built-in presets when upgrading to **`configVersion: 6`**. On plugin enable, **`default_gold_pulse`** is registered as the custom handler behind the **`gold_pulse`** preset (you do not need to register it yourself).
 
 ```yaml
 configVersion: 6
@@ -42,30 +35,29 @@ glowAnimations:
 
 You can add your own entries and reference them from display groups or from `/unt glow animation`.
 
----
+***
 
 ## Per-Row Glow (`displayGroups`)
 
-Each display group accepts an optional **`glow`** block and optional **`glowInterval`** (tick cadence
-for animated glow; defaults to `behavior.displayAnimationInterval`).
+Each display group accepts an optional **`glow`** block and optional **`glowInterval`** (tick cadence for animated glow; defaults to `behavior.displayAnimationInterval`).
 
 ### Glow Types
 
-| `type` | Description | Key fields |
-| :--- | :--- | :--- |
-| **`fixed`** | Static outline color | `color` — hex (`#RRGGBB`) or RGB (`255,0,0`) |
-| **`reference`** | Reuses a `glowAnimations` preset (or API-registered preset) | `ref`, optional `speed` multiplier |
-| **`rainbow`** | Cycles hue over time | `speed` |
-| **`gradient`** | Steps through a color list | `colors` (≥2), `refreshInterval`, `speed` |
-| **`custom`** | Delegates to a plugin handler | `id` — must match `registerNametagCustomGlowHandler` |
+| `type`          | Description                                                 | Key fields                                           |
+| --------------- | ----------------------------------------------------------- | ---------------------------------------------------- |
+| **`fixed`**     | Static outline color                                        | `color` — hex (`#RRGGBB`) or RGB (`255,0,0`)         |
+| **`reference`** | Reuses a `glowAnimations` preset (or API-registered preset) | `ref`, optional `speed` multiplier                   |
+| **`rainbow`**   | Cycles hue over time                                        | `speed`                                              |
+| **`gradient`**  | Steps through a color list                                  | `colors` (≥2), `refreshInterval`, `speed`            |
+| **`custom`**    | Delegates to a plugin handler                               | `id` — must match `registerNametagCustomGlowHandler` |
 
 Common fields on all types:
 
-| Field | Default | Description |
-| :--- | :--- | :--- |
-| **`enabled`** | `true` | Set to `false` to disable glow for the row. |
-| **`speed`** | `1.0` | Tempo multiplier for animated types. `0` disables animation. |
-| **`customProperties`** | `{}` | Optional string map readable by custom glow handlers. |
+| Field                  | Default | Description                                                  |
+| ---------------------- | ------- | ------------------------------------------------------------ |
+| **`enabled`**          | `true`  | Set to `false` to disable glow for the row.                  |
+| **`speed`**            | `1.0`   | Tempo multiplier for animated types. `0` disables animation. |
+| **`customProperties`** | `{}`    | Optional string map readable by custom glow handlers.        |
 
 ### Example: VIP row with preset rainbow glow
 
@@ -95,34 +87,31 @@ nameTags:
     color: '#55ffff'
 ```
 
----
+***
 
 ## In-Game Commands (`/unt glow`)
 
-| Command | Description |
-| :--- | :--- |
-| **`/unt glow fixed <player> <group> <color>`** | Sets a fixed glow color on one row (persisted). |
-| **`/unt glow animation <id> [player] [group]`** | Applies a named preset to all rows or one row. |
-| **`/unt glow rate <rate> <id> [player] [group]`** | Same as animation with a speed multiplier. |
-| **`/unt glow rainbow <player> <group> [speed]`** | Rainbow glow on one row. |
-| **`/unt glow gradient <player> <group> <colors...> [interval]`** | Gradient glow (space-separated colors). |
-| **`/unt glow clear <player> [group]`** | Clears API/command glow overrides. |
-| **`/unt glow get [player]`** | Lists active per-player glow overrides. |
+| Command                                                          | Description                                     |
+| ---------------------------------------------------------------- | ----------------------------------------------- |
+| **`/unt glow fixed <player> <group> <color>`**                   | Sets a fixed glow color on one row (persisted). |
+| **`/unt glow animation <id> [player] [group]`**                  | Applies a named preset to all rows or one row.  |
+| **`/unt glow rate <rate> <id> [player] [group]`**                | Same as animation with a speed multiplier.      |
+| **`/unt glow rainbow <player> <group> [speed]`**                 | Rainbow glow on one row.                        |
+| **`/unt glow gradient <player> <group> <colors...> [interval]`** | Gradient glow (space-separated colors).         |
+| **`/unt glow clear <player> [group]`**                           | Clears API/command glow overrides.              |
+| **`/unt glow get [player]`**                                     | Lists active per-player glow overrides.         |
 
 Permissions: **`unt.glow`** (self), **`unt.glow.others`** (modify other players).
 
----
+***
 
 ## Developer API
 
-Programmatic glow overrides, preset registration, and custom handlers are documented in the
-[Developer API — Glow](api/glow.md).
+Programmatic glow overrides, preset registration, and custom handlers are documented in the [Developer API — Glow](https://github.com/alexdev03/UnlimitedNameTags-Wiki/blob/main/features/api/glow.md).
 
----
+***
 
 ## Performance Notes
 
-- Animated glow (rainbow, gradient, custom) ticks on the same schedule as display animations.
-  Use **`glowInterval`** on busy rows to reduce update frequency.
-- Glow is applied client-side via display entity metadata; the server only sends color updates on
-  the configured interval.
+* Animated glow (rainbow, gradient, custom) ticks on the same schedule as display animations. Use **`glowInterval`** on busy rows to reduce update frequency.
+* Glow is applied client-side via display entity metadata; the server only sends color updates on the configured interval.

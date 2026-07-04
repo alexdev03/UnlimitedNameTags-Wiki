@@ -1,13 +1,12 @@
-# Overview
+# Legacy v1.x Wiki
 
-> [!IMPORTANT]
-> This is the legacy documentation for **UnlimitedNameTags v1.x**. If you are using the modern version 2.x, [click here to view the v2 Wiki](../README.md).
+> \[!IMPORTANT] This is the legacy documentation for **UnlimitedNameTags v1.x**. If you are using the modern version 2.x, [click here to view the v2 Wiki](../).
 
 _A powerful tool to customize and manage player name tags like never before!_
 
 Welcome to the official documentation for the **UnlimitedNameTags** plugin. This wiki provides detailed information about the plugin's features, installation, configuration, commands, and integrations.
 
----
+***
 
 [![Discord](https://img.shields.io/discord/1263414013040263249?label=Discord\&logo=discord\&color=5865F2)](https://discord.gg/W4Fu8fqCKs)\
 [![CodeFactor](https://www.codefactor.io/repository/github/alexdev03/unlimitednametags/badge)](https://www.codefactor.io/repository/github/alexdev03/unlimitednametags)\
@@ -29,10 +28,10 @@ Welcome to the official documentation for the **UnlimitedNameTags** plugin. This
 4. [Configuration](configuration.md) ­ƒöº
 5. [Commands and permissions](commands-permissions.md) ­ƒû▒´©Å­ƒöæ
 6. [Integrations](integrations/integrations.md) ­ƒöù
-7. [Wiki style guide](STYLE.md) Ô£Å´©Å
+7. [Wiki style guide](https://github.com/alexdev03/UnlimitedNameTags-Wiki/blob/main/v1/STYLE.md) Ô£Å´©Å
 8. [Support](./#-support) ­ƒåÿ
 
----
+***
 
 ## **Overview**
 
@@ -48,7 +47,7 @@ Unlimited Name Tags is a powerful plugin for Minecraft servers that allows advan
 * Easy-to-configure settings via `settings.yml`
 * Optional [`advanced.yml`](features/advanced-yml.md) for manual helmet ÔåÆ name tag height rules (custom CMD, equippable models, etc.)
 
----
+***
 
 ## **Requirements**
 
@@ -60,7 +59,7 @@ Unlimited Name Tags is a powerful plugin for Minecraft servers that allows advan
 * **Paper**: Fully supported from **1.20.1+** _(highly recommended)_.
 * **Spigot**: Supported from **1.20.2+**, but Paper is preferred for enhanced performance.
 
----
+***
 
 ## ­ƒô£ **Supported Client Versions**
 
@@ -80,10 +79,10 @@ The plugin may use **ViaVersion** on the server to detect viewer capabilities; t
 
 > **Note:** Bedrock clients do not support text displays like Java; not all features match. Multi-line and RGB-style colours may work; backgrounds and shadows often will not.
 
----
+***
 
 ## ­ƒÆ¼ **Support**
 
 Need help? Join our [Discord Server](https://discord.gg/W4Fu8fqCKs)! For **pre-sale questions**, feel free to use the **#chat** channel. If you need support, please open a ticket and ensure your license is verified to gain access to assistance.
 
----
+***
