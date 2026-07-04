@@ -56,7 +56,7 @@ Confirm your setup is correct by verifying the following:
 Below is a complete, valid `settings.yml` using the current schema version. It configures a single `default` name tag preset that displays the player's username.
 
 ```yaml
-configVersion: 6
+configVersion: 7
 
 behavior:
   taskInterval: 20
@@ -87,6 +87,12 @@ performance:
   placeholderCacheTime: 1
   enableRelationalPlaceholders: false
   placeholderUpdateRates: {}
+  distanceRefreshCulling:
+    enabled: true
+    nearDistance: 24.0
+    maxDistance: 96.0
+    maxInterval: 100
+    curve: 2.0
 
 nameTags:
   default:

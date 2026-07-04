@@ -40,12 +40,12 @@ Time-based values within the configuration are defined in **ticks**.
 
 ---
 
-## Complete Example (`configVersion: 6`)
+## Complete Example (`configVersion: 7`)
 
 Below is a reference `settings.yml` configuration demonstrating a two-preset setup and a placeholder replacement rule:
 
 ```yaml
-configVersion: 6
+configVersion: 7
 
 glowAnimations:
   rainbow:
@@ -90,6 +90,12 @@ performance:
   placeholderCacheTime: 1
   enableRelationalPlaceholders: false
   placeholderUpdateRates: {}
+  distanceRefreshCulling:
+    enabled: true
+    nearDistance: 24.0
+    maxDistance: 96.0
+    maxInterval: 100
+    curve: 2.0
 
 nameTags:
   vip:
@@ -169,6 +175,13 @@ Root-level map of reusable glow presets. Keys are referenced from display groups
 | **`placeholderCacheTime`** | `1` | Default caching duration (in ticks) for individual placeholders. |
 | **`enableRelationalPlaceholders`** | `false` | Evaluates PlaceholderAPI variables on a per-viewer basis. Required for relational placeholders, but incurs a performance cost. |
 | **`placeholderUpdateRates`** | `{}` | Key-value mapping to define specific update rates per placeholder. E.g., `'%vault_eco_balance%': 100`. |
+| **`distanceRefreshCulling.enabled`** | `true` | Enables distance-aware refresh intervals for far-away name tags. |
+| **`distanceRefreshCulling.nearDistance`** | `24.0` | Distance in blocks where owners keep the normal `behavior.taskInterval`. |
+| **`distanceRefreshCulling.maxDistance`** | `96.0` | Distance where the refresh interval reaches `maxInterval`. |
+| **`distanceRefreshCulling.maxInterval`** | `100` | Slowest refresh interval in ticks for far-away owners or owners with no active viewers. |
+| **`distanceRefreshCulling.curve`** | `2.0` | Growth curve. `1.0` is linear; `2.0` keeps nearby tags responsive and slows distant tags more aggressively. |
+
+For tuning guidance, see [Performance — Distance Refresh Culling](performance.md#distance-refresh-culling).
 
 ---
 
