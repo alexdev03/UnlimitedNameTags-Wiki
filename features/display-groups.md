@@ -72,27 +72,62 @@ Renders a floating Minecraft item or custom item model (including resources from
 
 ### Custom item sources
 
-Configure only one custom source per ITEM row:
+Use one of the following sources for each `ITEM` row.
+
+#### Legacy `customModelData`
+
+Use this for resource packs that identify a custom model with a numeric CustomModelData value:
 
 ```yaml
-# Legacy CustomModelData
-- displayType: ITEM
-  itemMaterial: PAPER
-  customModelData: 1234
-
-# Modern minecraft:item_model component
-- displayType: ITEM
-  itemMaterial: PAPER
-  itemModel: "my_pack:rank_badge"
-
-# Nexo supplies the complete ItemStack; itemMaterial is not required
-- displayType: ITEM
-  nexoId: "rank_badge"
+nameTags:
+  custom_model_data_badge:
+    displayGroups:
+      - displayType: ITEM
+        itemMaterial: PAPER
+        customModelData: 1234
+        itemDisplayMode: FIXED
+        scale: 0.7
 ```
 
+#### Modern `itemModel`
+
+Use this for resource packs that identify the model with the modern `minecraft:item_model`
+component. The value must be a namespaced model ID:
+
+```yaml
+nameTags:
+  item_model_badge:
+    displayGroups:
+      - displayType: ITEM
+        itemMaterial: PAPER
+        itemModel: "my_pack:rank_badge"
+        itemDisplayMode: FIXED
+        scale: 0.7
+```
+
+#### Nexo `nexoId`
+
+Nexo must be installed and loaded as a plugin on the server. UnlimitedNameTags then asks Nexo for
+the complete item by its Nexo item ID, so `itemMaterial`, `customModelData`, and `itemModel` are not
+required:
+
+```yaml
+nameTags:
+  nexo_badge:
+    displayGroups:
+      - displayType: ITEM
+        nexoId: "rank_badge"
+        itemDisplayMode: FIXED
+        scale: 0.7
+```
+
+> [!IMPORTANT]
+> `nexoId` works only when Nexo is present and enabled in the server's plugin list. Verify it with
+> `/plugins` or the server startup log before using this source.
+
 `itemMaterial` defaults to `STONE` for vanilla, `customModelData`, and `itemModel` rows. `nexoId`
-requires Nexo and takes precedence over the other item keys. Without `nexoId`, setting both
-`customModelData` and `itemModel` is invalid: configure exactly one model key.
+takes precedence over the other item keys. Without `nexoId`, setting both `customModelData` and
+`itemModel` is invalid: configure exactly one model key.
 
 ### `itemDisplayMode` Reference
 | Mode | Description | Recommended Use |
