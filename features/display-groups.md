@@ -50,7 +50,8 @@ displayGroups:
 Renders a floating Minecraft item or custom item model (including resources from Nexo, Oraxen, ItemsAdder, etc.) above the player's head.
 
 ### Features
-- **Custom Model Data**: Renders complex cosmetic items like floating crowns, wings, or shields.
+- **Custom models**: Apply either `customModelData` or the modern `itemModel` component to the base item.
+- **Nexo items**: When Nexo is installed, `nexoId` resolves the complete item directly from Nexo.
 - **Positioning**: Fine-tune item display postures using the `itemDisplayMode` key.
 - **Dynamic Resolution**: Supports PlaceholderAPI to resolve item types dynamically (e.g.,
   matching a player's active hand item).
@@ -59,6 +60,7 @@ Renders a floating Minecraft item or custom item model (including resources from
 ```yaml
 - displayType: ITEM
   itemMaterial: GOLDEN_HELMET
+  customModelData: 1234
   itemDisplayMode: HEAD  # Positions the item above the player head
   scale: 0.7
   yOffset: 0.4           # Vertically offsets it above the text row
@@ -67,6 +69,30 @@ Renders a floating Minecraft item or custom item model (including resources from
     axis: Y
     degreesPerSecond: 90
 ```
+
+### Custom item sources
+
+Configure only one custom source per ITEM row:
+
+```yaml
+# Legacy CustomModelData
+- displayType: ITEM
+  itemMaterial: PAPER
+  customModelData: 1234
+
+# Modern minecraft:item_model component
+- displayType: ITEM
+  itemMaterial: PAPER
+  itemModel: "my_pack:rank_badge"
+
+# Nexo supplies the complete ItemStack; itemMaterial is not required
+- displayType: ITEM
+  nexoId: "rank_badge"
+```
+
+`itemMaterial` defaults to `STONE` for vanilla, `customModelData`, and `itemModel` rows. `nexoId`
+requires Nexo and takes precedence over the other item keys. Without `nexoId`, setting both
+`customModelData` and `itemModel` is invalid: configure exactly one model key.
 
 ### `itemDisplayMode` Reference
 | Mode | Description | Recommended Use |
